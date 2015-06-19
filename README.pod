@@ -88,7 +88,11 @@ constructor arguments when L</session> is called.
 Returns a new L<Web::Starch::Session> (or whetever L</session_class> is set
 to) object for the specified key.
 
-If no key is specified then a key will be automatically generated.
+If no key is specified, or is undef, then a key will be automatically generated.
+
+Additional arguments can be passed after the key argument.  These extra
+arguments will be passed to the session object constructor and will
+override anything specified by L</session_args>.
 
 =head1 EXTENDING
 

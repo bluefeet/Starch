@@ -211,15 +211,23 @@ sub _build_session_args {
 Returns a new L<Web::Starch::Session> (or whetever L</session_class> is set
 to) object for the specified key.
 
-If no key is specified then a key will be automatically generated.
+If no key is specified, or is undef, then a key will be automatically generated.
+
+Additional arguments can be passed after the key argument.  These extra
+arguments will be passed to the session object constructor and will
+override anything specified by L</session_args>.
 
 =cut
 
 sub session {
-    my ($self, $key) = @_;
+    my $self = shift;
+    my $key = shift;
+
+    my $extra_args = $self->session_class->BUILDARGS( @_ );
 
     return $self->session_class->new(
         %{ $self->session_args() },
+        %$extra_args,
         starch => $self,
         defined($key) ? (key => $key) : (),
     );
