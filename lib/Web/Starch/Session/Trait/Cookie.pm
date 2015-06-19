@@ -132,7 +132,7 @@ sub _build_cookie_http_only {
 
 =head2 cookie_args
 
-Returns L</delete_cookie_args> if the L<Web::Starch::Session/is_deleted>, otherwise
+Returns L</expire_cookie_args> if the L<Web::Starch::Session/is_expired>, otherwise
 returns L</set_cookie_args>.
 
 These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
@@ -144,7 +144,7 @@ Catalyst accepts for cookies.
 sub cookie_args {
     my ($self) = @_;
 
-    return $self->delete_cookie_args() if $self->is_deleted();
+    return $self->expire_cookie_args() if $self->is_expired();
     return $self->set_cookie_args();
 }
 
@@ -176,7 +176,7 @@ sub set_cookie_args {
     };
 }
 
-=head2 delete_cookie_args
+=head2 expire_cookie_args
 
 This returns the same this as L</set_cookie_args>, but overrides the
 C<expires> value to be C<-1d> which will trigger the client to remove
@@ -184,7 +184,7 @@ the cookie immediately.
 
 =cut
 
-sub delete_cookie_args {
+sub expire_cookie_args {
     my ($self) = @_;
 
     return {

@@ -8,7 +8,7 @@ Web::Starch::Session - The starch session object.
 
     my $session = $starch->session();
     $session->data->{foo} = 'bar';
-    $session->flush();
+    $session->save();
     $session = $starch->session( $session->key() );
     print $session->data->{foo}; # bar
 
@@ -25,6 +25,7 @@ use Types::Common::String -types;
 use JSON::XS qw();
 use Digest;
 use Log::Any qw($log);
+use Carp qw( croak );
 
 use Moo;
 use strictures 1;
@@ -35,9 +36,9 @@ my $compare_json = JSON::XS->new->canonical();
 sub DEMOLISH {
     my ($self) = @_;
 
-    if ($self->is_dirty() and !$self->is_deleted()) {
+    if ($self->is_dirty() and !$self->is_expired()) {
         $log->warnf(
-            '%s %s was changed and not flushed',
+            '%s %s was changed and not saved',
             ref($self), $self->key(),
         );
     }
@@ -81,9 +82,10 @@ be considered new.
 =cut
 
 has _existing_key => (
-    is       => 'ro',
-    isa      => NonEmptySimpleStr,
-    init_arg => 'key',
+    is        => 'ro',
+    isa       => NonEmptySimpleStr,
+    init_arg  => 'key',
+    predicate => 1,
 );
 
 has key => (
@@ -94,7 +96,7 @@ has key => (
 sub _build_key {
     my ($self) = @_;
 
-    return $self->_existing_key() if !$self->is_new();
+    return $self->_existing_key() if $self->_has_existing_key();
 
     my $digest = $self->digest();
     $digest->add( $self->hash_seed() );
@@ -125,14 +127,15 @@ The session data at the state it was when the session was first instantiated.
 =cut
 
 has original_data => (
-    is     => 'lazy',
-    isa    => HashRef,
-    writer => '_set_original_data',
+    is      => 'lazy',
+    isa     => HashRef,
+    writer  => '_set_original_data',
+    clearer => '_clear_original_data',
 );
 sub _build_original_data {
     my ($self) = @_;
 
-    return {} if $self->is_new();
+    return {} if !$self->in_store();
 
     my $data = $self->starch->store->get( $self->key() );
     $data //= {};
@@ -151,36 +154,45 @@ has data => (
     isa      => HashRef,
     init_arg => undef,
     writer   => '_set_data',
+    clearer  => '_clear_data',
 );
 sub _build_data {
     my ($self) = @_;
     return _clone( $self->original_data() );
 }
 
-=head2 is_new
+=head2 in_store
 
-Returns true if the session is new (if the L</key> argument was not specified).
+Returns true if the session is expected to exist in the store
+(AKA, if the L</key> argument was specified).
 
 =cut
 
-sub is_new {
+has in_store => (
+    is     => 'lazy',
+    isa    => Bool,
+    writer => '_set_in_store',
+);
+sub _build_in_store {
     my ($self) = @_;
-    return( $self->_existing_key() ? 0 : 1 );
+    return( $self->_has_existing_key() ? 1 : 0 );
 }
 
-=head2 is_deleted
+=head2 is_expired
 
-Returns true if L</delete> has been called on this session.
+Returns true if L</expire> has been called on this session.
 
 =cut
 
-has is_deleted => (
-    is       => 'ro',
+has is_expired => (
+    is       => 'lazy',
     isa      => Bool,
-    default  => 0,
-    writer   => '_set_is_deleted',
+    writer   => '_set_is_expired',
     init_arg => undef,
 );
+sub _build_is_expired {
+    return 0;
+}
 
 =head2 is_dirty
 
@@ -201,34 +213,71 @@ sub is_dirty {
 
 =head1 METHODS
 
-=head2 flush
+=head2 save
 
-If this session L</is_dirty> this will flush the L</data> to the
-L<Web::Starch/store>.
+If this session L</is_dirty> this will save the L</data> to the
+L<Web::Starch/store> and L</reload> the session.
 
 =cut
 
-sub flush {
+sub save {
     my ($self) = @_;
     return if !$self->is_dirty();
-    return $self->force_flush();
+    return $self->force_save();
 }
 
-=head2 force_flush
+=head2 force_save
 
-Like L</flush>, but flushes no matter what.
+Like L</save>, but saves even if L</is_dirty> is not set.
 
 =cut
 
-sub force_flush {
+sub force_save {
     my ($self) = @_;
+
+    croak 'Cannot call save or force_save on an expired session'
+        if $self->is_expired();
 
     $self->starch->store->set(
         $self->key(),
         $self->data(),
     );
 
-    $self->mark_clean();
+    $self->force_reload();
+
+    $self->_set_in_store( 1 );
+
+    return;
+}
+
+=head2 reload
+
+Clears L</original_data> and L</data> so that the next call to these
+will reload the session data from the store.  If the session L</is_dirty>
+then an exception will be thrown.
+
+=cut
+
+sub reload {
+    my ($self) = @_;
+
+    croak 'Cannot call reload on a dirty session'
+        if $self->is_dirty();
+
+    return $self->force_reload();
+}
+
+=head2 force_reload
+
+Just like L</reload>, but reloads even if the session L</is dirty>.
+
+=cut
+
+sub force_reload {
+    my ($self) = @_;
+
+    $self->_clear_original_data();
+    $self->_clear_data();
 
     return;
 }
@@ -266,19 +315,20 @@ sub rollback {
     return;
 }
 
-=head2 delete
+=head2 expire
 
 Deletes the session from the L<Web::Starch/store> and marks it
-as L</is_deleted>.
+as L</is_expired>.
 
 =cut
 
-sub delete {
+sub expire {
     my ($self) = @_;
 
     $self->starch->store->remove( $self->key() );
 
-    $self->_set_is_deleted( 1 );
+    $self->_set_is_expired( 1 );
+    $self->_set_in_store( 0 );
 
     return;
 }

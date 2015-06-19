@@ -295,6 +295,40 @@ Please submit bugs and feature requests on GitHub issues:
 
 L<https://github.com/bluefeet/Web-Starch/issues>
 
+=head1 ALTERNATIVES
+
+=over
+
+=item *
+
+L<CGI::Session>
+
+=item *
+
+L<Data::Session>
+
+=item *
+
+L<HTTP::Session>
+
+=item *
+
+L<Catalyst::Plugin::Session>
+
+=item *
+
+L<Plack::Middleware::Session>
+
+=item *
+
+L<Dancer::Session>
+
+=item *
+
+L<
+
+=back
+
 =head1 AUTHOR
 
 Aran Clary Deltac <bluefeet@cpan.org>

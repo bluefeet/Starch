@@ -32,16 +32,16 @@ subtest cookie_args => sub{
   is( $args->{secure}, 0, 'cookie secure is correct' );
   is( $args->{httponly}, 0, 'cookie httponly is correct' );
 
-  $session->delete();
+  $session->expire();
 
   $args = $session->cookie_args();
-  is( $args->{name}, 'foo-session', 'deleted cookie name is correct' );
-  is( $args->{value}, $session->key(), 'deleted cookie value is session key' );
-  is( $args->{expires}, '-1d', 'deleted cookie expires is correct' );
-  is( $args->{domain}, 'foo.example.com', 'deleted cookie domain is correct' );
-  is( $args->{path}, '/bar', 'deleted cookie path is correct' );
-  is( $args->{secure}, 0, 'deleted cookie secure is correct' );
-  is( $args->{httponly}, 0, 'deleted cookie httponly is correct' );
+  is( $args->{name}, 'foo-session', 'expired cookie name is correct' );
+  is( $args->{value}, $session->key(), 'expired cookie value is session key' );
+  is( $args->{expires}, '-1d', 'expired cookie expires is correct' );
+  is( $args->{domain}, 'foo.example.com', 'expired cookie domain is correct' );
+  is( $args->{path}, '/bar', 'expired cookie path is correct' );
+  is( $args->{secure}, 0, 'expired cookie secure is correct' );
+  is( $args->{httponly}, 0, 'expired cookie httponly is correct' );
 };
 
 subtest set_cookie_args => sub{
@@ -50,20 +50,20 @@ subtest set_cookie_args => sub{
   my $args = $session->set_cookie_args();
   is( $args->{expires}, '+1d', 'new session cookie expires is good' );
 
-  $session->delete();
+  $session->expire();
   $args = $session->set_cookie_args();
-  is( $args->{expires}, '+1d', 'deleted session cookie expires is good' );
+  is( $args->{expires}, '+1d', 'expired session cookie expires is good' );
 };
 
-subtest delete_cookie_args => sub{
+subtest expire_cookie_args => sub{
   my $session = $starch->session();
 
-  my $args = $session->delete_cookie_args();
+  my $args = $session->expire_cookie_args();
   is( $args->{expires}, '-1d', 'new session cookie expires is good' );
 
-  $session->delete();
-  $args = $session->delete_cookie_args();
-  is( $args->{expires}, '-1d', 'deleted session cookie expires is good' );
+  $session->expire();
+  $args = $session->expire_cookie_args();
+  is( $args->{expires}, '-1d', 'expired session cookie expires is good' );
 };
 
 done_testing;
