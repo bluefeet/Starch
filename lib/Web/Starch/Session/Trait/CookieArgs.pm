@@ -1,15 +1,15 @@
-package Web::Starch::Session::Trait::Cookie;
+package Web::Starch::Session::Trait::CookieArgs;
 
 =head1 NAME
 
-Web::Starch::Session::Trait::Cookie - Add arguments and methods to sessions for
-dealing with HTTP cookies.
+Web::Starch::Session::Trait::CookieArgs - Add arguments and methods to sessions
+for dealing with HTTP cookies.
 
 =head1 SYNOPSIS
 
     my $starch = Web::Starch->new(
         ...,
-        session_traits => ['Web::Starch::Session::Trait::Cookie'],
+        session_traits => ['CookieArgs'],
         session_args => { cookie_name=>'my_session' },
     );
     my $session = $starch->session();
@@ -132,8 +132,8 @@ sub _build_cookie_http_only {
 
 =head2 cookie_args
 
-Returns L</expire_cookie_args> if the L<Web::Starch::Session/is_expired>, otherwise
-returns L</set_cookie_args>.
+Returns L</cookie_expire_args> if the L<Web::Starch::Session/is_expired>, otherwise
+returns L</cookie_set_args>.
 
 These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
 the C<-> in front of the argument names, which is the same format that
@@ -144,18 +144,18 @@ Catalyst accepts for cookies.
 sub cookie_args {
     my ($self) = @_;
 
-    return $self->expire_cookie_args() if $self->is_expired();
-    return $self->set_cookie_args();
+    return $self->cookie_expire_args() if $self->is_expired();
+    return $self->cookie_set_args();
 }
 
-=head2 set_cookie_args
+=head2 cookie_set_args
 
 Returns a hashref containing all the cookie args including the
 value being set to L<Web::Starch::Session/key>.
 
 =cut
 
-sub set_cookie_args {
+sub cookie_set_args {
     my ($self) = @_;
 
     my $args = {
@@ -176,19 +176,19 @@ sub set_cookie_args {
     };
 }
 
-=head2 expire_cookie_args
+=head2 cookie_expire_args
 
-This returns the same this as L</set_cookie_args>, but overrides the
+This returns the same this as L</cookie_set_args>, but overrides the
 C<expires> value to be C<-1d> which will trigger the client to remove
 the cookie immediately.
 
 =cut
 
-sub expire_cookie_args {
+sub cookie_expire_args {
     my ($self) = @_;
 
     return {
-        %{ $self->set_cookie_args() },
+        %{ $self->cookie_set_args() },
         expires => '-1d',
     };
 }

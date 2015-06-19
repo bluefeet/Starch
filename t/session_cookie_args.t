@@ -9,7 +9,7 @@ use Web::Starch::Store::Memory;
 
 my $starch = Web::Starch->new(
     store => { class => 'Memory' },
-    session_traits => [ 'Cookie' ],
+    session_traits => [ 'CookieArgs' ],
     session_args => {
         cookie_name      => 'foo-session',
         cookie_expires   => '+1d',
@@ -44,25 +44,25 @@ subtest cookie_args => sub{
   is( $args->{httponly}, 0, 'expired cookie httponly is correct' );
 };
 
-subtest set_cookie_args => sub{
+subtest cookie_set_args => sub{
   my $session = $starch->session();
 
-  my $args = $session->set_cookie_args();
+  my $args = $session->cookie_set_args();
   is( $args->{expires}, '+1d', 'new session cookie expires is good' );
 
   $session->expire();
-  $args = $session->set_cookie_args();
+  $args = $session->cookie_set_args();
   is( $args->{expires}, '+1d', 'expired session cookie expires is good' );
 };
 
-subtest expire_cookie_args => sub{
+subtest cookie_expire_args => sub{
   my $session = $starch->session();
 
-  my $args = $session->expire_cookie_args();
+  my $args = $session->cookie_expire_args();
   is( $args->{expires}, '-1d', 'new session cookie expires is good' );
 
   $session->expire();
-  $args = $session->expire_cookie_args();
+  $args = $session->cookie_expire_args();
   is( $args->{expires}, '-1d', 'expired session cookie expires is good' );
 };
 
