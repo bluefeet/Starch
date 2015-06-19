@@ -325,9 +325,17 @@ L<Dancer::Session>
 
 =item *
 
-L<
+L<Mojolicious::Sessions>
+
+=item *
+
+L<MojoX::Session>
 
 =back
+
+Unlike these modules this module tries to make as little assumptions
+as possible and just provides raw session management with the ability
+for implementors to alter behaviors as they see fit.
 
 =head1 AUTHOR
 
