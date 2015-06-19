@@ -282,9 +282,9 @@ is a matter of sub-clasing:
     package My::Starch;
     use Moo;
     extends 'Web::Starch';
-    sub _build_default_session_class { 'My::Starch::Session' }
+    sub _build_session_class_arg { 'My::Starch::Session' }
 
-Note that you should override/modify C<_build_default_session_class>
+Note that you should override/modify C<_build_session_class_arg>
 rather than C<_build_session_class> as doing the latter would cause
 L</session_traits> to be ignored which would be breaking the inherited
 public API.
