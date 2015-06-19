@@ -20,7 +20,7 @@ use strictures 1;
 use namespace::clean;
 
 with qw(
-  Web::Starch::Store
+    Web::Starch::Store
 );
 
 =head1 ARGUMENTS
@@ -34,8 +34,8 @@ Defaults to C<undef>, which means no expiration.
 =cut
 
 has expires => (
-  is  => 'ro',
-  isa => PositiveInt,
+    is  => 'ro',
+    isa => PositiveInt,
 );
 
 =head2 global
@@ -47,8 +47,8 @@ in the same process which also have global set will share the same storage.
 =cut
 
 has global => (
-  is  => 'ro',
-  isa => Bool,
+    is  => 'ro',
+    isa => Bool,
 );
 
 my $global_memory = {};
@@ -62,13 +62,13 @@ This is the hash ref which is used for storing sessions.
 =cut
 
 has memory => (
-  is  => 'lazy',
-  isa => HashRef,
+    is  => 'lazy',
+    isa => HashRef,
 );
 sub _build_memory {
-  my ($self) = @_;
-  return $global_memory if $self->global();
-  return {};
+    my ($self) = @_;
+    return $global_memory if $self->global();
+    return {};
 }
 
 =head1 STORE METHODS
@@ -79,28 +79,28 @@ which all stores implement.
 =cut
 
 sub set {
-  my ($self, $key, $value) = @_;
+    my ($self, $key, $value) = @_;
 
-  $self->memory->{$key} = {
-    value   => $value,
-    expires => $self->abs_expires(),
-  };
+    $self->memory->{$key} = {
+        value     => $value,
+        expires => $self->abs_expires(),
+    };
 
-  return;
+    return;
 }
 
 sub get {
-  my ($self, $key) = @_;
-  my $data = $self->memory->{$key};
-  return undef if !$data;
-  return undef if $data->{expires} and $data->{expires} <= time();
-  return $data->{value};
+    my ($self, $key) = @_;
+    my $data = $self->memory->{$key};
+    return undef if !$data;
+    return undef if $data->{expires} and $data->{expires} <= time();
+    return $data->{value};
 }
 
 sub remove {
-  my ($self, $key) = @_;
-  delete( $self->memory->{$key} );
-  return;
+    my ($self, $key) = @_;
+    delete( $self->memory->{$key} );
+    return;
 }
 
 =head1 OTHER METHODS
@@ -113,10 +113,10 @@ If it is not set then C<undef> will be returned.
 =cut
 
 sub abs_expires {
-  my ($self) = @_;
-  my $expires = $self->expires();
-  return undef if !defined $expires;
-  return time() + $expires;
+    my ($self) = @_;
+    my $expires = $self->expires();
+    return undef if !defined $expires;
+    return time() + $expires;
 }
 
 1;

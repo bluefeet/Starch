@@ -216,13 +216,13 @@ If no key is specified then a key will be automatically generated.
 =cut
 
 sub session {
-  my ($self, $key) = @_;
+    my ($self, $key) = @_;
 
-  return $self->session_class->new(
-    %{ $self->session_args() },
-    starch => $self,
-    defined($key) ? (key => $key) : (),
-  );
+    return $self->session_class->new(
+        %{ $self->session_args() },
+        starch => $self,
+        defined($key) ? (key => $key) : (),
+    );
 }
 
 1;
