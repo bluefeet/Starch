@@ -8,7 +8,7 @@ Web::Starch - Implementation independent session management.
 
     my $starch = Web::Starch->new(
         store => {
-            class   => 'Memory',
+            class   => '::Memory',
             expires => 60 * 15, # 15 minutes
         },
     );
@@ -17,7 +17,8 @@ Web::Starch - Implementation independent session management.
 
 =head1 DESCRIPTION
 
-This module provides a generic interface to managing sessions.
+This module provides a generic interface to managing sessions, AKA the
+session manager.
 
 Drop-in replacements for various framework session systems will be
 implemented, such as
@@ -36,17 +37,52 @@ for this distribution and for you as an implementor.
 
 =cut
 
+use Web::Starch::Factory;
 use Web::Starch::Session;
+
 use Moo::Role qw();
 use Types::Standard -types;
 use Types::Common::String -types;
 use Scalar::Util qw( blessed );
-use Class::Load qw( load_optional_class );
 use Carp qw( croak );
 
 use Moo;
 use strictures 1;
 use namespace::clean;
+
+=head1 PLUGINS
+
+    my $starch = Web::Starch->new_with_plugins(
+        ['::CookieArgs'],
+        store => { class=>'::Memory' },
+        cookie_name => 'my_session',
+    );
+    my $session = $starch->session();
+    print $session->cookie_args->{name}; # my_session
+
+Starch plugins are applied using the C<new_with_plugins> constructor method.
+The first argument is an array ref of plugin names.  The plugin names can
+be fully qualified, or relative to C<Web::Starch::Plugin>.  A leading C<::>
+signifies that the plugin's package name is relative.
+
+=cut
+
+sub new_with_plugins {
+    my $class = shift;
+    my $plugins = shift;
+
+    my $args = $class->BUILDARGS( @_ );
+
+    my $factory = Web::Starch::Factory->new(
+        plugins => $plugins,
+        base_manager_class => $class,
+    );
+
+    return $factory->manager_class->new(
+        %$args,
+        factory => $factory,
+    );
+}
 
 =head1 REQUIRED ARGUMENTS
 
@@ -56,8 +92,10 @@ The L<Web::Starch::Store> storage backend to use for persisting the session
 data.  If a hashref is passed it is expected to contain at least a C<class>
 key and will be blessed into a store object automatically.
 
-The C<class> key's value must be a fully qualified package name of a class
-which implements the C<set>, C<get>, and C<remove> methods.  Typically
+The C<class> can be fully qualified, or relative to C<Web::Starch::Store>.
+A leading C<::> signifies that the store's package name is relative.
+
+The class must implement the C<set>, C<get>, and C<remove> methods.  Typically
 a store class consumes the L<Web::Starch::Store> role which enforces this interface.
 
 To find available stores you can search
@@ -88,117 +126,38 @@ sub _build_store {
     my $store = $self->_store_arg();
     return $store if blessed $store;
 
-    my $class_prefix = $store->{class};
+    $store = { %$store };
+    my $suffix = delete $store->{class};
     croak "No class key was declared in the Web::Starch store hash ref"
-        if !defined $class_prefix;
+        if !defined $suffix;
 
-    foreach my $class(
-        "Web::Starch::Store::$class_prefix",
-        $class_prefix,
-    ) {
-        next if !load_optional_class($class);
-        return $class->new( $store );
-    }
+    my $class = $self->factory->store_class( $suffix );
+    my $args = $class->BUILDARGS( $store );
 
-    croak "Could not find a store class with the name Web::Starch::Store::$class_prefix or $class_prefix";
+    return $class->new(
+        %$args,
+        factory => $self->factory(),
+    );
 }
 
 =head1 OPTIONAL ARGUMENTS
 
-=head2 session_class
+=head2 factory
 
-The class that L</session> will use for constructing session objects.  Defaults
-to L<Web::Starch::Session>, but you can override this with your own sub-class.
-
-If you specify L</session_traits> then an anonymous class will be returned
-which will be a subclass of Web::Starch::Session (or, if the class you specified
-if you provided the session_class argument) with the traits applied to it.
-
-See L</EXTENDING>.
+The underlying L<Web::Starch::Factory> object which manages all the plugins
+and session/store object construction.
 
 =cut
 
-# Use two attributes here to represent the single session_class attribute.
-# This is done so that a custom session class and session traits can both
-# be declared and they will be combined to create the final session class.
-
-has _session_class_arg => (
-    is       => 'lazy',
-    isa      => ClassName,
-    init_arg => 'session_class',
-    builder  => '_build_session_class_arg',
+has factory => (
+    is  => 'lazy',
+    isa => HasMethods[ 'session_class', 'store_class' ],
 );
-sub _build_session_class_arg {
-    return 'Web::Starch::Session';
-}
-
-has session_class => (
-    is       => 'lazy',
-    isa      => ClassName,
-    init_arg => undef,
-);
-sub _build_session_class {
+sub _build_factory {
     my ($self) = @_;
-
-    my $class = $self->_session_class_arg();
-
-    my $traits = $self->session_traits();
-    return $class if !@$traits;
-
-    my @actual_traits;
-    foreach my $trait_prefix (@$traits) {
-        my $trait_found = 0;
-        foreach my $trait (
-            "Web::Starch::Session::Trait::$trait_prefix",
-            $trait_prefix,
-        ) {
-            next if !load_optional_class( $trait );
-            $trait_found = 1;
-            push @actual_traits, $trait;
-            last;
-        }
-
-        next if $trait_found;
-        croak "Could not find a session trait with the name Web::Starch::Session::Trait::$trait_prefix or $trait_prefix";
-    }
-
-    return Moo::Role->create_class_with_roles(
-        $class,
-        @actual_traits,
+    return Web::Starch::Factory->new(
+        base_manager_class => ref( $self ),
     );
-}
-
-=head2 session_traits
-
-A list of L<Moo::Role> roles.  These roles will be applied by
-L</session_class>.  The role names may be specified without the
-C<Web::Starch::Store::> suffix.
-
-See L</EXTENDING>.
-
-=cut
-
-has session_traits => (
-    is  => 'lazy',
-    isa => ArrayRef[ NonEmptySimpleStr ],
-);
-sub _build_session_traits {
-    return [];
-}
-
-=head2 session_args
-
-A hash ref of arguments that will be included in the session's
-constructor arguments when L</session> is called.
-
-=cut
-
-has session_args => (
-    is  => 'lazy',
-    isa => HashRef,
-);
-sub _build_session_args {
-    return {};
 }
 
 =head1 METHODS
@@ -208,14 +167,13 @@ sub _build_session_args {
     my $new_session = $starch->session();
     my $existing_session = $starch->session( $key );
 
-Returns a new L<Web::Starch::Session> (or whetever L</session_class> is set
-to) object for the specified key.
+Returns a new L<Web::Starch::Session> (or whatever L<Web::Starch::Factory/session_class>
+returns) object for the specified key.
 
 If no key is specified, or is undef, then a key will be automatically generated.
 
 Additional arguments can be passed after the key argument.  These extra
-arguments will be passed to the session object constructor and will
-override anything specified by L</session_args>.
+arguments will be passed to the session object constructor.
 
 =cut
 
@@ -223,10 +181,11 @@ sub session {
     my $self = shift;
     my $key = shift;
 
-    my $extra_args = $self->session_class->BUILDARGS( @_ );
+    my $class = $self->factory->session_class();
 
-    return $self->session_class->new(
-        %{ $self->session_args() },
+    my $extra_args = $class->BUILDARGS( @_ );
+
+    return $class->new(
         %$extra_args,
         starch => $self,
         defined($key) ? (key => $key) : (),
@@ -235,67 +194,6 @@ sub session {
 
 1;
 __END__
-
-=head1 EXTENDING
-
-Below is per-package explanations about how to extend Web::Starch.
-
-Besides the documented public API any C<_build_*> methods are fair game
-to apply method modifiers to in your sub-classes and roles (except where
-otherwise noted below).
-
-=head2 Web::Starch::Session
-
-The most common extensions involve modifying the functionality of the
-session objects.  The simplest way to do this is by creating Moo roles
-and applying them via the L</session_traits> argument.  This would look
-something like;
-
-    package My::Session::Trait;
-    use Moo::Role;
-    sub foo { ... }
-    
-    my $starch = Web::Starch->new(
-        ...,
-        session_traits => ['My::Session::Trait'],
-    );
-    my $session = $starch->session();
-    $session->foo();
-
-Alternatively you can create your own subclass of L<Web::Starch::Session>
-which would look like:
-
-    package My::Session;
-    use Moo;
-    extends 'ZR::Starch::Session';
-    sub foo { ... }
-    
-    my $starch = Web::Starch->new(
-        ...,
-        session_class 'My::Session',
-    );
-    my $session = $starch->session();
-    $session->foo();
-
-=head2 Web::Starch::Store
-
-If you'd like to create a new store class see the
-L<Web::Starch::Store> documentation.
-
-=head2 Web::Starch
-
-Extending the C<$starch> object, while not really a common practice,
-is a matter of sub-clasing:
-
-    package My::Starch;
-    use Moo;
-    extends 'Web::Starch';
-    sub _build_session_class_arg { 'My::Starch::Session' }
-
-Note that you should override/modify C<_build_session_class_arg>
-rather than C<_build_session_class> as doing the latter would cause
-L</session_traits> to be ignored which would be breaking the inherited
-public API.
 
 =head1 SUPPORT
 

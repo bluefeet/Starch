@@ -1,0 +1,23 @@
+
+=head1 NAME
+
+Web::Starch::Plugin - Starch plugin framework.
+
+=head1 DESCRIPTION
+
+Plugins can modify any of the manager (L<Web::Starch>), session (L<Web::Starch::Session>),
+and store (L<Web::Starch::Store>) classes to extend functionality.
+
+A plugin may extend several of these classes, via plugin bundles, or just one.  A common
+setup is a plugin bundle which adds arguments to the manager object and then adds logic
+to the session objects which acts upon the arguments.
+
+See the L<Web::Starch::Plugin::CookieArgs> plugin for a working plugin which ships
+with starch.
+
+See the L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
+L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
+for details about how to write plugins.
+
+=cut
+

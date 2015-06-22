@@ -24,7 +24,6 @@ use Types::Standard -types;
 use Types::Common::String -types;
 use JSON::XS qw();
 use Digest;
-use Log::Any qw($log);
 use Carp qw( croak );
 
 use Moo;
@@ -37,7 +36,7 @@ sub DEMOLISH {
     my ($self) = @_;
 
     if ($self->is_dirty() and !$self->is_expired()) {
-        $log->warnf(
+        warn sprintf(
             '%s %s was changed and not saved',
             ref($self), $self->key(),
         );

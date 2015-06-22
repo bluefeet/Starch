@@ -1,25 +1,16 @@
-package Web::Starch::Session::Trait::CookieArgs;
+package Web::Starch::Plugin::CookieArgs::Manager;
 
 =head1 NAME
 
-Web::Starch::Session::Trait::CookieArgs - Add arguments and methods to sessions
+Web::Starch::Plugin::CookieArgs::Manager - Add arguments to the starch object
 for dealing with HTTP cookies.
-
-=head1 SYNOPSIS
-
-    my $starch = Web::Starch->new(
-        ...,
-        session_traits => ['CookieArgs'],
-        session_args => { cookie_name=>'my_session' },
-    );
-    my $session = $starch->session();
-    my $cookie_args = $session->cookie_args();
-    pritn $cookie_args->{name}; # my_session
 
 =head1 DESCRIPTION
 
-This session trait adds some utility methods to make it easier to write
-code that tracks session state via a cookie.
+This role adds methods to L<Web::Starch>.
+
+See L<Web::Starch::Plugin::CookieArgs> for examples of using this
+module.
 
 =cut
 
@@ -27,8 +18,12 @@ use Types::Standard -types;
 use Types::Common::String -types;
 
 use Moo::Role;
-use strictures 1;
+use strictures 2;
 use namespace::clean;
+
+with qw(
+    Web::Starch::Plugin::ForManager
+);
 
 =head1 ARGUMENTS
 
@@ -126,71 +121,6 @@ has cookie_http_only => (
 );
 sub _build_cookie_http_only {
     return 1;
-}
-
-=head1 METHODS
-
-=head2 cookie_args
-
-Returns L</cookie_expire_args> if the L<Web::Starch::Session/is_expired>, otherwise
-returns L</cookie_set_args>.
-
-These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
-the C<-> in front of the argument names, which is the same format that
-Catalyst accepts for cookies.
-
-=cut
-
-sub cookie_args {
-    my ($self) = @_;
-
-    return $self->cookie_expire_args() if $self->is_expired();
-    return $self->cookie_set_args();
-}
-
-=head2 cookie_set_args
-
-Returns a hashref containing all the cookie args including the
-value being set to L<Web::Starch::Session/key>.
-
-=cut
-
-sub cookie_set_args {
-    my ($self) = @_;
-
-    my $args = {
-        name     => $self->cookie_name(),
-        value    => $self->key(),
-        expires  => $self->cookie_expires(),
-        domain   => $self->cookie_domain(),
-        path     => $self->cookie_path(),
-        secure   => $self->cookie_secure(),
-        httponly => $self->cookie_http_only(),
-    };
-
-    # Filter out undefined values.
-    return {
-        map { $_ => $args->{$_} }
-        grep { defined $args->{$_} }
-        keys( %$args )
-    };
-}
-
-=head2 cookie_expire_args
-
-This returns the same this as L</cookie_set_args>, but overrides the
-C<expires> value to be C<-1d> which will trigger the client to remove
-the cookie immediately.
-
-=cut
-
-sub cookie_expire_args {
-    my ($self) = @_;
-
-    return {
-        %{ $self->cookie_set_args() },
-        expires => '-1d',
-    };
 }
 
 1;

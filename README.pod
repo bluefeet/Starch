@@ -8,7 +8,7 @@ Web::Starch - Implementation independent session management.
 
     my $starch = Web::Starch->new(
         store => {
-            class   => 'Memory',
+            class   => '::Memory',
             expires => 60 * 15, # 15 minutes
         },
     );
@@ -17,7 +17,8 @@ Web::Starch - Implementation independent session management.
 
 =head1 DESCRIPTION
 
-This module provides a generic interface to managing sessions.
+This module provides a generic interface to managing sessions, AKA the
+session manager.
 
 Drop-in replacements for various framework session systems will be
 implemented, such as
@@ -34,6 +35,21 @@ This module aims to be as fast as possible and be independent from
 any particular framework which makes writing unit tests easier
 for this distribution and for you as an implementor.
 
+=head1 PLUGINS
+
+    my $starch = Web::Starch->new_with_plugins(
+        ['::CookieArgs'],
+        store => { class=>'::Memory' },
+        cookie_name => 'my_session',
+    );
+    my $session = $starch->session();
+    print $session->cookie_args->{name}; # my_session
+
+Starch plugins are applied using the C<new_with_plugins> constructor method.
+The first argument is an array ref of plugin names.  The plugin names can
+be fully qualified, or relative to C<Web::Starch::Plugin>.  A leading C<::>
+signifies that the plugin's package name is relative.
+
 =head1 REQUIRED ARGUMENTS
 
 =head2 store
@@ -42,8 +58,10 @@ The L<Web::Starch::Store> storage backend to use for persisting the session
 data.  If a hashref is passed it is expected to contain at least a C<class>
 key and will be blessed into a store object automatically.
 
-The C<class> key's value must be a fully qualified package name of a class
-which implements the C<set>, C<get>, and C<remove> methods.  Typically
+The C<class> can be fully qualified, or relative to C<Web::Starch::Store>.
+A leading C<::> signifies that the store's package name is relative.
+
+The class must implement the C<set>, C<get>, and C<remove> methods.  Typically
 a store class consumes the L<Web::Starch::Store> role which enforces this interface.
 
 To find available stores you can search
@@ -54,29 +72,10 @@ session database by using the L<Web::Starch::Store::Layered> store.
 
 =head1 OPTIONAL ARGUMENTS
 
-=head2 session_class
+=head2 factory
 
-The class that L</session> will use for constructing session objects.  Defaults
-to L<Web::Starch::Session>, but you can override this with your own sub-class.
-
-If you specify L</session_traits> then an anonymous class will be returned
-which will be a subclass of Web::Starch::Session (or, if the class you specified
-if you provided the session_class argument) with the traits applied to it.
-
-See L</EXTENDING>.
-
-=head2 session_traits
-
-A list of L<Moo::Role> roles.  These roles will be applied by
-L</session_class>.  The role names may be specified without the
-C<Web::Starch::Store::> suffix.
-
-See L</EXTENDING>.
-
-=head2 session_args
-
-A hash ref of arguments that will be included in the session's
-constructor arguments when L</session> is called.
+The underlying L<Web::Starch::Factory> object which manages all the plugins
+and session/store object construction.
 
 =head1 METHODS
 
@@ -85,75 +84,13 @@ constructor arguments when L</session> is called.
     my $new_session = $starch->session();
     my $existing_session = $starch->session( $key );
 
-Returns a new L<Web::Starch::Session> (or whetever L</session_class> is set
-to) object for the specified key.
+Returns a new L<Web::Starch::Session> (or whatever L<Web::Starch::Factory/session_class>
+returns) object for the specified key.
 
 If no key is specified, or is undef, then a key will be automatically generated.
 
 Additional arguments can be passed after the key argument.  These extra
-arguments will be passed to the session object constructor and will
-override anything specified by L</session_args>.
-
-=head1 EXTENDING
-
-Below is per-package explanations about how to extend Web::Starch.
-
-Besides the documented public API any C<_build_*> methods are fair game
-to apply method modifiers to in your sub-classes and roles (except where
-otherwise noted below).
-
-=head2 Web::Starch::Session
-
-The most common extensions involve modifying the functionality of the
-session objects.  The simplest way to do this is by creating Moo roles
-and applying them via the L</session_traits> argument.  This would look
-something like;
-
-    package My::Session::Trait;
-    use Moo::Role;
-    sub foo { ... }
-    
-    my $starch = Web::Starch->new(
-        ...,
-        session_traits => ['My::Session::Trait'],
-    );
-    my $session = $starch->session();
-    $session->foo();
-
-Alternatively you can create your own subclass of L<Web::Starch::Session>
-which would look like:
-
-    package My::Session;
-    use Moo;
-    extends 'ZR::Starch::Session';
-    sub foo { ... }
-    
-    my $starch = Web::Starch->new(
-        ...,
-        session_class 'My::Session',
-    );
-    my $session = $starch->session();
-    $session->foo();
-
-=head2 Web::Starch::Store
-
-If you'd like to create a new store class see the
-L<Web::Starch::Store> documentation.
-
-=head2 Web::Starch
-
-Extending the C<$starch> object, while not really a common practice,
-is a matter of sub-clasing:
-
-    package My::Starch;
-    use Moo;
-    extends 'Web::Starch';
-    sub _build_session_class_arg { 'My::Starch::Session' }
-
-Note that you should override/modify C<_build_session_class_arg>
-rather than C<_build_session_class> as doing the latter would cause
-L</session_traits> to be ignored which would be breaking the inherited
-public API.
+arguments will be passed to the session object constructor.
 
 =head1 SUPPORT
 

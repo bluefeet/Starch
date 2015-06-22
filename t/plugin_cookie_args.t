@@ -5,19 +5,15 @@ use Test::More;
 
 use Web::Starch;
 
-use Web::Starch::Store::Memory;
-
-my $starch = Web::Starch->new(
-    store => { class => 'Memory' },
-    session_traits => [ 'CookieArgs' ],
-    session_args => {
-        cookie_name      => 'foo-session',
-        cookie_expires   => '+1d',
-        cookie_domain    => 'foo.example.com',
-        cookie_path      => '/bar',
-        cookie_secure    => 0,
-        cookie_http_only => 0,
-    },
+my $starch = Web::Starch->new_with_plugins(
+    ['::CookieArgs'],
+    store => { class => '::Memory' },
+    cookie_name      => 'foo-session',
+    cookie_expires   => '+1d',
+    cookie_domain    => 'foo.example.com',
+    cookie_path      => '/bar',
+    cookie_secure    => 0,
+    cookie_http_only => 0,
 );
 
 subtest cookie_args => sub{

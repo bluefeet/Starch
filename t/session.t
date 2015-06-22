@@ -5,11 +5,9 @@ use Test::More;
 
 use Web::Starch;
 
-use Web::Starch::Store::Memory;
-
 my $starch = Web::Starch->new(
     store => {
-        class => 'Memory',
+        class => '::Memory',
     },
 );
 
