@@ -72,6 +72,11 @@ session database by using the L<Web::Starch::Store::Layered> store.
 
 =head1 OPTIONAL ARGUMENTS
 
+=head1 digest_algorithm
+
+The L<Digest> algorithm which L<Web::Starch::Session/digest> will use.
+Defaults to C<SHA-1>.
+
 =head2 factory
 
 The underlying L<Web::Starch::Factory> object which manages all the plugins
@@ -82,15 +87,20 @@ and session/store object construction.
 =head2 session
 
     my $new_session = $starch->session();
-    my $existing_session = $starch->session( $key );
+    my $existing_session = $starch->session( $id );
 
 Returns a new L<Web::Starch::Session> (or whatever L<Web::Starch::Factory/session_class>
-returns) object for the specified key.
+returns) object for the specified session ID.
 
-If no key is specified, or is undef, then a key will be automatically generated.
+If no ID is specified, or is undef, then an ID will be automatically generated.
 
-Additional arguments can be passed after the key argument.  These extra
+Additional arguments can be passed after the ID argument.  These extra
 arguments will be passed to the session object constructor.
+
+=head1 DEPENDENCIES
+
+The C<Web-Starch> distribution is shipped with minimal dependencies
+and with no non-core XS requirements.  This is important for many people.
 
 =head1 SUPPORT
 

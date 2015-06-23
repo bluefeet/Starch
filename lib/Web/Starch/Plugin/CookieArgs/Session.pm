@@ -45,7 +45,7 @@ sub cookie_args {
 =head2 cookie_set_args
 
 Returns a hashref containing all the cookie args including the
-value being set to L<Web::Starch::Session/key>.
+value being set to L<Web::Starch::Session/id>.
 
 =cut
 
@@ -54,7 +54,7 @@ sub cookie_set_args {
 
     my $args = {
         name     => $self->starch->cookie_name(),
-        value    => $self->key(),
+        value    => $self->id(),
         expires  => $self->starch->cookie_expires(),
         domain   => $self->starch->cookie_domain(),
         path     => $self->starch->cookie_path(),

@@ -21,7 +21,7 @@ subtest cookie_args => sub{
 
   my $args = $session->cookie_args();
   is( $args->{name}, 'foo-session', 'cookie name is correct' );
-  is( $args->{value}, $session->key(), 'cookie value is session key' );
+  is( $args->{value}, $session->id(), 'cookie value is session ID' );
   is( $args->{expires}, '+1d', 'cookie expires is correct' );
   is( $args->{domain}, 'foo.example.com', 'cookie domain is correct' );
   is( $args->{path}, '/bar', 'cookie path is correct' );
@@ -32,7 +32,7 @@ subtest cookie_args => sub{
 
   $args = $session->cookie_args();
   is( $args->{name}, 'foo-session', 'expired cookie name is correct' );
-  is( $args->{value}, $session->key(), 'expired cookie value is session key' );
+  is( $args->{value}, $session->id(), 'expired cookie value is session ID' );
   is( $args->{expires}, '-1d', 'expired cookie expires is correct' );
   is( $args->{domain}, 'foo.example.com', 'expired cookie domain is correct' );
   is( $args->{path}, '/bar', 'expired cookie path is correct' );

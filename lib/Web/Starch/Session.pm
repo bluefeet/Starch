@@ -9,7 +9,7 @@ Web::Starch::Session - The starch session object.
     my $session = $starch->session();
     $session->data->{foo} = 'bar';
     $session->save();
-    $session = $starch->session( $session->key() );
+    $session = $starch->session( $session->id() );
     print $session->data->{foo}; # bar
 
 =head1 DESCRIPTION
@@ -35,7 +35,7 @@ sub DEMOLISH {
     if ($self->is_dirty() and !$self->is_expired()) {
         warn sprintf(
             '%s %s was changed and not saved',
-            ref($self), $self->key(),
+            ref($self), $self->id(),
         );
     }
 
@@ -59,48 +59,29 @@ has starch => (
 
 =head1 OPTIONAL ARGUMENTS
 
-=head2 key
+=head2 id
 
-The session key.  If one is not specified then one will be built and will
+The session ID.  If one is not specified then one will be built and will
 be considered new.
 
 =cut
 
-has _existing_key => (
+has _existing_id => (
     is        => 'ro',
     isa       => NonEmptySimpleStr,
-    init_arg  => 'key',
+    init_arg  => 'id',
     predicate => 1,
 );
 
-has key => (
+has id => (
     is       => 'lazy',
     isa      => NonEmptySimpleStr,
     init_arg => undef,
 );
-sub _build_key {
+sub _build_id {
     my ($self) = @_;
-
-    return $self->_existing_key() if $self->_has_existing_key();
-
-    my $digest = $self->digest();
-    $digest->add( $self->hash_seed() );
-    return $digest->hexdigest();
-}
-
-=head1 digest_algorithm
-
-The L<Digest> algorithm which L</digest> will use.  Defaults to
-C<SHA-1>.
-
-=cut
-
-has digest_algorithm => (
-    is  => 'lazy',
-    isa => NonEmptySimpleStr,
-);
-sub _build_digest_algorithm {
-    return 'SHA-1';
+    return $self->_existing_id() if $self->_has_existing_id();
+    return $self->generate_id();
 }
 
 =head1 ATTRIBUTES
@@ -122,7 +103,7 @@ sub _build_original_data {
 
     return {} if !$self->in_store();
 
-    my $data = $self->starch->store->get( $self->key() );
+    my $data = $self->starch->store->get( $self->id() );
     $data //= {};
 
     return $data;
@@ -149,7 +130,7 @@ sub _build_data {
 =head2 in_store
 
 Returns true if the session is expected to exist in the store
-(AKA, if the L</key> argument was specified).
+(AKA, if the L</id> argument was specified).
 
 =cut
 
@@ -160,7 +141,7 @@ has in_store => (
 );
 sub _build_in_store {
     my ($self) = @_;
-    return( $self->_has_existing_key() ? 1 : 0 );
+    return( $self->_has_existing_id() ? 1 : 0 );
 }
 
 =head2 is_expired
@@ -226,7 +207,7 @@ sub force_save {
         if $self->is_expired();
 
     $self->starch->store->set(
-        $self->key(),
+        $self->id(),
         $self->data(),
     );
 
@@ -312,7 +293,7 @@ as L</is_expired>.
 sub expire {
     my ($self) = @_;
 
-    $self->starch->store->remove( $self->key() );
+    $self->starch->store->remove( $self->id() );
 
     $self->_set_is_expired( 1 );
     $self->_set_in_store( 0 );
@@ -322,7 +303,7 @@ sub expire {
 
 =head2 hash_seed
 
-Returns a fairly unique string used for seeding the L</key>'s digest hash.
+Returns a fairly unique string used for seeding L</id>.
 
 =cut
 
@@ -335,13 +316,29 @@ sub hash_seed {
 =head2 digest
 
 Returns a new L<Digest> object set to the algorithm specified
-by L</digest_algorithm>.
+by L<Web::Starch/digest_algorithm>.
 
 =cut
 
 sub digest {
     my ($self) = @_;
-    return Digest->new( $self->digest_algorithm() );
+    return Digest->new( $self->starch->digest_algorithm() );
+}
+
+=head2 generate_id
+
+Generates and returns a new session ID using the L</hash_seed>
+passed to the L</digest>.  This is used by L</id> if no id arugment
+was specified.
+
+=cut
+
+sub generate_id {
+    my ($self) = @_;
+
+    my $digest = $self->digest();
+    $digest->add( $self->hash_seed() );
+    return $digest->hexdigest();
 }
 
 =head1 CLASS METHODS

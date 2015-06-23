@@ -142,6 +142,21 @@ sub _build_store {
 
 =head1 OPTIONAL ARGUMENTS
 
+=head1 digest_algorithm
+
+The L<Digest> algorithm which L<Web::Starch::Session/digest> will use.
+Defaults to C<SHA-1>.
+
+=cut
+
+has digest_algorithm => (
+    is  => 'lazy',
+    isa => NonEmptySimpleStr,
+);
+sub _build_digest_algorithm {
+    return 'SHA-1';
+}
+
 =head2 factory
 
 The underlying L<Web::Starch::Factory> object which manages all the plugins
@@ -165,21 +180,21 @@ sub _build_factory {
 =head2 session
 
     my $new_session = $starch->session();
-    my $existing_session = $starch->session( $key );
+    my $existing_session = $starch->session( $id );
 
 Returns a new L<Web::Starch::Session> (or whatever L<Web::Starch::Factory/session_class>
-returns) object for the specified key.
+returns) object for the specified session ID.
 
-If no key is specified, or is undef, then a key will be automatically generated.
+If no ID is specified, or is undef, then an ID will be automatically generated.
 
-Additional arguments can be passed after the key argument.  These extra
+Additional arguments can be passed after the ID argument.  These extra
 arguments will be passed to the session object constructor.
 
 =cut
 
 sub session {
     my $self = shift;
-    my $key = shift;
+    my $id = shift;
 
     my $class = $self->factory->session_class();
 
@@ -188,12 +203,17 @@ sub session {
     return $class->new(
         %$extra_args,
         starch => $self,
-        defined($key) ? (key => $key) : (),
+        defined($id) ? (id => $id) : (),
     );
 }
 
 1;
 __END__
+
+=head1 DEPENDENCIES
+
+The C<Web-Starch> distribution is shipped with minimal dependencies
+and with no non-core XS requirements.  This is important for many people.
 
 =head1 SUPPORT
 

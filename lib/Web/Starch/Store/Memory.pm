@@ -79,10 +79,10 @@ which all stores implement.
 =cut
 
 sub set {
-    my ($self, $key, $value) = @_;
+    my ($self, $id, $data) = @_;
 
-    $self->memory->{$key} = {
-        value     => $value,
+    $self->memory->{$id} = {
+        data    => $data,
         expires => $self->abs_expires(),
     };
 
@@ -90,16 +90,16 @@ sub set {
 }
 
 sub get {
-    my ($self, $key) = @_;
-    my $data = $self->memory->{$key};
-    return undef if !$data;
-    return undef if $data->{expires} and $data->{expires} <= time();
-    return $data->{value};
+    my ($self, $id) = @_;
+    my $record = $self->memory->{$id};
+    return undef if !$record;
+    return undef if $record->{expires} and $record->{expires} <= time();
+    return $record->{data};
 }
 
 sub remove {
-    my ($self, $key) = @_;
-    delete( $self->memory->{$key} );
+    my ($self, $id) = @_;
+    delete( $self->memory->{$id} );
     return;
 }
 
