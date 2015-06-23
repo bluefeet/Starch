@@ -43,7 +43,7 @@ for details about what exactly is logged.
 See the L<Log::Any> documentation for instructions on how to output
 these log messages using an adapter.
 
-Note that, like any plugin bundle, the individual plugins can be used
+The the individual C<::Trace> plugins can be used
 independently so that, for example, you could enable trace logging on the
 store only by enabling just the C<::Trace::Store> plugin.
 

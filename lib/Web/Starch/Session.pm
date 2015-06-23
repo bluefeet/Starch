@@ -38,7 +38,7 @@ with qw(
 sub DEMOLISH {
     my ($self) = @_;
 
-    if ($self->is_dirty() and !$self->is_expired()) {
+    if ($self->is_dirty()) {
         $self->log->errorf(
             '%s %s was changed and not saved.',
             ref($self), $self->id(),
@@ -84,10 +84,11 @@ The session data at the state it was when the session was first instantiated.
 =cut
 
 has original_data => (
-    is      => 'lazy',
-    isa     => HashRef,
-    writer  => '_set_original_data',
-    clearer => '_clear_original_data',
+    is        => 'lazy',
+    isa       => HashRef,
+    writer    => '_set_original_data',
+    clearer   => '_clear_original_data',
+    predicate => '_has_original_data',
 );
 sub _build_original_data {
     my ($self) = @_;
@@ -160,6 +161,12 @@ and L</data> are different).
 
 sub is_dirty {
     my ($self) = @_;
+
+    return 0 if $self->is_expired();
+
+    # If we haven't even loaded the data from the store then
+    # there is no way we're dirty.
+    return 0 if !$self->_has_original_data();
 
     local $Storable::canonical = 1;
 
@@ -235,6 +242,8 @@ Just like L</reload>, but reloads even if the session L</is_dirty>.
 sub force_reload {
     my ($self) = @_;
 
+    return if $self->is_expired();
+
     $self->_clear_original_data();
     $self->_clear_data();
 
@@ -251,6 +260,8 @@ L</data>.
 sub mark_clean {
     my ($self) = @_;
 
+    return if $self->is_expired();
+
     $self->_set_original_data(
         $self->clone( $self->data() ),
     );
@@ -266,6 +277,8 @@ Sets L</data> to L</original_data>.
 
 sub rollback {
     my ($self) = @_;
+
+    return if $self->is_expired();
 
     $self->_set_data(
         $self->clone( $self->original_data() ),
@@ -302,6 +315,8 @@ sub force_expire {
 
     $self->manager->store->remove( $self->id() );
 
+    $self->_set_original_data( {} );
+    $self->_set_data( {} );
     $self->_set_is_expired( 1 );
     $self->_set_in_store( 0 );
 
