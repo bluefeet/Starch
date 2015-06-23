@@ -48,6 +48,21 @@ sub DEMOLISH {
     return;
 }
 
+=head1 REQUIRED ARGUMENTS
+
+=head2 manager
+
+The L<Web::Starch> object that glues everything together.  The session
+object needs this to get at configuration information and the stores.
+
+=cut
+
+has manager => (
+    is       => 'ro',
+    isa      => InstanceOf[ 'Web::Starch' ],
+    required => 1,
+);
+
 =head1 OPTIONAL ARGUMENTS
 
 =head2 id

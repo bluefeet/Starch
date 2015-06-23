@@ -20,17 +20,6 @@ Web::Starch - Implementation independent session management.
 This module provides a generic interface to managing sessions, AKA the
 session manager.
 
-Drop-in replacements for various framework session systems will be
-implemented, such as
-L<Catalyst::Plugin::Starch> and L<Plack::Middleware::Starch>.
-
-The inspiration of this module was the complexity and performance
-issues with L<Catalyst::Plugin::Session>.  When using
-L<Devel::NYTProf> on my Catalyst apps, at 2 separate jobs, I
-found that Catalyst::Plugin::Session was a substantial contributor
-to slow response times due to its deep stack of subroutine calls and,
-in this author's opinion, overly complex architecture.
-
 This module aims to be as fast as possible and be independent from
 any particular framework which makes writing unit tests easier
 for this distribution and for you as an implementor.

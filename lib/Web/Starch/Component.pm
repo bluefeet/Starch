@@ -19,22 +19,6 @@ use Moo::Role;
 use strictures 2;
 use namespace::clean;
 
-=head1 REQUIRED ARGUMENTS
-
-=head2 manager
-
-The L<Web::Starch> object that glued everything together.  This is
-setup as a weakened reference so you don't get any memory leaks.
-
-=cut
-
-has manager => (
-    is       => 'ro',
-    isa      => InstanceOf[ 'Web::Starch' ],
-    required => 1,
-    weak_ref => 1,
-);
-
 =head1 ATTRIBUTES
 
 =head2 log

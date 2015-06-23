@@ -3,13 +3,9 @@ use strictures 1;
 
 use Test::More;
 
-use Web::Starch;
 use Web::Starch::Store::Memory;
 
-my $starch = Web::Starch->new(
-    store => { class=>'::Memory' },
-);
-my $mem = $starch->store();
+my $mem = Web::Starch::Store::Memory->new();
 
 is( $mem->get('foo'), undef, 'get an unknown key' );
 

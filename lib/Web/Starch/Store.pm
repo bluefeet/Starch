@@ -38,6 +38,8 @@ a no-op.
 
 =cut
 
+use Types::Standard -types;
+
 use Moo::Role;
 use strictures 1;
 use namespace::clean;
@@ -51,5 +53,13 @@ requires qw(
     get
     remove
 );
+
+has factory => (
+    is  => 'lazy',
+    isa => HasMethods[ 'store_class' ],
+);
+sub _build_factory {
+    return Web::Starch::Factory->new();
+}
 
 1;
