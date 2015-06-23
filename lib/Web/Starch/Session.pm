@@ -18,19 +18,16 @@ This is the session class used by L<Web::Starch/session>.
 
 =cut
 
-use Sereal;
 use Scalar::Util qw( refaddr );
 use Types::Standard -types;
 use Types::Common::String -types;
-use JSON::XS qw();
 use Digest;
 use Carp qw( croak );
+use Storable qw( freeze dclone );
 
 use Moo;
 use strictures 1;
 use namespace::clean;
-
-my $compare_json = JSON::XS->new->canonical();
 
 sub DEMOLISH {
     my ($self) = @_;
@@ -43,17 +40,6 @@ sub DEMOLISH {
     }
 
     return;
-}
-
-my $clone_encoder = Sereal::Encoder->new();
-my $clone_decoder = Sereal::Decoder->new();
-
-sub _clone {
-    my ($data) = @_;
-
-    return $clone_decoder->decode(
-        $clone_encoder->encode( $data ),
-    );
 }
 
 =head1 REQUIRED ARGUMENTS
@@ -157,7 +143,7 @@ has data => (
 );
 sub _build_data {
     my ($self) = @_;
-    return _clone( $self->original_data() );
+    return $self->clone( $self->original_data() );
 }
 
 =head2 in_store
@@ -203,8 +189,10 @@ and L</data> are different).
 sub is_dirty {
     my ($self) = @_;
 
-    my $old = $compare_json->encode( $self->original_data() );
-    my $new = $compare_json->encode( $self->data() );
+    local $Storable::canonical = 1;
+
+    my $old = freeze( $self->original_data() );
+    my $new = freeze( $self->data() );
 
     return 0 if $new eq $old;
     return 1;
@@ -292,7 +280,7 @@ sub mark_clean {
     my ($self) = @_;
 
     $self->_set_original_data(
-        _clone( $self->data() ),
+        $self->clone( $self->data() ),
     );
 
     return;
@@ -308,7 +296,7 @@ sub rollback {
     my ($self) = @_;
 
     $self->_set_data(
-        _clone( $self->original_data() ),
+        $self->clone( $self->original_data() ),
     );
 
     return;
@@ -354,6 +342,20 @@ by L</digest_algorithm>.
 sub digest {
     my ($self) = @_;
     return Digest->new( $self->digest_algorithm() );
+}
+
+=head1 CLASS METHODS
+
+=head2 clone
+
+Clones complex perl data structures.  Used internally to build
+L</data> from L</original_data>.
+
+=cut
+
+sub clone {
+    my ($class, $data) = @_;
+    return dclone( $data );
 }
 
 1;
