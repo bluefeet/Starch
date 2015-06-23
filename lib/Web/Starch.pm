@@ -35,6 +35,9 @@ This module aims to be as fast as possible and be independent from
 any particular framework which makes writing unit tests easier
 for this distribution and for you as an implementor.
 
+This class consumes the L<Web::Starch::Component> role, but modifies
+the C<manager> attribute to just return itself.
+
 =cut
 
 use Web::Starch::Factory;
@@ -49,6 +52,29 @@ use Carp qw( croak );
 use Moo;
 use strictures 1;
 use namespace::clean;
+
+with qw(
+    Web::Starch::Component
+);
+
+sub BUILD {
+    my ($self) = @_;
+
+    # Get this built as early as possible.
+    $self->store();
+
+    return;
+}
+
+has '+manager' => (
+    is       => 'lazy',
+    required => 0,
+    init_arg => undef,
+);
+sub _build_manager {
+    my ($self) = @_;
+    return $self;
+}
 
 =head1 PLUGINS
 
@@ -136,7 +162,7 @@ sub _build_store {
 
     return $class->new(
         %$args,
-        factory => $self->factory(),
+        manager => $self,
     );
 }
 
@@ -202,7 +228,7 @@ sub session {
 
     return $class->new(
         %$extra_args,
-        starch => $self,
+        manager => $self,
         defined($id) ? (id => $id) : (),
     );
 }

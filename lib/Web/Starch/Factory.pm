@@ -2,7 +2,7 @@ package Web::Starch::Factory;
 
 =head1 NAME
 
-Web::Starch::Factory - Role applicator, class creator, and object constructor.
+Web::Starch::Factory - Role applicator and class creator.
 
 =head1 DESCRIPTION
 

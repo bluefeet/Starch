@@ -10,6 +10,8 @@ This role defines an interfaces for session store classes.  Session store
 classes are meant to be thin wrappers around the store implementations
 (such as DBI, CHI, etc).
 
+This role consumes the L<Web::Starch::Component> role.
+
 =head1 REQUIRED METHODS
 
 Store classes must implement these three methods.
@@ -39,6 +41,10 @@ a no-op.
 use Moo::Role;
 use strictures 1;
 use namespace::clean;
+
+with qw(
+    Web::Starch::Component
+);
 
 requires qw(
     set

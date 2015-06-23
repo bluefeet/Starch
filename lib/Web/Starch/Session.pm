@@ -16,6 +16,8 @@ Web::Starch::Session - The starch session object.
 
 This is the session class used by L<Web::Starch/session>.
 
+This class consumes the L<Web::Starch::Component> role.
+
 =cut
 
 use Scalar::Util qw( refaddr );
@@ -29,33 +31,22 @@ use Moo;
 use strictures 1;
 use namespace::clean;
 
+with qw(
+    Web::Starch::Component
+);
+
 sub DEMOLISH {
     my ($self) = @_;
 
     if ($self->is_dirty() and !$self->is_expired()) {
-        warn sprintf(
-            '%s %s was changed and not saved',
+        $self->log->errorf(
+            '%s %s was changed and not saved.',
             ref($self), $self->id(),
         );
     }
 
     return;
 }
-
-=head1 REQUIRED ARGUMENTS
-
-=head2 starch
-
-The L<Web::Starch> object which was used to create this session
-object.  L<Web::Starch/session> automatically sets this.
-
-=cut
-
-has starch => (
-    is       => 'ro',
-    isa      => InstanceOf[ 'Web::Starch' ],
-    required => 1,
-);
 
 =head1 OPTIONAL ARGUMENTS
 
@@ -103,7 +94,7 @@ sub _build_original_data {
 
     return {} if !$self->in_store();
 
-    my $data = $self->starch->store->get( $self->id() );
+    my $data = $self->manager->store->get( $self->id() );
     $data //= {};
 
     return $data;
@@ -184,7 +175,7 @@ sub is_dirty {
 =head2 save
 
 If this session L</is_dirty> this will save the L</data> to the
-L<Web::Starch/store> and L</reload> the session.
+L<Web::Starch/store>.
 
 =cut
 
@@ -206,14 +197,14 @@ sub force_save {
     croak 'Cannot call save or force_save on an expired session'
         if $self->is_expired();
 
-    $self->starch->store->set(
+    $self->manager->store->set(
         $self->id(),
         $self->data(),
     );
 
-    $self->force_reload();
-
     $self->_set_in_store( 1 );
+
+    $self->mark_clean();
 
     return;
 }
@@ -237,7 +228,7 @@ sub reload {
 
 =head2 force_reload
 
-Just like L</reload>, but reloads even if the session L</is dirty>.
+Just like L</reload>, but reloads even if the session L</is_dirty>.
 
 =cut
 
@@ -286,14 +277,30 @@ sub rollback {
 =head2 expire
 
 Deletes the session from the L<Web::Starch/store> and marks it
-as L</is_expired>.
+as L</is_expired>.  Throws an exception if not L<in_store>.
 
 =cut
 
 sub expire {
     my ($self) = @_;
 
-    $self->starch->store->remove( $self->id() );
+    croak 'Cannot call expire on a session that is not stored yet'
+        if !$self->in_store();
+
+    return $self->force_expire();
+}
+
+=head2 force_expire
+
+Just like L</expire>, but remove the session from the store even if
+the session is not L</in_store>.
+
+=cut
+
+sub force_expire {
+    my ($self) = @_;
+
+    $self->manager->store->remove( $self->id() );
 
     $self->_set_is_expired( 1 );
     $self->_set_in_store( 0 );
@@ -322,7 +329,7 @@ by L<Web::Starch/digest_algorithm>.
 
 sub digest {
     my ($self) = @_;
-    return Digest->new( $self->starch->digest_algorithm() );
+    return Digest->new( $self->manager->digest_algorithm() );
 }
 
 =head2 generate_id
