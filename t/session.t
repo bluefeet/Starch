@@ -32,6 +32,7 @@ subtest in_store => sub{
 subtest is_expired => sub{
     my $session = $starch->session();
     is( $session->is_expired(), 0, 'new session is not expired' );
+    $session->force_save();
     $session->expire();
     is( $session->is_expired(), 1, 'expired session is expired' );
 };

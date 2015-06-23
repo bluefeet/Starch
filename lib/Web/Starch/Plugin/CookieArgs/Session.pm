@@ -53,13 +53,13 @@ sub cookie_set_args {
     my ($self) = @_;
 
     my $args = {
-        name     => $self->starch->cookie_name(),
+        name     => $self->manager->cookie_name(),
         value    => $self->id(),
-        expires  => $self->starch->cookie_expires(),
-        domain   => $self->starch->cookie_domain(),
-        path     => $self->starch->cookie_path(),
-        secure   => $self->starch->cookie_secure(),
-        httponly => $self->starch->cookie_http_only(),
+        expires  => $self->manager->cookie_expires(),
+        domain   => $self->manager->cookie_domain(),
+        path     => $self->manager->cookie_path(),
+        secure   => $self->manager->cookie_secure(),
+        httponly => $self->manager->cookie_http_only(),
     };
 
     # Filter out undefined values.
