@@ -77,12 +77,14 @@ has _existing_id => (
     isa       => NonEmptySimpleStr,
     init_arg  => 'id',
     predicate => 1,
+    clearer   => '_clear_existing_id',
 );
 
 has id => (
     is       => 'lazy',
     isa      => NonEmptySimpleStr,
     init_arg => undef,
+    clearer  => '_clear_id',
 );
 sub _build_id {
     my ($self) = @_;
@@ -376,6 +378,26 @@ sub generate_id {
     my $digest = $self->digest();
     $digest->add( $self->hash_seed() );
     return $digest->hexdigest();
+}
+
+=head2 reset_id
+
+=cut
+
+sub reset_id {
+    my ($self) = @_;
+
+    # Remove the data for the current session ID.
+    $self->manager->session( $self->id() )->expire();
+
+    # Ensure that future calls to id generate a new one.
+    $self->_clear_existing_id();
+    $self->_clear_id();
+
+    # Make sure the session data is now dirty so it gets saved.
+    $self->_set_original_data( {} );
+
+    return;
 }
 
 =head1 CLASS METHODS
