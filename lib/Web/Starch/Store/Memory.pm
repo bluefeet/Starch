@@ -23,36 +23,6 @@ with qw(
     Web::Starch::Store
 );
 
-=head1 ARGUMENTS
-
-=head2 expires
-
-The number of seconds to expire data in.
-
-Defaults to C<undef>, which means no expiration.
-
-=cut
-
-has expires => (
-    is  => 'ro',
-    isa => PositiveInt,
-);
-
-=head2 global
-
-By default the in-memory storage will not be shared by instances of
-this class.  If you turn on the global option then all other instances
-in the same process which also have global set will share the same storage.
-
-=cut
-
-has global => (
-    is  => 'ro',
-    isa => Bool,
-);
-
-my $global_memory = {};
-
 =head1 ATTRIBUTES
 
 =head2 memory
@@ -67,7 +37,6 @@ has memory => (
 );
 sub _build_memory {
     my ($self) = @_;
-    return $global_memory if $self->global();
     return {};
 }
 
@@ -81,42 +50,20 @@ which all stores implement.
 sub set {
     my ($self, $id, $data) = @_;
 
-    $self->memory->{$id} = {
-        data    => $data,
-        expires => $self->abs_expires(),
-    };
+    $self->memory->{$id} = $data;
 
     return;
 }
 
 sub get {
     my ($self, $id) = @_;
-    my $record = $self->memory->{$id};
-    return undef if !$record;
-    return undef if $record->{expires} and $record->{expires} <= time();
-    return $record->{data};
+    return $self->memory->{$id};
 }
 
 sub remove {
     my ($self, $id) = @_;
     delete( $self->memory->{$id} );
     return;
-}
-
-=head1 OTHER METHODS
-
-=head2 abs_expires
-
-Returns C<time()> plus the value of L</expires>, if L</expires> is set.
-If it is not set then C<undef> will be returned.
-
-=cut
-
-sub abs_expires {
-    my ($self) = @_;
-    my $expires = $self->expires();
-    return undef if !defined $expires;
-    return time() + $expires;
 }
 
 1;
