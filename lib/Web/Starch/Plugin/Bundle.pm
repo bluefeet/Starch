@@ -1,5 +1,58 @@
 package Web::Starch::Plugin::Bundle;
 
+=head1 NAME
+
+Web::Starch::Plugin::Bundle - Base role for Web::Starch plugin bundles.
+
+=head1 SYNOPSIS
+
+    # Make a manager plugin.
+    package MyPlugin::Manager;
+    use Moo::Role;
+    with 'Web::Starch::Plugin::ForManager';
+    has foo => ( is=>'ro' );
+
+    # Make a store plugin.
+    package MyPlugin::Store;
+    use Moo::Role;
+    with 'Web::Starch::Plugin::ForStore';
+    has foo => ( is=>'ro' );
+
+    # Make a session plugin.
+    package MyPlugin::Session;
+    use Moo::Role;
+    with 'Web::Starch::Plugin::ForSession';
+    sub print_manager_foo {
+        my ($self) = @_;
+        print $self->manager->foo();
+    }
+    sub print_store_foo {
+        my ($self) = @_;
+        print $self->manager->store->foo();
+    }
+
+    # Bundle the plugins together.
+    package MyPlugin;
+    use Moo;
+    with 'Web::Starch::Plugin::Bundle';
+    sub bundled_plugins {
+        return ['MyPlugin::Manager', 'MyPlugin::Store', 'MyPlugin::Session'];
+    }
+
+    # Use the bundle.
+    my $starch = Web::Starch->new_with_plugins(
+        plugins => ['MyPlugin'],
+        store => { class=>'::Memory', foo=>'FOO_STORE' },
+        foo => 'FOO_MANAGER',
+    );
+    my $session = $starch->session();
+    $session->print_manager_foo(); # FOO_MANAGER
+    $session->print_store_foo(); # FOO_STORE
+
+=head1 DESCRIPTION
+
+=cut
+
 use Moo::Role qw();
 use Types::Standard -types;
 use Module::Runtime qw( require_module );

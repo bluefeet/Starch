@@ -1,7 +1,7 @@
 
 =head1 NAME
 
-Web::Starch::Plugin - Starch plugin framework.
+Web::Starch::Plugin - Web::Starch plugin framework.
 
 =head1 DESCRIPTION
 
@@ -12,12 +12,37 @@ A plugin may extend several of these classes, via plugin bundles, or just one.  
 setup is a plugin bundle which adds arguments to the manager object and then adds logic
 to the session objects which acts upon the arguments.
 
-See the L<Web::Starch::Plugin::CookieArgs> plugin for a working plugin which ships
-with starch.
+=head1 CORE PLUGINS
+
+These plugins are included with the C<Web-Starch> distribution.
+
+=over
+
+=item *
+
+L<Web::Starch::Plugin::Trace>
+
+=item *
+
+L<Web::Starch::Plugin::CookieArgs>
+
+=back
+
+=head1 EXTERNAL PLUGINS
+
+Third-party plugins can be found on
+L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
+
+=head2 WRITING
+
+See any of the L</CORE PLUGINS> for working examples which ship with starch.
 
 See the L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
 L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
-for details about how to write plugins.
+for details about how to write plugins and plugin bundles.
+
+Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
+acts as a dynamic plugin bundle.
 
 =cut
 
