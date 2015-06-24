@@ -25,6 +25,11 @@ The most common use-case for this store is for placing a cache in
 front of a persistent store.  Typically caches are much faster than
 persistent storage engines.
 
+Another use case is for migrating from one store to another.  Your
+current store would be set as the outer store, and your new store
+would be set as the inner store.  Once sufficient time has passed
+you could switch to using just the inner store.
+
 If you'd like to layer more than two stores you can use a layered
 stores within layered stores.
 

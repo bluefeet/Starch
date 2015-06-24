@@ -202,6 +202,24 @@ sub session {
 1;
 __END__
 
+=head2 OBJECT REFERENCES
+
+                                                          +------+
+                                                          v      |
+    +------------------------+       +------------------------+  |
+    |        manager         | ----> |          store         |--+
+    |     (Web::Starch)      |       |  (Web::Starch::Store)  |
+    +------------------------+       +------------------------+
+                    ^     |                       |
+                    |     +------------+          |
+                    |                  v          v
+    +------------------------+       +------------------------+
+    |        session         |       |        factory         |
+    | (Web::Starch::Session) |       | (Web::Starch::Factory) |
+    +------------------------+       +------------------------+
+
+This diagram shows which objects hold references to other objects.
+
 =head1 DEPENDENCIES
 
 The C<Web-Starch> distribution is shipped with minimal dependencies
