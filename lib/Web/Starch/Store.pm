@@ -12,6 +12,37 @@ classes are meant to be thin wrappers around the store implementations
 
 This role consumes the L<Web::Starch::Component> role.
 
+=head1 CORE STORES
+
+These stores are included with the C<Web-Starch> distribution.
+
+=over
+
+=item *
+
+L<Web::Starch::Store::Memory>
+
+=item *
+
+L<Web::Starch::Store::Layered>
+
+=back
+
+=head1 EXTERNAL STORES
+
+These stores are distributed separately on CPAN.
+
+=over
+
+=item *
+
+L<Web::Starch::Store::CHI>
+
+=back
+
+More third-party plugins can be found on
+L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
+
 =head1 REQUIRED METHODS
 
 Store classes must implement these three methods.
@@ -53,6 +84,16 @@ requires qw(
     get
     remove
 );
+
+=head1 OPTIONAL ARGUMENTS
+
+=head2 factory
+
+A L<Web::Starch::Factory> object which is used by stores to
+create sub-stores (such as the Layered store's outer and inner
+stores).
+
+=cut
 
 has factory => (
     is  => 'lazy',

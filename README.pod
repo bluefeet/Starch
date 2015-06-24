@@ -89,6 +89,24 @@ If no ID is specified, or is undef, then an ID will be automatically generated.
 Additional arguments can be passed after the ID argument.  These extra
 arguments will be passed to the session object constructor.
 
+=head2 OBJECT REFERENCES
+
+                                                          +------+
+                                                          v      |
+    +------------------------+       +------------------------+  |
+    |        manager         | ----> |          store         |--+
+    |     (Web::Starch)      |       |  (Web::Starch::Store)  |
+    +------------------------+       +------------------------+
+                    ^     |                       |
+                    |     +------------+          |
+                    |                  v          v
+    +------------------------+       +------------------------+
+    |        session         |       |        factory         |
+    | (Web::Starch::Session) |       | (Web::Starch::Factory) |
+    +------------------------+       +------------------------+
+
+This diagram shows which objects hold references to other objects.
+
 =head1 DEPENDENCIES
 
 The C<Web-Starch> distribution is shipped with minimal dependencies
