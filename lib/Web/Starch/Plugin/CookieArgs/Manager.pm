@@ -25,7 +25,7 @@ with qw(
     Web::Starch::Plugin::ForManager
 );
 
-=head1 ARGUMENTS
+=head1 OPTIONAL ARGUMENTS
 
 Additional details about these arguments can be found in the
 L<CGI::Simple::Cookie> documentation.

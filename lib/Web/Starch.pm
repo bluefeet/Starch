@@ -275,7 +275,14 @@ for implementors to alter behaviors as they see fit.
 
 =head1 AUTHOR
 
-Aran Clary Deltac <bluefeet@cpan.org>
+Aran Clary Deltac <bluefeetE<64>gmail.com>
+
+=head1 ACKNOWLEDGEMENTS
+
+Thanks to L<ZipRecruiter|https://www.ziprecruiter.com/>
+for encouraging their employees to contribute back to the open
+source ecosystem.  Without their dedication to quality software
+development this distribution would not exist.
 
 =head1 LICENSE
 
