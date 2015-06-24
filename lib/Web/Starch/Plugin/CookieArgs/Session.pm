@@ -88,3 +88,9 @@ sub cookie_expire_args {
 }
 
 1;
+__END__
+
+=head1 AUTHOR AND LICENSE
+
+See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+

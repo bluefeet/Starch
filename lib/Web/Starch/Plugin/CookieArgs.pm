@@ -43,3 +43,8 @@ starch object.
 
 This plugin is meant to ease the work of integrating starch with various
 web frameworks.
+
+=head1 AUTHOR AND LICENSE
+
+See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+

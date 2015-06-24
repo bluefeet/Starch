@@ -104,3 +104,9 @@ around remove => sub{
 };
 
 1;
+__END__
+
+=head1 AUTHOR AND LICENSE
+
+See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+

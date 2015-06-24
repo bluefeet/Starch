@@ -49,3 +49,7 @@ store only by enabling just the C<::Trace::Store> plugin.
 
 This plugin is meant for development as logging will reduce performance.
 
+=head1 AUTHOR AND LICENSE
+
+See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+

@@ -45,4 +45,8 @@ for details about how to write plugins and plugin bundles.
 Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
 acts as a dynamic plugin bundle.
 
+=head1 AUTHOR AND LICENSE
+
+See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+
 =cut
