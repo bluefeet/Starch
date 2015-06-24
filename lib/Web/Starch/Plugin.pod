@@ -1,3 +1,4 @@
+=pod
 
 =head1 NAME
 
@@ -45,4 +46,3 @@ Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
 acts as a dynamic plugin bundle.
 
 =cut
-
