@@ -111,8 +111,6 @@ session database by using the L<Web::Starch::Store::Layered> store.
 
 =cut
 
-# I tried creating a custom type with coercion and failed miserably.
-# Even then, this code is easier to understand and follow.
 has _store_arg => (
     is       => 'ro',
     isa      => HasMethods[ 'set', 'get', 'remove' ] | HashRef,
@@ -131,18 +129,7 @@ sub _build_store {
     my $store = $self->_store_arg();
     return $store if blessed $store;
 
-    $store = { %$store };
-    my $suffix = delete $store->{class};
-    croak "No class key was declared in the Web::Starch store hash ref"
-        if !defined $suffix;
-
-    my $class = $self->factory->store_class( $suffix );
-    my $args = $class->BUILDARGS( $store );
-
-    return $class->new(
-        %$args,
-        factory => $self->factory(),
-    );
+    return $self->factory->new_store( $store );
 }
 
 =head1 OPTIONAL ARGUMENTS

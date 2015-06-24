@@ -17,6 +17,8 @@ Normally there is no need to interact with this class directly.
 use Moo::Role qw();
 use Types::Standard -types;
 use Module::Runtime qw( require_module );
+use Carp qw( croak );
+use Moo::Object qw();
 
 use Moo;
 use strictures 2;
@@ -233,6 +235,31 @@ sub store_class {
     return $class if !@$roles;
 
     return Moo::Role->create_class_with_roles( $class, @$roles );
+}
+
+=head2 new_store
+
+    my $store = $factory->new_store( class=>'::Memory', %args );
+
+Creates and returns a new L</store_class> object with the
+factory argument set.
+
+=cut
+
+sub new_store {
+    my $self = shift;
+
+    my $args = Moo::Object->BUILDARGS( @_ );
+    $args = { %$args };
+    my $suffix = delete $args->{class};
+    croak "No class key was declared in the Web::Starch store hash ref"
+        if !defined $suffix;
+
+    my $class = $self->store_class( $suffix );
+    return $class->new(
+        %$args,
+        factory => $self,
+    );
 }
 
 1;
