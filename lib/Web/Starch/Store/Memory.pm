@@ -23,6 +23,22 @@ with qw(
     Web::Starch::Store
 );
 
+=head1 OPTIONAL ARGUMENTS
+
+=head2 global
+
+Set this to a true value to use a shared memory store for all instances
+of this class that enable this argument.
+
+=cut
+
+my $global_memory = {};
+
+has global => (
+    is  => 'ro',
+    isa => Bool,
+);
+
 =head1 ATTRIBUTES
 
 =head2 memory
@@ -37,6 +53,7 @@ has memory => (
 );
 sub _build_memory {
     my ($self) = @_;
+    return $global_memory if $self->global();
     return {};
 }
 
