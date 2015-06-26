@@ -129,7 +129,7 @@ sub set {
 sub get {
     my $self = shift;
     my $data = $self->outer->get( @_ );
-    $data = $self->inner->get( @_ ) if !defined $data;
+    $data = $self->inner->get( @_ ) if !$data;
     return $data;
 }
 

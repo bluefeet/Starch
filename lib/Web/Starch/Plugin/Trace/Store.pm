@@ -78,7 +78,7 @@ around get => sub{
     $self->log->tracef(
         'starch.store.get.%s.missing',
         $id,
-    ) if !defined $data;
+    ) if !$data;
 
     return $data;
 };

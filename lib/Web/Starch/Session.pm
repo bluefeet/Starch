@@ -113,7 +113,7 @@ sub _build_original_data {
     return {} if !$self->in_store();
 
     my $data = $self->manager->store->get( $self->id() );
-    $data = {} if !defined $data;
+    $data = {} if !$data;
 
     return $data;
 }
