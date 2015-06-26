@@ -96,12 +96,22 @@ stores).
 =cut
 
 has factory => (
-    is  => 'lazy',
-    isa => HasMethods[ 'store_class' ],
+    is       => 'ro',
+    isa      => InstanceOf[ 'Web::Starch::Factory' ],
+    required => 1,
 );
-sub _build_factory {
-    return Web::Starch::Factory->new();
-}
+
+=head1 expires
+
+See L<Web::Starch/expires> which this argument defaults to.
+
+=cut
+
+has expires => (
+  is       => 'ro',
+  isa      => PositiveInt | Undef,
+  required => 1,
+);
 
 1;
 __END__

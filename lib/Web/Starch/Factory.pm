@@ -244,6 +244,9 @@ sub store_class {
 Creates and returns a new L</store_class> object with the
 factory argument set.
 
+Note that since the L<Web::Starch::Store/expires> argument is
+required you must specify it.
+
 =cut
 
 sub new_store {

@@ -94,8 +94,8 @@ sub new_with_plugins {
 =head2 store
 
 The L<Web::Starch::Store> storage backend to use for persisting the session
-data.  If a hashref is passed it is expected to contain at least a C<class>
-key and will be blessed into a store object automatically.
+data.  A hashref must be passed and it is expected to contain at least a
+C<class> key and will be converted into a store object automatically.
 
 The C<class> can be fully qualified, or relative to C<Web::Starch::Store>.
 A leading C<::> signifies that the store's package name is relative.
@@ -113,26 +113,55 @@ session database by using the L<Web::Starch::Store::Layered> store.
 
 has _store_arg => (
     is       => 'ro',
-    isa      => HasMethods[ 'set', 'get', 'remove' ] | HashRef,
+    isa      => HashRef,
     required => 1,
     init_arg => 'store',
 );
 
 has store => (
     is       => 'lazy',
-    isa      => HasMethods[ 'set', 'get', 'remove' ],
+    isa      => ConsumerOf[ 'Web::Starch::Store' ],
     init_arg => undef,
 );
 sub _build_store {
     my ($self) = @_;
 
     my $store = $self->_store_arg();
-    return $store if blessed $store;
 
-    return $self->factory->new_store( $store );
+    return $self->factory->new_store(
+        expires => $self->expires(),
+        %$store,
+    );
 }
 
 =head1 OPTIONAL ARGUMENTS
+
+=head1 expires
+
+How long, in seconds, a session should live after the last time it was
+modified.  Defaults to C<60 * 60 * 2> (2 hours).
+
+This value is used when constructing the L</store> to set the default
+expires value for stores if no expires was specified for them.
+
+The L<Web::Starch::Plugin::CookieArgs> plugin also uses this as the
+default value for the C<cookie_expires> argument.
+
+You can set this argument to C<undef> which has different meaning for
+stores than cookies.  For stores this typically means "expire whenever
+you want to" and for cookies means "expire when the session (browser/tab)
+is closed".  Some stores, such as Memcached, function well with undefined
+expirations as they use an LRU to automatically expire data, other stores
+not so much.  Read the documentation for your store to determine how
+its expiration strategy works.
+
+=cut
+
+has expires => (
+  is       => 'ro',
+  isa      => PositiveInt | Undef,
+  default => 60 * 60 * 2, # 2 hours
+);
 
 =head1 digest_algorithm
 

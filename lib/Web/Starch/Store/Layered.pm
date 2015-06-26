@@ -59,23 +59,25 @@ Accepts the same value as L<Web::Starch/store>.
 
 has _outer_arg => (
     is       => 'ro',
-    isa      => HasMethods[ 'set', 'get', 'remove' ] | HashRef,
+    isa      => HashRef,
     required => 1,
     init_arg => 'outer',
 );
 
 has outer => (
     is       => 'lazy',
-    isa      => HasMethods[ 'set', 'get', 'remove' ],
+    isa      => ConsumerOf[ 'Web::Starch::Store' ],
     init_arg => undef,
 );
 sub _build_outer {
     my ($self) = @_;
 
-    my $outer = $self->_outer_arg();
-    return $outer if blessed $outer;
+    my $store = $self->_outer_arg();
 
-    return $self->factory->new_store( $outer );
+    return $self->factory->new_store(
+        expires => $self->expires(),
+        %$store,
+    );
 }
 
 =head2 inner
@@ -89,23 +91,25 @@ Accepts the same value as L<Web::Starch/store>.
 
 has _inner_arg => (
     is       => 'ro',
-    isa      => HasMethods[ 'set', 'get', 'remove' ] | HashRef,
+    isa      => HashRef,
     required => 1,
     init_arg => 'inner',
 );
 
 has inner => (
     is       => 'lazy',
-    isa      => HasMethods[ 'set', 'get', 'remove' ],
+    isa      => ConsumerOf[ 'Web::Starch::Store' ],
     init_arg => undef,
 );
 sub _build_inner {
     my ($self) = @_;
 
-    my $inner = $self->_inner_arg();
-    return $inner if blessed $inner;
+    my $store = $self->_inner_arg();
 
-    return $self->factory->new_store( $inner );
+    return $self->factory->new_store(
+        expires => $self->expires(),
+        %$store,
+    );
 }
 
 =head1 STORE METHODS
