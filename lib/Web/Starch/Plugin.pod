@@ -36,7 +36,7 @@ L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
 
 =head2 WRITING
 
-See any of the L</CORE PLUGINS> for working examples which ship with starch.
+See any of the L</CORE PLUGINS> for working examples which ship with Starch.
 
 See the L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
 L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation

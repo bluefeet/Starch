@@ -22,7 +22,7 @@ Web::Starch::Plugin::ForManager - Base role for Web::Starch plugins.
 
 This role, currently, provides no additional functionality to
 manager plugins.  All it does is labels a plugin as a manager
-plugin so that starch knows which class type it applies to.
+plugin so that Starch knows which class type it applies to.
 
 =cut
 

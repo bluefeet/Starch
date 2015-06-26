@@ -21,7 +21,7 @@ Web::Starch::Plugin::ForStore - Base role for Web::Starch::Store plugins.
 
 This role, currently, provides no additional functionality to
 store plugins.  All it does is labels a plugin as a store
-plugin so that starch knows which class type it applies to.
+plugin so that Starch knows which class type it applies to.
 
 =cut
 

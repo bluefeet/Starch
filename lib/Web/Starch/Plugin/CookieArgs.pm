@@ -39,9 +39,9 @@ HTTP cookies.
 This plugin provides two roles L<Web::Starch::Plugin::CookieArgs::Session>,
 which adds methods to the session object, and
 L<Web::Starch::Plugin::CookieArgs::Manager> which adds arguments to the
-starch object.
+Starch object.
 
-This plugin is meant to ease the work of integrating starch with various
+This plugin is meant to ease the work of integrating Starch with various
 web frameworks.
 
 =head1 AUTHOR AND LICENSE

@@ -2,8 +2,8 @@ package Web::Starch::Plugin::CookieArgs::Manager;
 
 =head1 NAME
 
-Web::Starch::Plugin::CookieArgs::Manager - Add arguments to the starch object
-for dealing with HTTP cookies.
+Web::Starch::Plugin::CookieArgs::Manager - Add arguments to the Web::Starch
+object for dealing with HTTP cookies.
 
 =head1 DESCRIPTION
 

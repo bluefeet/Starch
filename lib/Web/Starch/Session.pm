@@ -2,7 +2,7 @@ package Web::Starch::Session;
 
 =head1 NAME
 
-Web::Starch::Session - The starch session object.
+Web::Starch::Session - The Web::Starch session object.
 
 =head1 SYNOPSIS
 

@@ -21,7 +21,7 @@ Web::Starch::Plugin::ForSession - Base role for Web::Starch::Session plugins.
 
 This role, currently, provides no additional functionality to
 session plugins.  All it does is labels a plugin as a session
-plugin so that starch knows which class type it applies to.
+plugin so that Starch knows which class type it applies to.
 
 =cut
 

@@ -30,7 +30,7 @@ Plack).
 =item *
 
 Provide a straight-forward and powerful mechanism for customizing just
-about any part of starch via stores and plugin bundles.
+about any part of Starch via stores and plugin bundles.
 
 =item *
 

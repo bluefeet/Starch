@@ -2,8 +2,8 @@ package Web::Starch::Plugin::CookieArgs::Session;
 
 =head1 NAME
 
-Web::Starch::Plugin::CookieArgs::Session - Add methods to the session object
-for dealing with HTTP cookies.
+Web::Starch::Plugin::CookieArgs::Session - Add methods to the Web::Starch::Session
+object for dealing with HTTP cookies.
 
 =head1 DESCRIPTION
 

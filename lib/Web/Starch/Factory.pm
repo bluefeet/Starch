@@ -67,7 +67,7 @@ sub bundled_plugins {
 
 =head2 base_manager_class
 
-The base class of the starch manager object.  Default to C<Web::Starch>.
+The base class of the Starch manager object.  Default to C<Web::Starch>.
 
 =cut
 
@@ -81,7 +81,7 @@ sub _build_base_manager_class {
 
 =head2 base_session_class
 
-The base class of starch session objects.  Default to C<Web::Starch::Session>.
+The base class of Starch session objects.  Default to C<Web::Starch::Session>.
 
 =cut
 

@@ -2,7 +2,7 @@ package Web::Starch::Component;
 
 =head1 NAME
 
-Web::Starch::Component - Shared role for all starch components.
+Web::Starch::Component - Shared role for all Web::Starch components.
 
 =head1 DESCRIPTION
 
