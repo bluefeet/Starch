@@ -7,10 +7,18 @@ Web::Starch::Store::Layered - Layer multiple stores.
 =head1 SYNOPSIS
 
     my $starch = Web::Starch->new(
+        expires => 2 * 60 * 60, # 2 hours
         store => {
             class => '::Layered',
-            outer => { class=>'::CHI', ... },
-            inner => { class=>'::MongoDB', ... },
+            outer => {
+                class=>'::CHI',
+                expires => 10 * 60, # 10 minutes
+                ...,
+            },
+            inner => {
+                class=>'::MongoDB',
+                ...,
+            },
         },
     );
 
@@ -26,11 +34,12 @@ front of a persistent store.  Typically caches are much faster than
 persistent storage engines.
 
 Another use case is for migrating from one store to another.  Your
-current store would be set as the outer store, and your new store
-would be set as the inner store.  Once sufficient time has passed
-you could switch to using just the inner store.
+new store would be set as the inner store, and your old store
+would be set as the outer store.  Once sufficient time has passed,
+and the new store has been populdated, you could switch to using
+just the new store.
 
-If you'd like to layer more than two stores you can use a layered
+If you'd like to layer more than two stores you can use layered
 stores within layered stores.
 
 =cut
@@ -45,6 +54,16 @@ use namespace::clean;
 with qw(
     Web::Starch::Store
 );
+
+sub BUILD {
+    my ($self) = @_;
+
+    # Load these up as early as possible.
+    $self->outer();
+    $self->inner();
+
+    return;
+}
 
 =head1 REQUIRED ARGUMENTS
 
