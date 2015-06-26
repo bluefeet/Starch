@@ -25,10 +25,10 @@ HTTP cookies.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new(
-        ...,
-        plugins => ['CookieArgs'],
+    my $starch = Web::Starch->new_with_plugins(
+        ['::CookieArgs'],
         cookie_name => 'my_session',
+        store => { ... },
     );
     my $session = $starch->session();
     my $cookie_args = $session->cookie_args();

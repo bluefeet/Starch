@@ -7,9 +7,9 @@ Web::Starch - Implementation independent session management.
 =head1 SYNOPSIS
 
     my $starch = Web::Starch->new(
+        expires => 60 * 15, # 15 minutes
         store => {
             class   => '::Memory',
-            expires => 60 * 15, # 15 minutes
         },
     );
     my $new_session = $starch->session();

@@ -26,9 +26,9 @@ sessions, and stores.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new(
-        plugins => ['Trace'],
-        ...,
+    my $starch = Web::Starch->new_with_plugins(
+        ['::Trace'],
+        store => { ... },
     );
 
 =head1 DESCRIPTION

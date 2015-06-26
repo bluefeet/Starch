@@ -41,7 +41,7 @@ Web::Starch::Plugin::Bundle - Base role for Web::Starch plugin bundles.
 
     # Use the bundle.
     my $starch = Web::Starch->new_with_plugins(
-        plugins => ['MyPlugin'],
+        ['MyPlugin'],
         store => { class=>'::Memory', foo=>'FOO_STORE' },
         foo => 'FOO_MANAGER',
     );
