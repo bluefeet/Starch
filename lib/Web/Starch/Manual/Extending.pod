@@ -1,0 +1,13 @@
+
+=pod
+
+=head1 NAME
+
+Web::Starch::Manual::Extending - How to alter and add functionality Web::Starch.
+
+=head1 TODO
+
+This document needs to be written.
+
+=cut
+

@@ -1,0 +1,57 @@
+
+=pod
+
+=head1 NAME
+
+Web::Starch::Manual - Organized collection of Web::Starch documentation.
+
+=head1 GOALS
+
+This distribution intends to be the best go-to solution for managing
+sessions.  To do this we must:
+
+=over
+
+=item *
+
+Be as fast as possible by limiting method calls, implementing
+lazy-loading wherever it can be done, and using libraries which
+exhibit run-time effeciences which beat out their competitors.
+
+=item *
+
+Reduce data store reads and writes to just the most essential.
+
+=item *
+
+Be independent from any particular framework (such as Catalyst or
+Plack).
+
+=item *
+
+Provide a straight-forward and powerful mechanism for customizing just
+about any part of starch via stores and plugin bundles.
+
+=item *
+
+Be easy to understand due to everything being well documented,
+hyper-linked, and containing thurough examples.
+
+=back
+
+=head1 SEE ALSO
+
+=over
+
+=item *
+
+L<Web::Starch::Manual::Cookbook>
+
+=item *
+
+L<Web::Starch::Manual::Extending>
+
+=back
+
+=cut
+

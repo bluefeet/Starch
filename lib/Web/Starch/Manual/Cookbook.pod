@@ -1,0 +1,13 @@
+
+=pod
+
+=head1 NAME
+
+Web::Starch::Manual::Cookbook - Examples for common use cases of Web::Starch.
+
+=head1 TODO
+
+This document needs to be written.
+
+=cut
+

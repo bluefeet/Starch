@@ -20,12 +20,9 @@ Web::Starch - Implementation independent session management.
 This module provides a generic interface to managing sessions, AKA the
 session manager.
 
-This module aims to be as fast as possible and be independent from
-any particular framework which makes writing unit tests easier
-for this distribution and for you as an implementor.
+Please see L<Web::Starch::Manual> for some good starter documentation.
 
-This class consumes the L<Web::Starch::Component> role, but modifies
-the C<manager> attribute to just return itself.
+This class consumes the L<Web::Starch::Component> role.
 
 =cut
 
