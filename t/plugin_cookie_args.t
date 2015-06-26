@@ -6,6 +6,7 @@ use Test::More;
 use Web::Starch;
 
 my $expires = 60 * 60 * 8;
+my $arg_expires = '+' . $expires . 's';
 
 my $starch = Web::Starch->new_with_plugins(
     ['::CookieArgs'],
@@ -24,7 +25,7 @@ subtest cookie_args => sub{
     my $args = $session->cookie_args();
     is( $args->{name}, 'foo-session', 'cookie name is correct' );
     is( $args->{value}, $session->id(), 'cookie value is session ID' );
-    is( $args->{expires}, $expires, 'cookie expires is correct' );
+    is( $args->{expires}, $arg_expires, 'cookie expires is correct' );
     is( $args->{domain}, 'foo.example.com', 'cookie domain is correct' );
     is( $args->{path}, '/bar', 'cookie path is correct' );
     is( $args->{secure}, 0, 'cookie secure is correct' );
@@ -36,7 +37,7 @@ subtest cookie_args => sub{
     $args = $session->cookie_args();
     is( $args->{name}, 'foo-session', 'expired cookie name is correct' );
     is( $args->{value}, $session->id(), 'expired cookie value is session ID' );
-    ok( ($args->{expires} < 0), 'expired cookie expires is correct' );
+    is( $args->{expires}, '-1d', 'expired cookie expires is correct' );
     is( $args->{domain}, 'foo.example.com', 'expired cookie domain is correct' );
     is( $args->{path}, '/bar', 'expired cookie path is correct' );
     is( $args->{secure}, 0, 'expired cookie secure is correct' );
@@ -47,24 +48,24 @@ subtest cookie_set_args => sub{
     my $session = $starch->session();
 
     my $args = $session->cookie_set_args();
-    is( $args->{expires}, $expires, 'new session cookie expires is good' );
+    is( $args->{expires}, $arg_expires, 'new session cookie expires is good' );
 
     $session->force_save();
     $session->expire();
     $args = $session->cookie_set_args();
-    is( $args->{expires}, $expires, 'expired session cookie expires is good' );
+    is( $args->{expires}, $arg_expires, 'expired session cookie expires is good' );
 };
 
 subtest cookie_expire_args => sub{
     my $session = $starch->session();
 
     my $args = $session->cookie_expire_args();
-    ok( ($args->{expires} < 0), 'new session cookie expires is good' );
+    is( $args->{expires}, '-1d', 'new session cookie expires is good' );
 
     $session->force_save();
     $session->expire();
     $args = $session->cookie_expire_args();
-    ok( ($args->{expires} < 0), 'expired session cookie expires is good' );
+    is( $args->{expires}, '-1d', 'expired session cookie expires is good' );
 };
 
 subtest expires_default => sub{

@@ -55,7 +55,7 @@ sub cookie_set_args {
     my $args = {
         name     => $self->manager->cookie_name(),
         value    => $self->id(),
-        expires  => $self->manager->cookie_expires(),
+        expires  => '+' . $self->manager->cookie_expires() . 's',
         domain   => $self->manager->cookie_domain(),
         path     => $self->manager->cookie_path(),
         secure   => $self->manager->cookie_secure(),
@@ -83,7 +83,7 @@ sub cookie_expire_args {
 
     return {
         %{ $self->cookie_set_args() },
-        expires => -1 * (1 * 24 * 60 * 60), # -1 day
+        expires => '-1d',
     };
 }
 
