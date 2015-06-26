@@ -37,7 +37,7 @@ use Scalar::Util qw( blessed );
 use Carp qw( croak );
 
 use Moo;
-use strictures 1;
+use strictures 2;
 use namespace::clean;
 
 with qw(

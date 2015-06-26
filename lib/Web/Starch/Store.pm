@@ -73,7 +73,7 @@ use Types::Standard -types;
 use Types::Common::Numeric -types;
 
 use Moo::Role;
-use strictures 1;
+use strictures 2;
 use namespace::clean;
 
 with qw(

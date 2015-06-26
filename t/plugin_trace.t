@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use strictures 1;
+use strictures 2;
 
 # If this test fails it may not be due to obvious breakage, but instead
 # due to a change in how the various starch objects are created which
