@@ -36,8 +36,8 @@ This class consumes the L<Web::Starch::Component> role.
 
 Starch plugins are applied using the C<new_with_plugins> constructor method.
 The first argument is an array ref of plugin names.  The plugin names can
-be fully qualified, or relative to C<Web::Starch::Plugin>.  A leading C<::>
-signifies that the plugin's package name is relative.
+be fully qualified, or relative to the C<Web::Starch::Plugin> namespace.
+A leading C<::> signifies that the plugin's package name is relative.
 
 =head1 REQUIRED ARGUMENTS
 
@@ -47,8 +47,8 @@ The L<Web::Starch::Store> storage backend to use for persisting the session
 data.  A hashref must be passed and it is expected to contain at least a
 C<class> key and will be converted into a store object automatically.
 
-The C<class> can be fully qualified, or relative to C<Web::Starch::Store>.
-A leading C<::> signifies that the store's package name is relative.
+The C<class> can be fully qualified, or relative to the C<Web::Starch::Store>
+namespace.  A leading C<::> signifies that the store's package name is relative.
 
 The class must implement the C<set>, C<get>, and C<remove> methods.  Typically
 a store class consumes the L<Web::Starch::Store> role which enforces this interface.

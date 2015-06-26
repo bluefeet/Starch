@@ -67,4 +67,14 @@ subtest cookie_expire_args => sub{
     ok( ($args->{expires} < 0), 'expired session cookie expires is good' );
 };
 
+subtest expires_default => sub{
+    my $starch = Web::Starch->new_with_plugins(
+        ['::CookieArgs'],
+        store => { class=>'::Memory' },
+        expires => 78,
+    );
+
+    is( $starch->cookie_expires(), 78, 'cookie_expires defaults to expires' );
+};
+
 done_testing;
