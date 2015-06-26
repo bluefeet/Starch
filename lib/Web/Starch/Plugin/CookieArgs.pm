@@ -32,7 +32,7 @@ HTTP cookies.
     );
     my $session = $starch->session();
     my $cookie_args = $session->cookie_args();
-    pritn $cookie_args->{name}; # my_session
+    print $cookie_args->{name}; # my_session
 
 =head1 DESCRIPTION
 
