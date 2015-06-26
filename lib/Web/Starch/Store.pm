@@ -70,6 +70,7 @@ a no-op.
 =cut
 
 use Types::Standard -types;
+use Types::Common::Numeric -types;
 
 use Moo::Role;
 use strictures 1;

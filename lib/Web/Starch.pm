@@ -35,6 +35,7 @@ use Web::Starch::Session;
 use Moo::Role qw();
 use Types::Standard -types;
 use Types::Common::String -types;
+use Types::Common::Numeric -types;
 use Scalar::Util qw( blessed );
 use Carp qw( croak );
 
@@ -158,9 +159,9 @@ its expiration strategy works.
 =cut
 
 has expires => (
-  is       => 'ro',
-  isa      => PositiveInt | Undef,
-  default => 60 * 60 * 2, # 2 hours
+    is       => 'ro',
+    isa      => PositiveInt | Undef,
+    default => 60 * 60 * 2, # 2 hours
 );
 
 =head1 digest_algorithm

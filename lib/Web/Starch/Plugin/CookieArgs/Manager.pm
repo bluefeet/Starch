@@ -62,6 +62,7 @@ has cookie_expires => (
     isa => PositiveInt | Undef,
 );
 sub _build_cookie_expires {
+    my ($self) = @_;
     return $self->expires();
 }
 

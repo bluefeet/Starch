@@ -201,16 +201,16 @@ Returns true if the session was saved and is not dirty.
 =cut
 
 has _save_was_called => (
-  is     => 'ro',
-  isa    => Bool,
-  wrtier => '_set_save_was_called',
+    is     => 'ro',
+    isa    => Bool,
+    writer => '_set_save_was_called',
 );
 
 sub is_saved {
-  my ($self) = @_;
-  return 0 if !$self->_save_was_called();
-  return 0 if $self->is_dirty();
-  return 1;
+    my ($self) = @_;
+    return 0 if !$self->_save_was_called();
+    return 0 if $self->is_dirty();
+    return 1;
 }
 
 =head1 METHODS
@@ -246,7 +246,7 @@ sub force_save {
     );
 
     $self->_set_in_store( 1 );
-    $self->_save_was_called( 1 );
+    $self->_set_save_was_called( 1 );
 
     $self->mark_clean();
 

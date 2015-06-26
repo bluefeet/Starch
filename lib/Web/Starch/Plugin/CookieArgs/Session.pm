@@ -72,9 +72,9 @@ sub cookie_set_args {
 
 =head2 cookie_expire_args
 
-This returns the same this as L</cookie_set_args>, but overrides the
-C<expires> value to be C<-1d> which will trigger the client to remove
-the cookie immediately.
+This returns the same thing as L</cookie_set_args>, but overrides the
+C<expires> value to be one day in the past which will trigger the client
+to remove the cookie immediately.
 
 =cut
 
@@ -83,7 +83,7 @@ sub cookie_expire_args {
 
     return {
         %{ $self->cookie_set_args() },
-        expires => '-1d',
+        expires => -1 * (1 * 24 * 60 * 60), # -1 day
     };
 }
 

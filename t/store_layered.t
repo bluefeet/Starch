@@ -3,16 +3,19 @@ use strictures 1;
 
 use Test::More;
 
-use Web::Starch::Store::Layered;
-use Web::Starch::Store::Memory;
+use Web::Starch;
 
-my $inner = Web::Starch::Store::Memory->new();
-my $outer = Web::Starch::Store::Memory->new();
-
-my $layered = Web::Starch::Store::Layered->new(
-    outer => $outer,
-    inner => $inner,
+my $starch = Web::Starch->new(
+    store => {
+        class => '::Layered',
+        outer => { class=>'::Memory' },
+        inner => { class=>'::Memory' },
+    },
 );
+
+my $layered = $starch->store();
+my $outer = $layered->outer();
+my $inner = $layered->inner();
 
 $layered->set( foo => 32 );
 is( $layered->get('foo'), 32, 'layered get' );
