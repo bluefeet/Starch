@@ -9,5 +9,23 @@ Web::Starch::Manual::Extending - How to alter and add functionality Web::Starch.
 
 This document needs to be written.
 
+=head1 OBJECT REFERENCES
+
+                                                          +------+
+                                                          v      |
+    +------------------------+       +------------------------+  |
+    |        manager         | ----> |          store         |--+
+    |     (Web::Starch)      |       |  (Web::Starch::Store)  |
+    +------------------------+       +------------------------+
+                    ^     |                       |
+                    |     +------------+          |
+                    |                  v          v
+    +------------------------+       +------------------------+
+    |        session         |       |        factory         |
+    | (Web::Starch::Session) |       | (Web::Starch::Factory) |
+    +------------------------+       +------------------------+
+
+This diagram shows which objects hold references to other objects.
+
 =cut
 

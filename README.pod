@@ -105,23 +105,28 @@ If no ID is specified, or is undef, then an ID will be automatically generated.
 Additional arguments can be passed after the ID argument.  These extra
 arguments will be passed to the session object constructor.
 
-=head2 OBJECT REFERENCES
+=head1 TODO
 
-                                                          +------+
-                                                          v      |
-    +------------------------+       +------------------------+  |
-    |        manager         | ----> |          store         |--+
-    |     (Web::Starch)      |       |  (Web::Starch::Store)  |
-    +------------------------+       +------------------------+
-                    ^     |                       |
-                    |     +------------+          |
-                    |                  v          v
-    +------------------------+       +------------------------+
-    |        session         |       |        factory         |
-    | (Web::Starch::Session) |       | (Web::Starch::Factory) |
-    +------------------------+       +------------------------+
+=over
 
-This diagram shows which objects hold references to other objects.
+=item *
+
+A plugin which turns the data in the session into an object so that
+session data is declared and validated.
+
+=item *
+
+A store plugin which segments the data into various buckets for storage.
+This can substantially reduce race conditions as unrelated data would
+be saved independently.
+
+=item *
+
+Stores which support partial writes should support this through Starch
+too.  This can greatly reduce race conditions (which inversly increases
+consistency issues), and could reduce resource usage.
+
+=back
 
 =head1 DEPENDENCIES
 
