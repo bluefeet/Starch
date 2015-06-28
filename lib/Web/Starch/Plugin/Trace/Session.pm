@@ -114,23 +114,20 @@ around rollback => sub{
     return $self->$orig( @_ );
 };
 
-=head2 expire
+=head2 delete
 
-Every call to L<Web::Starch::Session/force_expire>
-is logged in the format of C<starch.session.expire.$session_id>.
-
-Every call to L<Web::Starch::Session/force_expire> (which C<expire> calls
+Every call to L<Web::Starch::Session/force_delete> (which C<delete> calls
 if the session is in the store) is logged in the format of
-C<starch.session.expire.$session_id>.
+C<starch.session.delete.$session_id>.
 
 =cut
 
-around force_expire => sub{
+around force_delete => sub{
     my $orig = shift;
     my $self = shift;
 
     $self->log->tracef(
-        'starch.session.expire.%s',
+        'starch.session.delete.%s',
         $self->id(),
     );
 

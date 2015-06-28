@@ -32,7 +32,7 @@ subtest cookie_args => sub{
     is( $args->{httponly}, 0, 'cookie httponly is correct' );
 
     $session->force_save();
-    $session->expire();
+    $session->delete();
 
     $args = $session->cookie_args();
     is( $args->{name}, 'foo-session', 'expired cookie name is correct' );
@@ -51,20 +51,20 @@ subtest cookie_set_args => sub{
     is( $args->{expires}, $arg_expires, 'new session cookie expires is good' );
 
     $session->force_save();
-    $session->expire();
+    $session->delete();
     $args = $session->cookie_set_args();
     is( $args->{expires}, $arg_expires, 'expired session cookie expires is good' );
 };
 
-subtest cookie_expire_args => sub{
+subtest cookie_delete_args => sub{
     my $session = $starch->session();
 
-    my $args = $session->cookie_expire_args();
+    my $args = $session->cookie_delete_args();
     is( $args->{expires}, '-1d', 'new session cookie expires is good' );
 
     $session->force_save();
-    $session->expire();
-    $args = $session->cookie_expire_args();
+    $session->delete();
+    $args = $session->cookie_delete_args();
     is( $args->{expires}, '-1d', 'expired session cookie expires is good' );
 };
 

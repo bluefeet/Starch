@@ -103,7 +103,7 @@ subtest 'session methods' => sub{
     $session->reload();
     $session->mark_clean();
     $session->rollback();
-    $session->expire();
+    $session->delete();
 
     $log->category_contains_ok(
         $session_class,
@@ -127,8 +127,8 @@ subtest 'session methods' => sub{
     );
     $log->category_contains_ok(
         $session_class,
-        qr{^starch\.session\.expire\.$session_id$},
-        'starch.session.expire.$session_id',
+        qr{^starch\.session\.delete\.$session_id$},
+        'starch.session.delete.$session_id',
     );
     $log->category_contains_ok(
         $store_class,

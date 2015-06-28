@@ -29,12 +29,12 @@ subtest in_store => sub{
     is( $session2->in_store(), 1, 'existing session is not is_new' );
 };
 
-subtest is_expired => sub{
+subtest is_deleted => sub{
     my $session = $starch->session();
-    is( $session->is_expired(), 0, 'new session is not expired' );
+    is( $session->is_deleted(), 0, 'new session is not deleted' );
     $session->force_save();
-    $session->expire();
-    is( $session->is_expired(), 1, 'expired session is expired' );
+    $session->delete();
+    is( $session->is_deleted(), 1, 'deleted session is deleted' );
 };
 
 subtest is_dirty => sub{
@@ -67,7 +67,7 @@ subtest force_save => sub{
     $session = $starch->session( $session->id() );
     $session->data();
 
-    $starch->session( $session->id() )->expire();
+    $starch->session( $session->id() )->delete();
 
     $session->save();
     is(
@@ -108,7 +108,7 @@ subtest rollback => sub{
     is( $session->data->{foo}, 23, 'rollback to previous mark_clean' );
 };
 
-subtest expire => sub{
+subtest delete => sub{
     my $session = $starch->session();
     $session->data->{foo} = 39;
     $session->save();
@@ -116,9 +116,9 @@ subtest expire => sub{
     $session = $starch->session( $session->id() );
     is( $session->data->{foo}, 39, 'session persists' );
 
-    $session->expire();
+    $session->delete();
     $session = $starch->session( $session->id() );
-    is( $session->data->{foo}, undef, 'session was expired' );
+    is( $session->data->{foo}, undef, 'session was deleted' );
 };
 
 subtest hash_seed => sub{

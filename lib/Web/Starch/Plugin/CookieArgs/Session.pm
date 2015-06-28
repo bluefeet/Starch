@@ -26,8 +26,8 @@ with qw(
 
 =head2 cookie_args
 
-Returns L</cookie_expire_args> if the L<Web::Starch::Session/is_expired>, otherwise
-returns L</cookie_set_args>.
+Returns L</cookie_delete_args> if the L<Web::Starch::Session/is_deleted>,
+otherwise returns L</cookie_set_args>.
 
 These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
 the C<-> in front of the argument names, which is the same format that
@@ -38,7 +38,7 @@ Catalyst accepts for cookies.
 sub cookie_args {
     my ($self) = @_;
 
-    return $self->cookie_expire_args() if $self->is_expired();
+    return $self->cookie_delete_args() if $self->is_deleted();
     return $self->cookie_set_args();
 }
 
@@ -70,7 +70,7 @@ sub cookie_set_args {
     };
 }
 
-=head2 cookie_expire_args
+=head2 cookie_delete_args
 
 This returns the same thing as L</cookie_set_args>, but overrides the
 C<expires> value to be one day in the past which will trigger the client
@@ -78,7 +78,7 @@ to remove the cookie immediately.
 
 =cut
 
-sub cookie_expire_args {
+sub cookie_delete_args {
     my ($self) = @_;
 
     return {

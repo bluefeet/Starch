@@ -153,19 +153,19 @@ sub _build_in_store {
     return( $self->_has_existing_id() ? 1 : 0 );
 }
 
-=head2 is_expired
+=head2 is_deleted
 
-Returns true if L</expire> has been called on this session.
+Returns true if L</delete> has been called on this session.
 
 =cut
 
-has is_expired => (
+has is_deleted => (
     is       => 'lazy',
     isa      => Bool,
-    writer   => '_set_is_expired',
+    writer   => '_set_is_deleted',
     init_arg => undef,
 );
-sub _build_is_expired {
+sub _build_is_deleted {
     return 0;
 }
 
@@ -179,7 +179,7 @@ and L</data> are different).
 sub is_dirty {
     my ($self) = @_;
 
-    return 0 if $self->is_expired();
+    return 0 if $self->is_deleted();
 
     # If we haven't even loaded the data from the store then
     # there is no way we're dirty.
@@ -237,8 +237,8 @@ Like L</save>, but saves even if L</is_dirty> is not set.
 sub force_save {
     my ($self) = @_;
 
-    croak 'Cannot call save or force_save on an expired session'
-        if $self->is_expired();
+    croak 'Cannot call save or force_save on an deleted session'
+        if $self->is_deleted();
 
     $self->manager->store->set(
         $self->id(),
@@ -279,7 +279,7 @@ Just like L</reload>, but reloads even if the session L</is_dirty>.
 sub force_reload {
     my ($self) = @_;
 
-    return if $self->is_expired();
+    return if $self->is_deleted();
 
     $self->_clear_original_data();
     $self->_clear_data();
@@ -297,7 +297,7 @@ L</data>.
 sub mark_clean {
     my ($self) = @_;
 
-    return if $self->is_expired();
+    return if $self->is_deleted();
 
     $self->_set_original_data(
         $self->clone( $self->data() ),
@@ -315,7 +315,7 @@ Sets L</data> to L</original_data>.
 sub rollback {
     my ($self) = @_;
 
-    return if $self->is_expired();
+    return if $self->is_deleted();
 
     $self->_set_data(
         $self->clone( $self->original_data() ),
@@ -324,37 +324,37 @@ sub rollback {
     return;
 }
 
-=head2 expire
+=head2 delete
 
 Deletes the session from the L<Web::Starch/store> and marks it
-as L</is_expired>.  Throws an exception if not L<in_store>.
+as L</is_deleted>.  Throws an exception if not L<in_store>.
 
 =cut
 
-sub expire {
+sub delete {
     my ($self) = @_;
 
-    croak 'Cannot call expire on a session that is not stored yet'
+    croak 'Cannot call delete on a session that is not stored yet'
         if !$self->in_store();
 
-    return $self->force_expire();
+    return $self->force_delete();
 }
 
-=head2 force_expire
+=head2 force_delete
 
-Just like L</expire>, but remove the session from the store even if
+Just like L</delete>, but remove the session from the store even if
 the session is not L</in_store>.
 
 =cut
 
-sub force_expire {
+sub force_delete {
     my ($self) = @_;
 
     $self->manager->store->remove( $self->id() );
 
     $self->_set_original_data( {} );
     $self->_set_data( {} );
-    $self->_set_is_expired( 1 );
+    $self->_set_is_deleted( 1 );
     $self->_set_in_store( 0 );
 
     return;
@@ -408,7 +408,7 @@ sub reset_id {
     my ($self) = @_;
 
     # Remove the data for the current session ID.
-    $self->manager->session( $self->id() )->expire();
+    $self->manager->session( $self->id() )->delete();
 
     # Ensure that future calls to id generate a new one.
     $self->_clear_existing_id();
