@@ -127,7 +127,6 @@ sub _build_store {
     my $store = $self->_store_arg();
 
     return $self->factory->new_store(
-        expires => $self->expires(),
         %$store,
     );
 }
@@ -139,13 +138,10 @@ sub _build_store {
 How long, in seconds, a session should live after the last time it was
 modified.  Defaults to C<60 * 60 * 2> (2 hours).
 
-This value is used when constructing the L</store> to set the default
-expires value for stores if no expires was specified for them.
+This value is used as the default for L<Web::Starch::Session/expires>
+and is sometimes referred to as the "global expires".
 
-The L<Web::Starch::Plugin::CookieArgs> plugin also uses this as the
-default value for the C<cookie_expires> argument.
-
-You can set this argument to C<undef> which has different meaning for
+You can set this argument to zero which has different meaning for
 stores than cookies.  For stores this typically means "expire whenever
 you want to" and for cookies means "expire when the session (browser/tab)
 is closed".  Some stores, such as Memcached, function well with undefined
@@ -157,8 +153,47 @@ its expiration strategy works.
 
 has expires => (
     is       => 'ro',
-    isa      => PositiveInt | Undef,
+    isa      => PositiveOrZeroInt,
     default => 60 * 60 * 2, # 2 hours
+);
+
+=head1 expires_session_key
+
+The session key to store the L<Web::Starch::Session/expires>
+value in.  Defaults to C<__SESSION_EXPIRES__>.
+
+=cut
+
+has expires_session_key => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '__SESSION_EXPIRES__',
+);
+
+=head1 modified_session_key
+
+The session key to store the L<Web::Starch::Session/modified>
+value in.  Defaults to C<__SESSION_MODIFIED__>.
+
+=cut
+
+has modified_session_key => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '__SESSION_MODIFIED__',
+);
+
+=head1 created_session_key
+
+The session key to store the L<Web::Starch::Session/created>
+value in.  Defaults to C<__SESSION_CREATED__>.
+
+=cut
+
+has created_session_key => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '__SESSION_CREATED__',
 );
 
 =head1 digest_algorithm
@@ -228,29 +263,6 @@ sub session {
 
 1;
 __END__
-
-=head1 TODO
-
-=over
-
-=item *
-
-A plugin which turns the data in the session into an object so that
-session data is declared and validated.
-
-=item *
-
-A store plugin which segments the data into various buckets for storage.
-This can substantially reduce race conditions as unrelated data would
-be saved independently.
-
-=item *
-
-Stores which support partial writes should support this through Starch
-too.  This can greatly reduce race conditions (which inversly increases
-consistency issues), and could reduce resource usage.
-
-=back
 
 =head1 DEPENDENCIES
 

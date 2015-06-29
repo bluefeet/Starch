@@ -92,9 +92,10 @@ sub _build_outer {
     my ($self) = @_;
 
     my $store = $self->_outer_arg();
+    my $expires = $self->expires();
 
     return $self->factory->new_store(
-        expires => $self->expires(),
+        defined($expires) ? (expires => $expires) : (),
         %$store,
     );
 }
@@ -124,9 +125,10 @@ sub _build_inner {
     my ($self) = @_;
 
     my $store = $self->_inner_arg();
+    my $expires = $self->expires();
 
     return $self->factory->new_store(
-        expires => $self->expires(),
+        defined($expires) ? (expires => $expires) : (),
         %$store,
     );
 }

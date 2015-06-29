@@ -11,8 +11,8 @@ my $arg_expires = '+' . $expires . 's';
 my $starch = Web::Starch->new_with_plugins(
     ['::CookieArgs'],
     store => { class => '::Memory' },
+    expires          => $expires,
     cookie_name      => 'foo-session',
-    cookie_expires   => $expires,
     cookie_domain    => 'foo.example.com',
     cookie_path      => '/bar',
     cookie_secure    => 0,
@@ -66,16 +66,6 @@ subtest cookie_delete_args => sub{
     $session->delete();
     $args = $session->cookie_delete_args();
     is( $args->{expires}, '-1d', 'expired session cookie expires is good' );
-};
-
-subtest expires_default => sub{
-    my $starch = Web::Starch->new_with_plugins(
-        ['::CookieArgs'],
-        store => { class=>'::Memory' },
-        expires => 78,
-    );
-
-    is( $starch->cookie_expires(), 78, 'cookie_expires defaults to expires' );
 };
 
 done_testing;

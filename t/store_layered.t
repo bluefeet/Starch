@@ -45,8 +45,8 @@ subtest expires => sub{
         },
         expires => 12,
     );
-    is( $starch->store->expires(), 12, 'the layered store got the global expires' );
-    is( $starch->store->outer->expires(), 12, 'the outer store got the global expires' );
+    is( $starch->store->expires(), undef, 'the layered store got undef expires' );
+    is( $starch->store->outer->expires(), undef, 'the outer store got undef expires' );
     is( $starch->store->inner->expires(), 23, 'the inner store got the explicit expires' );
 
     $starch = Web::Starch->new(

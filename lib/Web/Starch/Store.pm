@@ -49,7 +49,7 @@ Store classes must implement these three methods.
 
 =head2 set
 
-    $store->set( $key, \%data );
+    $store->set( $key, \%data, $expires );
 
 Sets the data for the key.
 
@@ -81,18 +81,29 @@ with qw(
 );
 
 requires qw(
-    set
     get
     remove
 );
 
-=head1 OPTIONAL ARGUMENTS
+around set => sub{
+    my $orig = shift;
+    my $self = shift;
+
+    my $expires = $self->expires();
+    return $self->$orig( @_ ) if !defined $expires;
+
+    my ($key, $data) = @_;
+    return $self->$orig( $key, $data, $expires );
+};
+
+=head1 REQUIRED ARGUMENTS
 
 =head2 factory
 
 A L<Web::Starch::Factory> object which is used by stores to
 create sub-stores (such as the Layered store's outer and inner
-stores).
+stores).  This is automatically set when the stores are built by
+L<Web::Starch::Factory>.
 
 =cut
 
@@ -102,16 +113,23 @@ has factory => (
     required => 1,
 );
 
-=head1 expires
+=head1 OPTIONAL ARGUMENTS
 
-See L<Web::Starch/expires> which this argument defaults to.
+=head2 expires
+
+Setting this to a positive integer tells the store to override whatever
+expiration the session specifies.  This is useful for when you're using
+layered stores where the outer store is a cache and you want the cache
+to hold on to the session data for less time than the inner store.
+
+Setting this to zero tells the store to not specify any particular expiration.
+This is useful for backends that use LRU for expiration, such as Memcached.
 
 =cut
 
 has expires => (
-  is       => 'ro',
-  isa      => PositiveInt | Undef,
-  required => 1,
+  is  => 'ro',
+  isa => PositiveOrZeroInt,
 );
 
 1;

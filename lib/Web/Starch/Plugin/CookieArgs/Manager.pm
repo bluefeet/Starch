@@ -45,27 +45,6 @@ sub _build_cookie_name {
     return 'session';
 }
 
-=head2 cookie_expires
-
-When this cookie should expire.
-
-This can be either a positive number of seconds or C<undef>.  Setting
-this to C<undef> will create a session cookie with no expiration which
-will automatially expire when the browser/tab is closed.
-
-Defaults to the value of L<Web::Starch/expires>.
-
-=cut
-
-has cookie_expires => (
-    is  => 'lazy',
-    isa => PositiveInt | Undef,
-);
-sub _build_cookie_expires {
-    my ($self) = @_;
-    return $self->expires();
-}
-
 =head2 cookie_domain
 
 The domain name to set the cookie to.  Set this to undef, or just don't set

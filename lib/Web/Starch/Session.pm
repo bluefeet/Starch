@@ -23,6 +23,7 @@ This class consumes the L<Web::Starch::Component> role.
 use Scalar::Util qw( refaddr );
 use Types::Standard -types;
 use Types::Common::String -types;
+use Types::Common::Numeric -types;
 use Digest;
 use Carp qw( croak );
 use Storable qw( freeze dclone );
@@ -136,6 +137,80 @@ sub _build_data {
     return $self->clone( $self->original_data() );
 }
 
+=head2 expires
+
+This defaults to L<Web::Starch/expires> and is stored in the L</data>
+under the L<Web::Starch/expires_session_key> key.
+
+=cut
+
+has expires => (
+    is       => 'lazy',
+    isa      => PositiveOrZeroInt,
+    init_arg => undef,
+    clearer  => '_clear_expires',
+);
+sub _build_expires {
+    my ($self) = @_;
+
+    my $manager = $self->manager();
+    my $expires = $self->original_data->{ $manager->expires_session_key() };
+
+    $expires = $manager->expires() if !defined $expires;
+
+    return $expires;
+}
+
+=head2 modified
+
+Whenever the session is L</save>d this will be updated and stored in
+L</data> under the L<Web::Starch/modified_session_key>.
+
+=cut
+
+has modified => (
+    is       => 'lazy',
+    isa      => PositiveInt,
+    init_arg => undef,
+    clearer  => '_clear_modified',
+);
+sub _build_modified {
+    my ($self) = @_;
+
+    my $modified = $self->original_data->{
+        $self->manager->modified_session_key()
+    };
+
+    $modified = $self->created() if !defined $modified;
+
+    return $modified;
+}
+
+=head2 created
+
+When the session is created this is set and stored in L</data>
+under the L<Web::Starch/created_session_key>.
+
+=cut
+
+has created => (
+    is       => 'lazy',
+    isa      => PositiveInt,
+    init_arg => undef,
+    clearer  => '_clear_created',
+);
+sub _build_created {
+    my ($self) = @_;
+
+    my $created = $self->original_data->{
+        $self->manager->created_session_key()
+    };
+
+    $created = time() if !defined $created;
+
+    return $created;
+}
+
 =head2 in_store
 
 Returns true if the session is expected to exist in the store
@@ -240,15 +315,26 @@ sub force_save {
     croak 'Cannot call save or force_save on an deleted session'
         if $self->is_deleted();
 
-    $self->manager->store->set(
+    my $manager = $self->manager();
+    my $data = $self->data();
+
+    $data->{ $manager->created_session_key() }  = $self->created();
+    $data->{ $manager->modified_session_key() } = time();
+    $data->{ $manager->expires_session_key() }  = $self->expires();
+
+    $manager->store->set(
         $self->id(),
-        $self->data(),
+        $data,
     );
 
     $self->_set_in_store( 1 );
     $self->_set_save_was_called( 1 );
 
     $self->mark_clean();
+
+    $self->_clear_expires();
+    $self->_clear_modified();
+    $self->_clear_created();
 
     return;
 }

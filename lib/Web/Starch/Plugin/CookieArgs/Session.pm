@@ -52,10 +52,12 @@ value being set to L<Web::Starch::Session/id>.
 sub cookie_set_args {
     my ($self) = @_;
 
+    my $expires = $self->expires();
+
     my $args = {
         name     => $self->manager->cookie_name(),
         value    => $self->id(),
-        expires  => '+' . $self->manager->cookie_expires() . 's',
+        $expires ? (expires => "+${expires}s") : (),
         domain   => $self->manager->cookie_domain(),
         path     => $self->manager->cookie_path(),
         secure   => $self->manager->cookie_secure(),

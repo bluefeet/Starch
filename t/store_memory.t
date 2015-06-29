@@ -27,7 +27,7 @@ subtest expires => sub{
         store=>{ class=>'::Memory' },
         expires => 89,
     );
-    is( $starch->store->expires(), 89, 'store expires defaulted to the global expires' );
+    is( $starch->store->expires(), undef, 'store expires left at undef' );
 
     $starch = Web::Starch->new(
         store=>{ class=>'::Memory', expires=>67 },
