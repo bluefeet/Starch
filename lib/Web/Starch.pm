@@ -220,7 +220,7 @@ and session/store object construction.
 
 has factory => (
     is  => 'lazy',
-    isa => HasMethods[ 'session_class', 'store_class' ],
+    isa => InstanceOf[ 'Web::Starch::Factory' ],
 );
 sub _build_factory {
     my ($self) = @_;

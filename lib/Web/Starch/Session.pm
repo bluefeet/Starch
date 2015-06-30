@@ -106,7 +106,7 @@ has original_data => (
     isa       => HashRef,
     writer    => '_set_original_data',
     clearer   => '_clear_original_data',
-    predicate => '_has_original_data',
+    predicate => 'is_loaded',
 );
 sub _build_original_data {
     my ($self) = @_;
@@ -258,7 +258,7 @@ sub is_dirty {
 
     # If we haven't even loaded the data from the store then
     # there is no way we're dirty.
-    return 0 if !$self->_has_original_data();
+    return 0 if !$self->is_loaded();
 
     local $Storable::canonical = 1;
 
@@ -268,6 +268,17 @@ sub is_dirty {
     return 0 if $new eq $old;
     return 1;
 }
+
+=head2 is_loaded
+
+This returns true if the L</original_data> has been loaded up from
+the session store.  Note that L</original_data> will be automatically
+loaded if L</original_data>, L</data>, or any methods that call them,
+are called.
+
+=cut
+
+# This is provided by the original_data attribute via its predicate.
 
 =head2 is_saved
 
