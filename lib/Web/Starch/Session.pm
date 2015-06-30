@@ -134,7 +134,7 @@ has data => (
 );
 sub _build_data {
     my ($self) = @_;
-    return $self->clone( $self->original_data() );
+    return $self->clone_data( $self->original_data() );
 }
 
 =head2 expires
@@ -398,7 +398,7 @@ sub mark_clean {
     return if $self->is_deleted();
 
     $self->_set_original_data(
-        $self->clone( $self->data() ),
+        $self->clone_data( $self->data() ),
     );
 
     return;
@@ -416,7 +416,7 @@ sub rollback {
     return if $self->is_deleted();
 
     $self->_set_data(
-        $self->clone( $self->original_data() ),
+        $self->clone_data( $self->original_data() ),
     );
 
     return;
@@ -536,7 +536,7 @@ sub reset_id {
     my ($self) = @_;
 
     # Remove the data for the current session ID.
-    $self->manager->session( $self->id() )->delete();
+    $self->manager->store->remove( $self->id() ) if $self->in_store();
 
     # Ensure that future calls to id generate a new one.
     $self->_clear_existing_id();
@@ -544,20 +544,21 @@ sub reset_id {
 
     # Make sure the session data is now dirty so it gets saved.
     $self->_set_original_data( {} );
+    $self->_set_save_was_called( 0 );
 
     return;
 }
 
 =head1 CLASS METHODS
 
-=head2 clone
+=head2 clone_data
 
 Clones complex perl data structures.  Used internally to build
 L</data> from L</original_data>.
 
 =cut
 
-sub clone {
+sub clone_data {
     my ($class, $data) = @_;
     return dclone( $data );
 }
