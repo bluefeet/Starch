@@ -33,16 +33,14 @@ with qw(
 How long to wait, since the last session write, before forcing a new
 write in order to extend the sessions expiration in the sore.
 
-Defaults to 2 minutes.
-
-Set this to zero to renew the session on every request.
+Defaults to zero which will renew the session expiration on every request.
 
 =cut
 
-has renewal_threshold => (
+has renew_threshold => (
     is      => 'lazy',
     isa     => PositiveOrZeroInt,
-    default => 2 * 60, # 2 minutes
+    default => 0,
 );
 
 1;
