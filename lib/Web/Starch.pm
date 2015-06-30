@@ -17,8 +17,8 @@ Web::Starch - Implementation independent session management.
 
 =head1 DESCRIPTION
 
-This module provides a generic interface to managing sessions, AKA the
-session manager.
+This module provides a generic interface to managing sessions and is
+often refered to as the "manager" in this documentation.
 
 Please see L<Web::Starch::Manual> for some good starter documentation.
 
@@ -67,6 +67,8 @@ Starch plugins are applied using the C<new_with_plugins> constructor method.
 The first argument is an array ref of plugin names.  The plugin names can
 be fully qualified, or relative to the C<Web::Starch::Plugin> namespace.
 A leading C<::> signifies that the plugin's package name is relative.
+
+See L<Web::Starch::Plugin> for more information.
 
 =cut
 
@@ -133,7 +135,7 @@ sub _build_store {
 
 =head1 OPTIONAL ARGUMENTS
 
-=head1 expires
+=head2 expires
 
 How long, in seconds, a session should live after the last time it was
 modified.  Defaults to C<60 * 60 * 2> (2 hours).
@@ -157,7 +159,7 @@ has expires => (
     default => 60 * 60 * 2, # 2 hours
 );
 
-=head1 expires_session_key
+=head2 expires_session_key
 
 The session key to store the L<Web::Starch::Session/expires>
 value in.  Defaults to C<__SESSION_EXPIRES__>.
@@ -170,7 +172,7 @@ has expires_session_key => (
     default => '__SESSION_EXPIRES__',
 );
 
-=head1 modified_session_key
+=head2 modified_session_key
 
 The session key to store the L<Web::Starch::Session/modified>
 value in.  Defaults to C<__SESSION_MODIFIED__>.
@@ -183,7 +185,7 @@ has modified_session_key => (
     default => '__SESSION_MODIFIED__',
 );
 
-=head1 created_session_key
+=head2 created_session_key
 
 The session key to store the L<Web::Starch::Session/created>
 value in.  Defaults to C<__SESSION_CREATED__>.
@@ -196,7 +198,7 @@ has created_session_key => (
     default => '__SESSION_CREATED__',
 );
 
-=head1 digest_algorithm
+=head2 digest_algorithm
 
 The L<Digest> algorithm which L<Web::Starch::Session/digest> will use.
 Defaults to C<SHA-1>.

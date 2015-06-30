@@ -21,11 +21,19 @@ These plugins are included with the C<Web-Starch> distribution.
 
 =item *
 
-L<Web::Starch::Plugin::Trace>
+L<Web::Starch::Plugin::AlwaysLoad>
 
 =item *
 
 L<Web::Starch::Plugin::CookieArgs>
+
+=item *
+
+L<Web::Starch::Plugin::RenewExpiration>
+
+=item *
+
+L<Web::Starch::Plugin::Trace>
 
 =back
 
