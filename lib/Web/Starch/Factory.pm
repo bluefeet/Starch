@@ -12,6 +12,8 @@ session, and store classes.
 
 Normally there is no need to interact with this class directly.
 
+This class consumes the L<Web::Starch::Component> role.
+
 =cut
 
 use Moo::Role qw();
@@ -25,6 +27,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
+    Web::Starch::Component
     Web::Starch::Plugin::Bundle
 );
 

@@ -16,9 +16,9 @@ my $starch = Web::Starch->new_with_plugins(
     store => { class => '::Memory' },
 );
 
-my $manager_class = $starch->factory->manager_class();
-my $session_class = $starch->factory->session_class();
-my $store_class = $starch->factory->store_class('::Memory');
+my $manager_class = 'Web::Starch';
+my $session_class = 'Web::Starch::Session';
+my $store_class   = 'Web::Starch::Store::Memory';
 
 subtest 'manager created with store' => sub{
     $log->category_contains_ok(
