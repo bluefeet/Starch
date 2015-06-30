@@ -149,6 +149,7 @@ has expires => (
     isa      => PositiveOrZeroInt,
     init_arg => undef,
     clearer  => '_clear_expires',
+    writer   => '_set_expires',
 );
 sub _build_expires {
     my ($self) = @_;
@@ -453,6 +454,36 @@ sub force_delete {
     $self->_set_data( {} );
     $self->_set_is_deleted( 1 );
     $self->_set_in_store( 0 );
+
+    return;
+}
+
+=head2 set_expires
+
+    # Extend this session's expires duration by two hours.
+    $session->set_expires( $session->expires() + (2 * 60 * 60) );
+
+Use this to set the session's expires to a duration different than the
+global expires set by L<Web::Starch/expires>.  This is useful for,
+for example, to support a "Remember Me" checkbox that many login
+forms provide where the difference between the user checking it or not
+is just a matter of what the session's expires duration is set to.
+
+Remember that the "expires" duration is a measurement, in seconds, of
+how long the session will live in the store since the last modification,
+and how long the cookie (if you are using cookies) will live since the
+last request.
+
+The expires duration can be more than or less than the global expires,
+there is no artificial constraint.
+
+=cut
+
+sub set_expires {
+    my ($self, $expires) = @_;
+
+    $self->_set_expires( $expires );
+    $self->data->{ $self->manager->expires_session_key() } = $expires;
 
     return;
 }
