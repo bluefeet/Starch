@@ -95,7 +95,9 @@ around set => sub{
     my $expires = $self->expires();
     return $self->$orig( @_ ) if !defined $expires;
 
-    my ($key, $data) = @_;
+    my ($key, $data, $session_expires) = @_;
+    return $self->$orig( @_ ) if $session_expires < $expires;
+
     return $self->$orig( $key, $data, $expires );
 };
 
@@ -120,13 +122,8 @@ has factory => (
 
 =head2 expires
 
-Setting this to a positive integer tells the store to override whatever
-expiration the session specifies.  This is useful for when you're using
-layered stores where the outer store is a cache and you want the cache
-to hold on to the session data for less time than the inner store.
-
-Setting this to zero tells the store to not specify any particular expiration.
-This is useful for backends that use LRU for expiration, such as Memcached.
+Set the per-store expires wich will override the session's expires
+if the session's expires is larger.
 
 =cut
 
