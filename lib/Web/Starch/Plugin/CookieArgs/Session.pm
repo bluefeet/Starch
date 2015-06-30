@@ -1,19 +1,5 @@
 package Web::Starch::Plugin::CookieArgs::Session;
 
-=head1 NAME
-
-Web::Starch::Plugin::CookieArgs::Session - Add methods to the Web::Starch::Session
-object for dealing with HTTP cookies.
-
-=head1 DESCRIPTION
-
-This role adds methods to L<Web::Starch::Session>.
-
-See L<Web::Starch::Plugin::CookieArgs> for examples of using this
-module.
-
-=cut
-
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
@@ -22,32 +8,12 @@ with qw(
     Web::Starch::Plugin::ForSession
 );
 
-=head1 METHODS
-
-=head2 cookie_args
-
-Returns L</cookie_delete_args> if the L<Web::Starch::Session/is_deleted>,
-otherwise returns L</cookie_set_args>.
-
-These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
-the C<-> in front of the argument names, which is the same format that
-Catalyst accepts for cookies.
-
-=cut
-
 sub cookie_args {
     my ($self) = @_;
 
     return $self->cookie_delete_args() if $self->is_deleted();
     return $self->cookie_set_args();
 }
-
-=head2 cookie_set_args
-
-Returns a hashref containing all the cookie args including the
-value being set to L<Web::Starch::Session/id>.
-
-=cut
 
 sub cookie_set_args {
     my ($self) = @_;
@@ -72,14 +38,6 @@ sub cookie_set_args {
     };
 }
 
-=head2 cookie_delete_args
-
-This returns the same thing as L</cookie_set_args>, but overrides the
-C<expires> value to be one day in the past which will trigger the client
-to remove the cookie immediately.
-
-=cut
-
 sub cookie_delete_args {
     my ($self) = @_;
 
@@ -90,9 +48,3 @@ sub cookie_delete_args {
 }
 
 1;
-__END__
-
-=head1 AUTHOR AND LICENSE
-
-See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
-

@@ -1,19 +1,5 @@
 package Web::Starch::Plugin::RenewExpiration::Session;
 
-=head1 NAME
-
-Web::Starch::Plugin::RenewExpiration::Session - Add methods to the Web::Starch::Session
-for renewing storage session expirations.
-
-=head1 DESCRIPTION
-
-This role adds methods to L<Web::Starch::Session>.
-
-See L<Web::Starch::Plugin::RenewExpiration> for examples of using this
-module.
-
-=cut
-
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
@@ -41,9 +27,3 @@ sub DEMOLISH {
 }
 
 1;
-__END__
-
-=head1 AUTHOR AND LICENSE
-
-See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
-

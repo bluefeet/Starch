@@ -36,13 +36,68 @@ HTTP cookies.
 
 =head1 DESCRIPTION
 
-This plugin provides two roles L<Web::Starch::Plugin::CookieArgs::Session>,
-which adds methods to the session object, and
-L<Web::Starch::Plugin::CookieArgs::Manager> which adds arguments to the
-Starch object.
+This plugin adds new arguments to the manager class and new methods to
+the session class which are intended to ease the integration of Starch
+with existing web frameworks.
 
-This plugin is meant to ease the work of integrating Starch with various
-web frameworks.
+=head1 OPTIONAL MANAGER ARGUMENTS
+
+These areguments are added to the L<Web::Starch> class.
+
+Additional details about these arguments can be found in the
+L<CGI::Simple::Cookie> documentation.
+
+=head2 cookie_name
+
+The name of the session cookie, defaults to C<session>.
+
+=head2 cookie_domain
+
+The domain name to set the cookie to.  Set this to undef, or just don't set
+it, to let the browser figure this out.
+
+=head2 cookie_path
+
+The path within the L</cookie_domain> that the cookie should be
+applied to.  Defaults to C</>.
+
+=head2 cookie_secure
+
+Whether the session cookie can only be transmitted over SSL.
+This defaults to true, as doing otherwise is a pretty terrible
+idea as a user's session cookie could be easly hijacker by
+anyone sniffing network packets.
+
+=head2 cookie_http_only
+
+If this is set to true then JavaScript will not have access to the cookie
+data, mitigating certain XSS attacks.  This defaults to true as having
+JavaScript that needs access to cookies is a rare case and you should
+have to explicitly declare that you want to turn this protection off.
+
+=head1 SESSION METHODS
+
+These methods are added to the L<Web::Starch::Session> class.
+
+=head2 cookie_args
+
+Returns L</cookie_delete_args> if the L<Web::Starch::Session/is_deleted>,
+otherwise returns L</cookie_set_args>.
+
+These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
+the C<-> in front of the argument names, which is the same format that
+Catalyst accepts for cookies.
+
+=head2 cookie_set_args
+
+Returns a hashref containing all the cookie args including the
+value being set to L<Web::Starch::Session/id>.
+
+=head2 cookie_delete_args
+
+This returns the same thing as L</cookie_set_args>, but overrides the
+C<expires> value to be one day in the past which will trigger the client
+to remove the cookie immediately.
 
 =head1 AUTHOR AND LICENSE
 
