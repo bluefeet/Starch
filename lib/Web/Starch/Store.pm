@@ -51,7 +51,10 @@ Store classes must implement these three methods.
 
     $store->set( $key, \%data, $expires );
 
-Sets the data for the key.
+Sets the data for the key.  The C<$expires> value will always be set and
+will be either C<0> or a postive integer representing the number of seconds
+in the future that this session data should be expired.  If C<0> then the
+store may expire the data whenever it chooses.
 
 =head2 get
 

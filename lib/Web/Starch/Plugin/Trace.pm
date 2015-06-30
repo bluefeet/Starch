@@ -39,7 +39,7 @@ C<trace> level.
 See the L<Log::Any> documentation for instructions on how to output
 these log messages using an adapter.
 
-This plugin is meant for development as logging will reduce performance.
+This plugin is meant for non-production use, as logging will reduce performance.
 
 =head1 MANAGER LOGGING
 

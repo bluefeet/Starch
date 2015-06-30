@@ -42,10 +42,10 @@ with existing web frameworks.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
 
-These areguments are added to the L<Web::Starch> class.
+These arguments are added to the L<Web::Starch> class.
 
-Additional details about these arguments can be found in the
-L<CGI::Simple::Cookie> documentation.
+A detailed description of what these arguments mean and what
+they can contain is in the L<CGI::Simple::Cookie> documentation.
 
 =head2 cookie_name
 
@@ -59,7 +59,8 @@ it, to let the browser figure this out.
 =head2 cookie_path
 
 The path within the L</cookie_domain> that the cookie should be
-applied to.  Defaults to C</>.
+applied to.  Set this to undef, or just don't set it, to let the
+browser figure it out.
 
 =head2 cookie_secure
 
@@ -91,7 +92,8 @@ Catalyst accepts for cookies.
 =head2 cookie_set_args
 
 Returns a hashref containing all the cookie args including the
-value being set to L<Web::Starch::Session/id>.
+value being set to L<Web::Starch::Session/id> and the expires being
+set to L<Web::Starch::Session/expires>.
 
 =head2 cookie_delete_args
 

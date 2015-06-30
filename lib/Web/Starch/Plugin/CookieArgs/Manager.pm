@@ -13,43 +13,31 @@ with qw(
 );
 
 has cookie_name => (
-    is  => 'lazy',
-    isa => NonEmptySimpleStr,
+    is      => 'lazy',
+    isa     => NonEmptySimpleStr,
+    default => 'session',
 );
-sub _build_cookie_name {
-    return 'session';
-}
 
 has cookie_domain => (
     is => 'lazy',
     isa => NonEmptySimpleStr | Undef,
 );
-sub _build_cookie_domain {
-    return undef;
-}
 
 has cookie_path => (
     is  => 'lazy',
-    isa => NonEmptySimpleStr,
+    isa => NonEmptySimpleStr | Undef,
 );
-sub _build_cookie_path {
-    return '/';
-}
 
 has cookie_secure => (
-    is  => 'lazy',
-    isa => Bool,
+    is      => 'lazy',
+    isa     => Bool,
+    default => 1,
 );
-sub _build_cookie_secure {
-    return 1;
-}
 
 has cookie_http_only => (
-    is  => 'lazy',
-    isa => Bool,
+    is      => 'lazy',
+    isa     => Bool,
+    default => 1,
 );
-sub _build_cookie_http_only {
-    return 1;
-}
 
 1;

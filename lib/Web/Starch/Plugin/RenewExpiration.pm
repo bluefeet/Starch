@@ -33,7 +33,7 @@ session store.
 
 =head1 DESCRIPTION
 
-If you session is used for reading more than writing you may find that your
+If your session is used for reading more than writing you may find that your
 sessions expire in the store when they are still being used since your code
 has not triggered a write of the session data.
 
@@ -49,7 +49,7 @@ These areguments are added to the L<Web::Starch> class.
 =head2 renew_threshold
 
 How long to wait, since the last session write, before forcing a new
-write in order to extend the sessions expiration in the sore.
+write in order to extend the sessions expiration in the store.
 
 Defaults to zero which will renew the session expiration on every request.
 
