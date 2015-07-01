@@ -92,13 +92,13 @@ around set => sub{
     my $orig = shift;
     my $self = shift;
 
-    my $expires = $self->expires();
-    return $self->$orig( @_ ) if !defined $expires;
+    my $max_expires = $self->max_expires();
+    return $self->$orig( @_ ) if !defined $max_expires;
 
-    my ($key, $data, $session_expires) = @_;
-    return $self->$orig( @_ ) if $session_expires < $expires;
+    my ($key, $data, $expires) = @_;
+    return $self->$orig( @_ ) if $expires <= $max_expires;
 
-    return $self->$orig( $key, $data, $expires );
+    return $self->$orig( $key, $data, $max_expires );
 };
 
 =head1 REQUIRED ARGUMENTS
@@ -120,14 +120,14 @@ has factory => (
 
 =head1 OPTIONAL ARGUMENTS
 
-=head2 expires
+=head2 max_expires
 
-Set the per-store expires wich will override the session's expires
+Set the per-store maximum expires wich will override the session's expires
 if the session's expires is larger.
 
 =cut
 
-has expires => (
+has max_expires => (
   is  => 'ro',
   isa => PositiveOrZeroInt,
 );
