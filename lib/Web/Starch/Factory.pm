@@ -12,22 +12,19 @@ session, and store classes.
 
 Normally there is no need to interact with this class directly.
 
-This class consumes the L<Web::Starch::Component> role.
-
 =cut
 
 use Moo::Role qw();
 use Types::Standard -types;
-use Module::Runtime qw( require_module );
 use Carp qw( croak );
 use Moo::Object qw();
+use Web::Starch::Util qw( load_prefixed_module );
 
 use Moo;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Component
     Web::Starch::Plugin::Bundle
 );
 
@@ -214,7 +211,7 @@ return the resolved class name.
 sub base_store_class {
     my ($self, $suffix) = @_;
 
-    return _load_module(
+    return load_prefixed_module(
         'Web::Starch::Store',
         $suffix,
     );

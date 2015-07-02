@@ -10,7 +10,8 @@ This role defines an interfaces for session store classes.  Session store
 classes are meant to be thin wrappers around the store implementations
 (such as DBI, CHI, etc).
 
-This role consumes the L<Web::Starch::Component> role.
+See L<Web::Starch::Manual/STORES> for instructions on using stores and a
+list of available session stores.
 
 =head1 CORE STORES
 
@@ -80,7 +81,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Component
+    Web::Starch::Role::Log
 );
 
 requires qw(

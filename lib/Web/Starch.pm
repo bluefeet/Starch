@@ -20,9 +20,8 @@ Web::Starch - Implementation independent session management.
 This module provides a generic interface to managing sessions and is
 often refered to as the "manager" in this documentation.
 
-Please see L<Web::Starch::Manual> for some good starter documentation.
-
-This class consumes the L<Web::Starch::Component> role.
+Please see L<Web::Starch::Manual> for some good holistic starter
+documentation.
 
 =cut
 
@@ -41,7 +40,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Component
+    Web::Starch::Role::Log
 );
 
 sub BUILD {

@@ -16,8 +16,6 @@ Web::Starch::Session - The Web::Starch session object.
 
 This is the session class used by L<Web::Starch/session>.
 
-This class consumes the L<Web::Starch::Component> role.
-
 =cut
 
 use Scalar::Util qw( refaddr );
@@ -33,7 +31,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Component
+    Web::Starch::Role::Log
 );
 
 sub DEMOLISH {

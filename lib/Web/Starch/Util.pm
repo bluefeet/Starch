@@ -26,7 +26,7 @@ our @EXPORT_OK;
 Takes a prefix to be appended to a relative package name and a
 relative or absolute package name.  It then resolves the relative
 package name to an absolute one, loads it, and returns the
-absolute name,
+absolute name.
 
 =cut
 
@@ -45,7 +45,7 @@ sub load_prefixed_module {
 
     my @ret = call_method_proxy(
         [
-            '$proxy'
+            '&proxy'
             'Some::Package',
             'some_method',
             @args,
@@ -65,7 +65,7 @@ push @EXPORT_OK, 'call_method_proxy';
 sub call_method_proxy {
     my ($proxy) = @_;
 
-    croak 'The method proxy is not an array ref with the first entry of "$proxy"'
+    croak 'The method proxy is not an array ref with the first entry of "&proxy"'
         if !is_method_proxy( $proxy );
 
     my ($marker, $package, $method, @args) = @$proxy;
@@ -89,10 +89,10 @@ sub call_method_proxy {
 =head1 is_method_proxy
 
     is_method_proxy( [ 'Foo', 'bar' ] ); # false
-    is_method_proxy( [ '$proxy', 'Foo', 'bar' ] ); # true
+    is_method_proxy( [ '&proxy', 'Foo', 'bar' ] ); # true
 
 Returns true if the passed value is an array ref where the first value
-is C<$proxy>.
+is C<&proxy>.
 
 =cut
 
@@ -100,7 +100,7 @@ push @EXPORT_OK, 'is_method_proxy';
 sub is_method_proxy {
     my ($proxy) = @_;
     return 0 if ref($proxy) ne 'ARRAY';
-    return 1 if defined( $proxy->[0] ) and $proxy->[0] eq '$proxy';
+    return 1 if defined( $proxy->[0] ) and $proxy->[0] eq '&proxy';
     return 0;
 }
 
