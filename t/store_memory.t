@@ -22,18 +22,18 @@ subtest basics => sub{
     is( $mem->get('foo'), undef, 'get a removed key' );
 };
 
-subtest expires => sub{
+subtest max_expires => sub{
     my $starch = Web::Starch->new(
         store=>{ class=>'::Memory' },
         expires => 89,
     );
-    is( $starch->store->expires(), undef, 'store expires left at undef' );
+    is( $starch->store->max_expires(), undef, 'store max_expires left at undef' );
 
     $starch = Web::Starch->new(
-        store=>{ class=>'::Memory', expires=>67 },
+        store=>{ class=>'::Memory', max_expires=>67 },
         expires => 89,
     );
-    is( $starch->store->expires(), 67, 'store expires explicitly set' );
+    is( $starch->store->max_expires(), 67, 'store max_expires explicitly set' );
 };
 
 done_testing();

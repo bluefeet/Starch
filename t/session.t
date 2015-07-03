@@ -224,15 +224,6 @@ subtest hash_seed => sub{
     isnt( $session->hash_seed(), $session->hash_seed(), 'two hash seeds are not the same' );
 };
 
-subtest digest => sub{
-    my $starch = starch();
-
-    my $session = $starch->session();
-    my $d1 = $session->digest();
-    my $d2 = $session->digest();
-    isnt( $d1, $d2, 'two digest objects are not the same' );
-};
-
 subtest generate_id => sub{
     my $starch = starch();
     my $session = $starch->session();

@@ -12,7 +12,7 @@ Web::Starch::Store::Layered - Layer multiple stores.
             class => '::Layered',
             outer => {
                 class=>'::CHI',
-                expires => 10 * 60, # 10 minutes
+                max_expires => 10 * 60, # 10 minutes
                 ...,
             },
             inner => {
@@ -92,10 +92,10 @@ sub _build_outer {
     my ($self) = @_;
 
     my $store = $self->_outer_arg();
-    my $expires = $self->expires();
+    my $max_expires = $self->max_expires();
 
     return $self->factory->new_store(
-        defined($expires) ? (expires => $expires) : (),
+        defined($max_expires) ? (max_expires => $max_expires) : (),
         %$store,
     );
 }
@@ -125,10 +125,10 @@ sub _build_inner {
     my ($self) = @_;
 
     my $store = $self->_inner_arg();
-    my $expires = $self->expires();
+    my $max_expires = $self->max_expires();
 
     return $self->factory->new_store(
-        defined($expires) ? (expires => $expires) : (),
+        defined($max_expires) ? (max_expires => $max_expires) : (),
         %$store,
     );
 }

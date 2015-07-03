@@ -23,17 +23,17 @@ often refered to as the "manager" in this documentation.
 Please see L<Web::Starch::Manual> for some good holistic starter
 documentation.
 
+This class support method proxies as described in
+L<Web::Starch::Manual/METHOD PROXIES>.
+
 =cut
 
 use Web::Starch::Factory;
 use Web::Starch::Session;
 
-use Moo::Role qw();
 use Types::Standard -types;
 use Types::Common::String -types;
 use Types::Common::Numeric -types;
-use Scalar::Util qw( blessed );
-use Carp qw( croak );
 
 use Moo;
 use strictures 2;
@@ -68,7 +68,7 @@ The first argument is an array ref of plugin names.  The plugin names can
 be fully qualified, or relative to the C<Web::Starch::Plugin> namespace.
 A leading C<::> signifies that the plugin's package name is relative.
 
-See L<Web::Starch::Plugin> for more information.
+More information about stores can be found at L<Web::Starch::Manual/PLUGINS>.
 
 =cut
 
@@ -100,14 +100,7 @@ C<class> key and will be converted into a store object automatically.
 The C<class> can be fully qualified, or relative to the C<Web::Starch::Store>
 namespace.  A leading C<::> signifies that the store's package name is relative.
 
-The class must implement the C<set>, C<get>, and C<remove> methods.  Typically
-a store class consumes the L<Web::Starch::Store> role which enforces this interface.
-
-To find available stores you can search
-L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3AStore>.
-
-Stores can be layered, such as if you want to put a cache in front of your
-session database by using the L<Web::Starch::Store::Layered> store.
+More information about stores can be found at L<Web::Starch::Manual/STORES>.
 
 =cut
 
@@ -140,16 +133,7 @@ sub _build_store {
 How long, in seconds, a session should live after the last time it was
 modified.  Defaults to C<60 * 60 * 2> (2 hours).
 
-This value is used as the default for L<Web::Starch::Session/expires>
-and is sometimes referred to as the "global expires".
-
-You can set this argument to zero which has different meaning for
-stores than cookies.  For stores this typically means "expire whenever
-you want to" and for cookies means "expire when the session (browser/tab)
-is closed".  Some stores, such as Memcached, function well with undefined
-expirations as they use an LRU to automatically expire data, other stores
-not so much.  Read the documentation for your store to determine how
-its expiration strategy works.
+See L<Web::Starch::Manual/EXPIRATION> for more information.
 
 =cut
 
@@ -197,21 +181,6 @@ has created_session_key => (
     isa     => NonEmptySimpleStr,
     default => '__SESSION_CREATED__',
 );
-
-=head2 digest_algorithm
-
-The L<Digest> algorithm which L<Web::Starch::Session/digest> will use.
-Defaults to C<SHA-1>.
-
-=cut
-
-has digest_algorithm => (
-    is  => 'lazy',
-    isa => NonEmptySimpleStr,
-);
-sub _build_digest_algorithm {
-    return 'SHA-1';
-}
 
 =head2 factory
 
@@ -265,59 +234,6 @@ sub session {
 
 1;
 __END__
-
-=head1 DEPENDENCIES
-
-The C<Web-Starch> distribution is shipped with minimal dependencies
-and with no non-core XS requirements.  This is important for many people.
-
-=head1 SUPPORT
-
-Please submit bugs and feature requests on GitHub issues:
-
-L<https://github.com/bluefeet/Web-Starch/issues>
-
-=head1 ALTERNATIVES
-
-=over
-
-=item *
-
-L<CGI::Session>
-
-=item *
-
-L<Data::Session>
-
-=item *
-
-L<HTTP::Session>
-
-=item *
-
-L<Catalyst::Plugin::Session>
-
-=item *
-
-L<Plack::Middleware::Session>
-
-=item *
-
-L<Dancer::Session>
-
-=item *
-
-L<Mojolicious::Sessions>
-
-=item *
-
-L<MojoX::Session>
-
-=back
-
-Unlike these modules this module tries to make as little assumptions
-as possible and just provides raw session management with the ability
-for implementors to alter behaviors as they see fit.
 
 =head1 AUTHOR
 

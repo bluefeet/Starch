@@ -36,31 +36,31 @@ subtest basics => sub{
     is( $inner->get('foo'), undef, 'inner get (no inner)' );
 };
 
-subtest expires => sub{
+subtest max_expires => sub{
     my $starch = Web::Starch->new(
         store => {
             class => '::Layered',
             outer => { class=>'::Memory' },
-            inner => { class=>'::Memory', expires=>23 },
+            inner => { class=>'::Memory', max_expires=>23 },
         },
         expires => 12,
     );
-    is( $starch->store->expires(), undef, 'the layered store got undef expires' );
-    is( $starch->store->outer->expires(), undef, 'the outer store got undef expires' );
-    is( $starch->store->inner->expires(), 23, 'the inner store got the explicit expires' );
+    is( $starch->store->max_expires(), undef, 'the layered store got undef max_expires' );
+    is( $starch->store->outer->max_expires(), undef, 'the outer store got undef max_expires' );
+    is( $starch->store->inner->max_expires(), 23, 'the inner store got the explicit max_expires' );
 
     $starch = Web::Starch->new(
         store => {
             class => '::Layered',
-            expires => 45,
+            max_expires => 45,
             outer => { class=>'::Memory' },
-            inner => { class=>'::Memory', expires=>23 },
+            inner => { class=>'::Memory', max_expires=>23 },
         },
         expires => 12,
     );
-    is( $starch->store->expires(), 45, 'the layered store got the explicit expires' );
-    is( $starch->store->outer->expires(), 45, 'the outer store got the layered expires' );
-    is( $starch->store->inner->expires(), 23, 'the inner store got the explicit expires' );
+    is( $starch->store->max_expires(), 45, 'the layered store got the explicit max_expires' );
+    is( $starch->store->outer->max_expires(), 45, 'the outer store got the layered max_expires' );
+    is( $starch->store->inner->max_expires(), 23, 'the inner store got the explicit max_expires' );
 };
 
 done_testing();

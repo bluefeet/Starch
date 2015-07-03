@@ -5,9 +5,71 @@
 
 Web::Starch::Manual::Extending - How to alter and add functionality Web::Starch.
 
-=head1 TODO
+=head1 STORES
 
-This document needs to be written.
+See L<Web::Starch::Store::Memory> for a basic example store.
+
+A store must implement the C<set>, C<get>, and C<remove> methods and consume
+the L<Web::Starch::Store> role.
+
+Writing new stores is generally a trivial process where the store class does
+nothing more than glue those three methods with some underlying implementation
+such as L<DBI> or L<CHI>.
+
+All stores should be written to accept a method proxy instead of connection
+settings.  For example, if you were to write a DBI store it would be important
+to support this for users which do not want to double the number of connections
+they are making to their database.  By supporting a method proxy the user can
+specify a code path for retrieving the C<$dbh> rather than letting the store
+make a new one.
+
+See any of the L<Web::Starch::Manual/STORES> for more information.
+
+=head1 PLUGINS
+
+See any of the L<Web::Starch::Manual/PLUGINS> for working examples which
+ship with Starch.
+
+See the L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
+L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
+for details about how to write plugins and plugin bundles.
+
+Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
+acts as a dynamic plugin bundle.
+
+Plugins can modify any of the manager (L<Web::Starch>), session (L<Web::Starch::Session>),
+and store (L<Web::Starch::Store>) classes to extend functionality.
+
+A plugin may extend several of these classes, via plugin bundles, or just one.  A common
+setup is a plugin bundle which adds arguments to the manager object and then adds logic
+to the session objects which acts upon the arguments.
+
+=head1 REQUIRED METHODS
+
+Store classes must implement these three methods.
+
+=head2 set
+
+    $store->set( $key, \%data, $expires );
+
+Sets the data for the key.  The C<$expires> value will always be set and
+will be either C<0> or a postive integer representing the number of seconds
+in the future that this session data should be expired.  If C<0> then the
+store may expire the data whenever it chooses.
+
+=head2 get
+
+    my $data = $store->get( $key );
+
+Returns the data for the given key.  If the data was not found then
+C<undef> is returned.
+
+=head2 remove
+
+    $store->remove( $key );
+
+Deletes the data for the key.  If the data does not exist then this is just
+a no-op.
 
 =head1 OBJECT REFERENCES
 

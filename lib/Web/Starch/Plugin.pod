@@ -6,52 +6,11 @@ Web::Starch::Plugin - Web::Starch plugin framework.
 
 =head1 DESCRIPTION
 
-Plugins can modify any of the manager (L<Web::Starch>), session (L<Web::Starch::Session>),
-and store (L<Web::Starch::Store>) classes to extend functionality.
+See L<Web::Starch::Manual/PLUGINS> for instructions on using plugins and a
+list of available plugins.
 
-A plugin may extend several of these classes, via plugin bundles, or just one.  A common
-setup is a plugin bundle which adds arguments to the manager object and then adds logic
-to the session objects which acts upon the arguments.
-
-=head1 CORE PLUGINS
-
-These plugins are included with the C<Web-Starch> distribution.
-
-=over
-
-=item *
-
-L<Web::Starch::Plugin::AlwaysLoad>
-
-=item *
-
-L<Web::Starch::Plugin::CookieArgs>
-
-=item *
-
-L<Web::Starch::Plugin::RenewExpiration>
-
-=item *
-
-L<Web::Starch::Plugin::Trace>
-
-=back
-
-=head1 EXTERNAL PLUGINS
-
-Third-party plugins can be found on
-L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
-
-=head2 WRITING
-
-See any of the L</CORE PLUGINS> for working examples which ship with Starch.
-
-See the L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
-L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
-for details about how to write plugins and plugin bundles.
-
-Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
-acts as a dynamic plugin bundle.
+See L<Web::Starch::Manual::Extending/PLUGINS> for instructions on writing
+your own plugins.
 
 =head1 AUTHOR AND LICENSE
 

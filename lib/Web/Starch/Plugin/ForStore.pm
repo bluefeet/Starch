@@ -23,6 +23,9 @@ This role, currently, provides no additional functionality to
 store plugins.  All it does is labels a plugin as a store
 plugin so that Starch knows which class type it applies to.
 
+See L<Web::Starch::Manual::Extending/PLUGINS> for more information
+on writing plugins.
+
 =cut
 
 use Moo::Role;

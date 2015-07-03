@@ -18,36 +18,15 @@ use Moo::Role qw();
 use Types::Standard -types;
 use Carp qw( croak );
 use Moo::Object qw();
+use Web::Starch::Util qw( load_prefixed_module );
 
 use Moo;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Role::LoadPrefixedModule
     Web::Starch::Plugin::Bundle
 );
-
-sub _roles_for {
-    my ($self, $prefix) = @_;
-
-    my $for_role = "Web::Starch::Plugin::For$prefix";
-
-    my @roles;
-    foreach my $role (@{ $self->roles() }) {
-        next if !Moo::Role::does_role( $role, $for_role );
-        push @roles, $role;
-    }
-
-    return \@roles;
-}
-
-sub _load_module {
-    my ($prefix, $module) =  @_;
-    $module = "$prefix$module" if $module =~ m{^::};
-    require_module( $module );
-    return $module;
-}
 
 =head1 OPTIONAL ARGUMENTS
 
@@ -95,24 +74,6 @@ sub _build_base_session_class {
 
 =head1 ATTRIBUTES
 
-=head2 manager_roles
-
-Of the L<Web::Starch::Plugin::Bundle/roles> this returnes the ones that
-are meant to be applied to the L</base_manager_class>.
-
-=cut
-
-has manager_roles => (
-    is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
-    init_arg => undef,
-);
-sub _build_manager_roles {
-    my ($self) = @_;
-
-    return $self->_roles_for('Manager');
-}
-
 =head2 manager_class
 
 The anonymous class which extends L</base_manager_class> and has
@@ -133,24 +94,6 @@ sub _build_manager_class {
     return $class if !@$roles;
 
     return Moo::Role->create_class_with_roles( $class, @$roles );
-}
-
-=head2 session_roles
-
-Of the L<Web::Starch::Plugin::Bundle/roles> this returnes the ones that
-are meant to be applied to the L</base_session_class>.
-
-=cut
-
-has session_roles => (
-    is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
-    init_arg => undef,
-);
-sub _build_session_roles {
-    my ($self) = @_;
-
-    return $self->_roles_for('Session');
 }
 
 =head2 session_class
@@ -175,24 +118,6 @@ sub _build_session_class {
     return Moo::Role->create_class_with_roles( $class, @$roles );
 }
 
-=head2 store_roles
-
-Of the L<Web::Starch::Plugin::Bundle/roles> this returnes the ones that
-are meant to be applied to the L</base_store_class>.
-
-=cut
-
-has store_roles => (
-    is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
-    init_arg => undef,
-);
-sub _build_store_roles {
-    my ($self) = @_;
-
-    return $self->_roles_for('Store');
-}
-
 =head1 METHODS
 
 =head2 base_store_class
@@ -211,7 +136,7 @@ return the resolved class name.
 sub base_store_class {
     my ($self, $suffix) = @_;
 
-    return $self->load_prefixed_module(
+    return load_prefixed_module(
         'Web::Starch::Store',
         $suffix,
     );

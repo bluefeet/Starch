@@ -13,63 +13,11 @@ classes are meant to be thin wrappers around the store implementations
 See L<Web::Starch::Manual/STORES> for instructions on using stores and a
 list of available session stores.
 
-=head1 CORE STORES
+See L<Web::Starch::Manual::Extending/STORES> for instructions on writing
+your own stores.
 
-These stores are included with the C<Web-Starch> distribution.
-
-=over
-
-=item *
-
-L<Web::Starch::Store::Memory>
-
-=item *
-
-L<Web::Starch::Store::Layered>
-
-=back
-
-=head1 EXTERNAL STORES
-
-These stores are distributed separately on CPAN.
-
-=over
-
-=item *
-
-L<Web::Starch::Store::CHI>
-
-=back
-
-More third-party plugins can be found on
-L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
-
-=head1 REQUIRED METHODS
-
-Store classes must implement these three methods.
-
-=head2 set
-
-    $store->set( $key, \%data, $expires );
-
-Sets the data for the key.  The C<$expires> value will always be set and
-will be either C<0> or a postive integer representing the number of seconds
-in the future that this session data should be expired.  If C<0> then the
-store may expire the data whenever it chooses.
-
-=head2 get
-
-    my $data = $store->get( $key );
-
-Returns the data for the given key.  If the data was not found then
-C<undef> is returned.
-
-=head2 remove
-
-    $store->remove( $key );
-
-Deletes the data for the key.  If the data does not exist then this is just
-a no-op.
+This role adds support for method proxies to consuming classes as
+described in L<Web::Starch::Manual/METHOD PROXIES>.
 
 =cut
 
@@ -86,6 +34,7 @@ with qw(
 );
 
 requires qw(
+    set
     get
     remove
 );
@@ -136,6 +85,10 @@ has max_expires => (
 
 1;
 __END__
+
+=head1 METHODS
+
+All store classes must implement the C<set>, C<get>, and C<remove> methods.
 
 =head1 AUTHOR AND LICENSE
 

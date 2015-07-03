@@ -22,7 +22,7 @@ use Scalar::Util qw( refaddr );
 use Types::Standard -types;
 use Types::Common::String -types;
 use Types::Common::Numeric -types;
-use Digest;
+use Digest::SHA qw( sha1_hex );
 use Carp qw( croak );
 use Storable qw( freeze dclone );
 
@@ -39,8 +39,8 @@ sub DEMOLISH {
 
     if ($self->is_dirty()) {
         $self->log->errorf(
-            '%s %s was changed and not saved.',
-            ref($self), $self->id(),
+            'Starch session %s was changed and not saved.',
+            $self->id(),
         );
     }
 
@@ -53,6 +53,7 @@ sub DEMOLISH {
 
 The L<Web::Starch> object that glues everything together.  The session
 object needs this to get at configuration information and the stores.
+This argument is automatically set by L<Web::Starch/session>.
 
 =cut
 
@@ -66,8 +67,8 @@ has manager => (
 
 =head2 id
 
-The session ID.  If one is not specified then one will be built and will
-be considered new.
+The session ID.  If one is not specified then one will be built and
+the session will be considered new.
 
 =cut
 
@@ -213,7 +214,7 @@ sub _build_created {
 =head2 in_store
 
 Returns true if the session is expected to exist in the store
-(AKA, if the L</id> argument was specified).
+(AKA, if the L</id> argument was specified or L</save> was called).
 
 =cut
 
@@ -259,13 +260,7 @@ sub is_dirty {
     # there is no way we're dirty.
     return 0 if !$self->is_loaded();
 
-    local $Storable::canonical = 1;
-
-    my $old = freeze( $self->original_data() );
-    my $new = freeze( $self->data() );
-
-    return 0 if $new eq $old;
-    return 1;
+    return $self->is_data_diff( $self->original_data(), $self->data() );
 }
 
 =head2 is_loaded
@@ -322,7 +317,7 @@ Like L</save>, but saves even if L</is_dirty> is not set.
 sub force_save {
     my ($self) = @_;
 
-    croak 'Cannot call save or force_save on an deleted session'
+    croak 'Cannot call save or force_save on a deleted session'
         if $self->is_deleted();
 
     my $manager = $self->manager();
@@ -498,32 +493,16 @@ sub hash_seed {
     return join( '', ++$counter, time, rand, $$, {}, refaddr($self) )
 }
 
-=head2 digest
-
-Returns a new L<Digest> object set to the algorithm specified
-by L<Web::Starch/digest_algorithm>.
-
-=cut
-
-sub digest {
-    my ($self) = @_;
-    return Digest->new( $self->manager->digest_algorithm() );
-}
-
 =head2 generate_id
 
-Generates and returns a new session ID using the L</hash_seed>
-passed to the L</digest>.  This is used by L</id> if no id arugment
-was specified.
+Generates and returns a new session ID which is a SHA-1 hex
+digest of calling L</hash_seed>.
 
 =cut
 
 sub generate_id {
     my ($self) = @_;
-
-    my $digest = $self->digest();
-    $digest->add( $self->hash_seed() );
-    return $digest->hexdigest();
+    return sha1_hex( $self->hash_seed() );
 }
 
 =head2 reset_id
@@ -559,6 +538,25 @@ L</data> from L</original_data>.
 sub clone_data {
     my ($class, $data) = @_;
     return dclone( $data );
+}
+
+=head2 is_data_diff
+
+Given two bits of data (scalar, array ref, or hash ref) this returns
+true if the data is different.  Used internally by L</is_dirty>.
+
+=cut
+
+sub is_data_diff {
+    my ($class, $old, $new) = @_;
+
+    local $Storable::canonical = 1;
+
+    $old = freeze( $old );
+    $new = freeze( $new );
+
+    return 0 if $new eq $old;
+    return 1;
 }
 
 1;
