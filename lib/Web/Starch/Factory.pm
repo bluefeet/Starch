@@ -19,6 +19,7 @@ use Types::Standard -types;
 use Carp qw( croak );
 use Moo::Object qw();
 use Web::Starch::Util qw( load_prefixed_module );
+use Module::Runtime qw( require_module );
 
 use Moo;
 use strictures 2;
@@ -91,6 +92,8 @@ sub _build_manager_class {
 
     my $roles = $self->manager_roles();
     my $class = $self->base_manager_class();
+    require_module( $class );
+
     return $class if !@$roles;
 
     return Moo::Role->create_class_with_roles( $class, @$roles );
@@ -113,6 +116,8 @@ sub _build_session_class {
 
     my $roles = $self->session_roles();
     my $class = $self->base_session_class();
+    require_module( $class );
+
     return $class if !@$roles;
 
     return Moo::Role->create_class_with_roles( $class, @$roles );
@@ -157,6 +162,7 @@ sub store_class {
 
     my $roles = $self->store_roles();
     my $class = $self->base_store_class( $suffix );
+
     return $class if !@$roles;
 
     return Moo::Role->create_class_with_roles( $class, @$roles );

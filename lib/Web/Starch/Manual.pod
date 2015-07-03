@@ -214,7 +214,7 @@ it may make sense to use the same C<$dbh> for both so that you do not
 double the number of connections you are making to your database.
 
 Method proxies can be used with the manager and store objects at any point in
-there arguments.  For example, if you have Perl code that builds the Starch
+their arguments.  For example, if you have Perl code that builds the Starch
 configuration from the ground up you could:
 
     my $starch = Web::Starch->new(

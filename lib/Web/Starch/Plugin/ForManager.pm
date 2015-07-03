@@ -20,7 +20,7 @@ Web::Starch::Plugin::ForManager - Base role for Web::Starch plugins.
 
 =head1 DESCRIPTION
 
-This role, currently, provides no additional functionality to
+This role provides no additional functionality to
 manager plugins.  All it does is labels a plugin as a manager
 plugin so that Starch knows which class type it applies to.
 
