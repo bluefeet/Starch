@@ -41,6 +41,7 @@ use namespace::clean;
 
 with qw(
     Web::Starch::Role::Log
+    Web::Starch::Role::MethodProxy
 );
 
 sub BUILD {

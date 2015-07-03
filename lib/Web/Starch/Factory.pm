@@ -18,13 +18,13 @@ use Moo::Role qw();
 use Types::Standard -types;
 use Carp qw( croak );
 use Moo::Object qw();
-use Web::Starch::Util qw( load_prefixed_module );
 
 use Moo;
 use strictures 2;
 use namespace::clean;
 
 with qw(
+    Web::Starch::Role::LoadPrefixedModule
     Web::Starch::Plugin::Bundle
 );
 
@@ -211,7 +211,7 @@ return the resolved class name.
 sub base_store_class {
     my ($self, $suffix) = @_;
 
-    return load_prefixed_module(
+    return $self->load_prefixed_module(
         'Web::Starch::Store',
         $suffix,
     );

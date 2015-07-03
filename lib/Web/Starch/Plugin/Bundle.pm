@@ -55,11 +55,14 @@ Web::Starch::Plugin::Bundle - Base role for Web::Starch plugin bundles.
 
 use Moo::Role qw();
 use Types::Standard -types;
-use Web::Starch::Util qw( load_prefixed_module );
 
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
+
+with qw(
+    Web::Starch::Role::LoadPrefixedModule
+);
 
 sub _load_module {
     my ($prefix, $module) =  @_;
@@ -85,7 +88,7 @@ sub _build_resolved_plugins {
 
     my @plugins;
     foreach my $plugin (@{ $self->plugins() }) {
-        push @plugins, load_prefixed_module(
+        push @plugins, $self->load_prefixed_module(
             'Web::Starch::Plugin',
             $plugin,
         );
