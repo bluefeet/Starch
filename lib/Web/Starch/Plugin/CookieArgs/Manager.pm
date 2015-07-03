@@ -13,29 +13,29 @@ with qw(
 );
 
 has cookie_name => (
-    is      => 'lazy',
+    is      => 'ro',
     isa     => NonEmptySimpleStr,
     default => 'session',
 );
 
 has cookie_domain => (
-    is => 'lazy',
+    is => 'ro',
     isa => NonEmptySimpleStr | Undef,
 );
 
 has cookie_path => (
-    is  => 'lazy',
+    is  => 'ro',
     isa => NonEmptySimpleStr | Undef,
 );
 
 has cookie_secure => (
-    is      => 'lazy',
+    is      => 'ro',
     isa     => Bool,
     default => 1,
 );
 
 has cookie_http_only => (
-    is      => 'lazy',
+    is      => 'ro',
     isa     => Bool,
     default => 1,
 );
