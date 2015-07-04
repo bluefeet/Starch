@@ -330,6 +330,7 @@ sub force_save {
     $manager->store->set(
         $self->id(),
         $data,
+        $self->expires(),
     );
 
     $self->_set_in_store( 1 );
