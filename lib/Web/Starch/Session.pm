@@ -527,8 +527,6 @@ sub reset_id {
     return;
 }
 
-=head1 CLASS METHODS
-
 =head2 clone_data
 
 Clones complex perl data structures.  Used internally to build
@@ -537,7 +535,7 @@ L</data> from L</original_data>.
 =cut
 
 sub clone_data {
-    my ($class, $data) = @_;
+    my ($self, $data) = @_;
     return dclone( $data );
 }
 
@@ -549,7 +547,7 @@ true if the data is different.  Used internally by L</is_dirty>.
 =cut
 
 sub is_data_diff {
-    my ($class, $old, $new) = @_;
+    my ($self, $old, $new) = @_;
 
     local $Storable::canonical = 1;
 
