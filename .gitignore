@@ -1,3 +1,4 @@
 /Web-Starch*
 /.build
 *.swp
+/nytprof*

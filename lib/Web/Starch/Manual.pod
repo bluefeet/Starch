@@ -226,6 +226,28 @@ return value as the arguments for instantiating the Starch object.
 
 
 
+=head1 PERFORMANCE
+
+On a decently-specced developer laptop Starch adds, at most, one half of one
+millisecond to every HTTP request.  This non-scientific benchmark was done using
+the C<Memory> store and a contrived example of the typical use of a session.
+
+Starch is meant to be as fast as possible while still being flexible.
+Due to Starch avoiding having many dependencies, and having zero
+non-core XS dependencies, there are still same areas which could be
+slightly faster.  At this time there is one plugin which will provide a
+relatively large performance gain, L<Web::Starch::Plugin::Sereal>.  This
+is relative as using this plugin might, if you're lucky, shave one tenth
+of one millisecond off of every HTTP request that uses sessions.
+
+Starch has gone through the wringer performance wise and there just are
+not many performance gains to be eeked out of Starch.  Instead you'll
+likely find that your time in Starch is primarly spent in your store.
+So, when setting up your sessions, picking a store is the most important
+decision you can make performance wise.
+
+
+
 =head1 STORES
 
 These stores are included with the C<Web-Starch> distribution:

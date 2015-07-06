@@ -219,9 +219,10 @@ Returns true if the session is expected to exist in the store
 =cut
 
 has in_store => (
-    is     => 'lazy',
-    isa    => Bool,
-    writer => '_set_in_store',
+    is       => 'lazy',
+    isa      => Bool,
+    writer   => '_set_in_store',
+    init_arg => undef,
 );
 sub _build_in_store {
     my ($self) = @_;
@@ -235,14 +236,12 @@ Returns true if L</delete> has been called on this session.
 =cut
 
 has is_deleted => (
-    is       => 'lazy',
+    is       => 'ro',
     isa      => Bool,
     writer   => '_set_is_deleted',
     init_arg => undef,
+    default  => 0,
 );
-sub _build_is_deleted {
-    return 0;
-}
 
 =head2 is_dirty
 
@@ -281,9 +280,10 @@ Returns true if the session was saved and is not dirty.
 =cut
 
 has _save_was_called => (
-    is     => 'ro',
-    isa    => Bool,
-    writer => '_set_save_was_called',
+    is       => 'ro',
+    isa      => Bool,
+    writer   => '_set_save_was_called',
+    init_arg => undef,
 );
 
 sub is_saved {
