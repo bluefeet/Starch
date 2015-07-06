@@ -13,7 +13,7 @@ Web::Starch - Implementation independent session management.
         },
     );
     my $new_session = $starch->session();
-    my $existing_session = $starch->session( $key );
+    my $existing_session = $starch->session( $id );
 
 =head1 DESCRIPTION
 
@@ -41,7 +41,7 @@ The first argument is an array ref of plugin names.  The plugin names can
 be fully qualified, or relative to the C<Web::Starch::Plugin> namespace.
 A leading C<::> signifies that the plugin's package name is relative.
 
-More information about stores can be found at L<Web::Starch::Manual/PLUGINS>.
+More information about plugins can be found at L<Web::Starch::Manual/PLUGINS>.
 
 =head1 REQUIRED ARGUMENTS
 

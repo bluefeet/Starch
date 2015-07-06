@@ -5,37 +5,12 @@
 
 Web::Starch::Manual::Extending - How to alter and add functionality Web::Starch.
 
-=head1 STORES
+=head1 DESCRIPTION
 
-See L<Web::Starch::Store::Memory> for a basic example store.
-
-A store must implement the C<set>, C<get>, and C<remove> methods and consume
-the L<Web::Starch::Store> role.
-
-Writing new stores is generally a trivial process where the store class does
-nothing more than glue those three methods with some underlying implementation
-such as L<DBI> or L<CHI>.
-
-All stores should be written to accept a method proxy instead of connection
-settings.  For example, if you were to write a DBI store it would be important
-to support this for users which do not want to double the number of connections
-they are making to their database.  By supporting a method proxy the user can
-specify a code path for retrieving the C<$dbh> rather than letting the store
-make a new one.
-
-See any of the L<Web::Starch::Manual/STORES> for more information.
+Starch was designed from the ground-up to be easy to extend.  Read below
+about the various ways that Starch can be extended.
 
 =head1 PLUGINS
-
-See any of the L<Web::Starch::Manual/PLUGINS> for working examples which
-ship with Starch.
-
-See the L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
-L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
-for details about how to write plugins and plugin bundles.
-
-Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
-acts as a dynamic plugin bundle.
 
 Plugins can modify any of the manager (L<Web::Starch>), session (L<Web::Starch::Session>),
 and store (L<Web::Starch::Store>) classes to extend functionality.
@@ -44,32 +19,116 @@ A plugin may extend several of these classes, via plugin bundles, or just one.  
 setup is a plugin bundle which adds arguments to the manager object and then adds logic
 to the session objects which acts upon the arguments.
 
-=head1 REQUIRED METHODS
+See L<Web::Starch::Plugin::CookieArgs> for a basic example plugin.  See
+L<Web::Starch::Manual/PLUGINS> for more existing plugins.
 
-Store classes must implement these three methods.
+See the SYNOPSIS in L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
+L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
+for some decent boilerplate for writing new plugins.
 
-=head2 set
+Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
+acts as a dynamic plugin bundle.
 
-    $store->set( $key, \%data, $expires );
+=head1 STORES
 
-Sets the data for the key.  The C<$expires> value will always be set and
+Stores provide the data persistance layers for stores so that, from HTTP request
+to request, the data set in the store is available to get.
+
+See L<Web::Starch::Store::Memory> for a basic example store.  See
+L<Web::Starch::Manual/STORES> for more existing stores.
+
+A store must implement the C<set>, C<get>, and C<remove> methods and consume
+the L<Web::Starch::Store> role.
+
+Writing new stores is generally a trivial process where the store class does
+nothing more than glue those three methods with some underlying implementation
+such as L<DBI> or L<CHI>.
+
+Stores should be written so that the underlying driver object (the C<$dbh>
+for a DBI store, for example) can be passed as an argument.   This allows
+the user to utilize L<Web::Starch::Manual/METHOD PROXIES> to build their
+own driver objects.
+
+Some boilerplate for getting a store going:
+
+    package Web::Starch::Store::FooBar;
+    
+    use Foo::Bar;
+    use Types::Standard -types;
+    
+    use strictures 2;
+    use namespace::clean;
+    use Moo;
+    
+    with qw(
+        Web::Starch::Store
+    );
+    
+    has foobar => (
+        is => 'lazy',
+        isa => InstanceOf[ 'Foo::Bar' ],
+    );
+    sub _build_foobar {
+        return Foo::Bar->new();
+    }
+    
+    sub set {
+        my ($self, $key, $data, $expires) = @_;
+        $self->foobar->set( $key, $data, $expires );
+        return;
+    }
+    
+    sub get {
+        my ($self, $key) = @_;
+        return $self->foobar->get( $key );
+    }
+    
+    sub remove {
+        my ($self, $key) = @_;
+        $self->foobar->remove( $key );
+        return;
+    }
+    
+    1;
+`
+Many stores benefit from building their lazy-loaded driver object early,
+as in:
+
+    sub BUILD {
+        my ($self) = @_;
+        $self->foobar();
+        return;
+    }
+
+A session's expires duration is stored in the session data under the
+L<Web::Starch/expires_session_key>.  This should B<not> be considered
+as anything meaningful to the store, since stores can have their
+L<Web::Starch::Store/max_expires> argument set which will automatically
+change the value of the C<expires> argument passed to C<set>.
+
+A more detailed description of the methods that a store must
+implement:
+
+=over
+
+=item *
+
+B<set> - Sets the data for the key.  The C<$expires> value will always be set and
 will be either C<0> or a postive integer representing the number of seconds
 in the future that this session data should be expired.  If C<0> then the
 store may expire the data whenever it chooses.
 
-=head2 get
+=item *
 
-    my $data = $store->get( $key );
-
-Returns the data for the given key.  If the data was not found then
+B<get> - Returns the data for the given key.  If the data was not found then
 C<undef> is returned.
 
-=head2 remove
+=item *
 
-    $store->remove( $key );
+B<remove> - Deletes the data for the key.  If the data does not exist then
+this is just a no-op.
 
-Deletes the data for the key.  If the data does not exist then this is just
-a no-op.
+=back
 
 =head1 OBJECT REFERENCES
 
@@ -88,6 +147,10 @@ a no-op.
     +------------------------+       +------------------------+
 
 This diagram shows which objects hold references to other objects.
+
+=head1 AUTHOR AND LICENSE
+
+See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
 
 =cut
 

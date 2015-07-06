@@ -16,8 +16,7 @@ Sessions typically store things like whether the user is logged in,
 which user they are, referer/source information, transient information
 which is stored when a user registers, and many other purposes.
 
-Besides this general document there is
-L<Web::Starch::Manual::Cookbook> and
+Documentation for extending Starch can be found at
 L<Web::Starch::Manual::Extending>.
 
 Typically you'll be integrating Starch with a web framework such as
@@ -314,7 +313,17 @@ L<Web::Starch::Plugin::Trace>
 
 =back
 
-Third-party plugins can be found on
+These plugins are distributed separately on CPAN:
+
+=over
+
+=item *
+
+L<Web::Starch::Plugin::Sereal>
+
+=back
+
+More third-party plugins can be found on
 L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
 
 
