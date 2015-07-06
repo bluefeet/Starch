@@ -123,7 +123,7 @@ sub call_method_proxy {
     return $package->$method( @args );
 }
 
-=head1 is_method_proxy
+=head2 is_method_proxy
 
     is_method_proxy( [ 'Foo', 'bar' ] ); # false
     is_method_proxy( [ '&proxy', 'Foo', 'bar' ] ); # true
