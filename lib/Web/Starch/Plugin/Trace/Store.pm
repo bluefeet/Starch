@@ -10,7 +10,10 @@ with qw(
 
 sub BUILD {
     my ($self) = @_;
-    $self->log->trace( 'starch.store.new' );
+    $self->log->tracef(
+        'starch.store.%s.new',
+        $self->_trace_log_name(),
+    );
     return;
 }
 
@@ -20,8 +23,8 @@ around set => sub{
     my ($id) = @_;
 
     $self->log->tracef(
-        'starch.store.set.%s',
-        $id,
+        'starch.store.%s.set.%s',
+        $self->_trace_log_name(), $id,
     );
 
     return $self->$orig( @_ );
@@ -33,15 +36,15 @@ around get => sub{
     my ($id) = @_;
 
     $self->log->tracef(
-        'starch.store.get.%s',
-        $id,
+        'starch.store.%s.get.%s',
+        $self->_trace_log_name(), $id,
     );
 
     my $data = $self->$orig( @_ );
 
     $self->log->tracef(
-        'starch.store.get.%s.missing',
-        $id,
+        'starch.store.%s.get.%s.missing',
+        $self->_trace_log_name(), $id,
     ) if !$data;
 
     return $data;
@@ -53,11 +56,19 @@ around remove => sub{
     my ($id) = @_;
 
     $self->log->tracef(
-        'starch.store.remove.%s',
-        $id,
+        'starch.store.%s.remove.%s',
+        $self->_trace_log_name(), $id,
     );
 
     return $self->$orig( @_ );
 };
+
+sub _trace_log_name {
+    my ($self) = @_;
+    my $name = ref( $self );
+    $name =~ s{^Web::Starch::Store::}{};
+    $name =~ s{__WITH__.*$}{};
+    return $name;
+}
 
 1;

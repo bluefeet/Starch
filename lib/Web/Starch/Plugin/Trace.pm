@@ -103,28 +103,31 @@ is logged in the format of C<starch.session.generate_id.$session_id>.
 
 These messages are logged from the L<Web::Starch::Store> object.
 
+The C<$store_name> bits in the below log messages will be the name
+of the store class minus the C<Web::Starch::Store::> bit.
+
 =head2 new
 
 Every time a L<Web::Starch::Store> object is created a message is
-logged in the format of C<starch.store.new>.
+logged in the format of C<starch.store.$store_name.new>.
 
 =head2 set
 
 Every call to L<Web::Starch::Store/set> is logged in the
-format of C<starch.store.set.$session_id>.
+format of C<starch.store.$store_name.set.$session_id>.
 
 =head2 get
 
 Every call to L<Web::Starch::Store/get> is logged in the
-format of C<starch.store.get.$session_id>.
+format of C<starch.store.$store_name.get.$session_id>.
 
 If the result of calling C<get> is undefined then an additional
-log will produced of the format C<starch.store.get.$session_id.missing>.
+log will produced of the format C<starch.store.$store_name.get.$session_id.missing>.
 
 =head2 remove
 
 Every call to L<Web::Starch::Store/remove> is logged in the
-format of C<starch.store.remove.$session_id>.
+format of C<starch.store.$store_name.remove.$session_id>.
 
 =head1 AUTHOR AND LICENSE
 

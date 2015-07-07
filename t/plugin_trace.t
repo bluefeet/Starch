@@ -28,8 +28,8 @@ subtest 'manager created with store' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.new$},
-        'starch.store.new',
+        qr{^starch\.store\.Memory\.new$},
+        'starch.store.Memory.new',
     );
     log_empty_ok();
 };
@@ -90,8 +90,8 @@ subtest 'session methods' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.set\.$session_id$},
-        'starch.store.set.$session_id',
+        qr{^starch\.store\.Memory\.set\.$session_id$},
+        'starch.store.Memory.set.$session_id',
     );
     $log->category_contains_ok(
         $session_class,
@@ -122,8 +122,8 @@ subtest 'session methods' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.get\.$session_id$},
-        'starch.store.get.$session_id',
+        qr{^starch\.store\.Memory\.get\.$session_id$},
+        'starch.store.Memory.get.$session_id',
     );
     $log->category_contains_ok(
         $session_class,
@@ -132,8 +132,8 @@ subtest 'session methods' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.remove\.$session_id$},
-        'starch.store.remove.$session_id',
+        qr{^starch\.store\.Memory\.remove\.$session_id$},
+        'starch.store.Memory.remove.$session_id',
     );
     log_empty_ok();
 

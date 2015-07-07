@@ -123,6 +123,7 @@ sub _build_store {
 
     return $self->factory->new_store(
         %$store,
+        manager => $self,
     );
 }
 

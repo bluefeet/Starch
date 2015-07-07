@@ -192,7 +192,6 @@ sub new_store {
     my $class = $self->store_class( $suffix );
     return $class->new(
         %$args,
-        factory => $self,
     );
 }
 

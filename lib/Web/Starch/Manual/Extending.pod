@@ -143,23 +143,54 @@ Stores should detect issues and throw exceptions loudly.  If the user
 would like to automatically turn store exceptions into log messages
 they can use the L<Web::Starch::Plugin::LogStoreExceptions> plugin.
 
-=head1 OBJECT REFERENCES
+=head1 INTERNAL STRUCTURE
 
                                                           +------+
                                                           v      |
     +------------------------+       +------------------------+  |
-    |        manager         | ----> |          store         |--+
-    |     (Web::Starch)      |       |  (Web::Starch::Store)  |
+    |      1. manager        | ----> |       3. store         |--+
+    |     (Web::Starch)      | < - - |  (Web::Starch::Store)  |
     +------------------------+       +------------------------+
-                    ^     |                       |
-                    |     +------------+          |
-                    |                  v          v
+                ^    |
+                |    |
+                |    +---------------------------+
+                |                                V
     +------------------------+       +------------------------+
-    |        session         |       |        factory         |
+    |      4. session        |       |      2. factory        |
     | (Web::Starch::Session) |       | (Web::Starch::Factory) |
     +------------------------+       +------------------------+
 
-This diagram shows which objects hold references to other objects.
+This diagram shows which objects hold references to other objects.  Solid
+lines depict a hard reference while dashed lines depict a weak reference.
+Weak references are used to avoid memory leaks.
+
+=over
+
+=item 1.
+
+B<manager> - The manager is the entry point for configuration and retrieving
+session objects.  It holds a strong reference to the factory and the store.
+The manager doesn't have much logic in and of itself, as most of the compile-time
+work is handled by the factory, and the run-time work by the sessions and store.
+
+=item 2.
+
+B<factory> - The factory handles constructing anonymous classes from base
+classes and roles.
+
+=item 3.
+
+B<store> - The store does all of the backend heavy-lifting.  It holds a
+weak reference to the manager so that it can, primarly, get at the factory
+object and create sub-stores.  The L<Web::Starch::Store::Layered> store depends
+on this functionality to create the inner and outer sub-stores.
+
+=item 4.
+
+B<session> - The session provides the run-time public interface to the store
+and other parts of starch.  It holds a strong reference to the manager.
+
+=back
 
 =head1 AUTHOR AND LICENSE
 

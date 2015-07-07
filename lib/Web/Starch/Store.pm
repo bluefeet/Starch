@@ -40,33 +40,30 @@ requires qw(
 );
 
 around set => sub{
-    my $orig = shift;
-    my $self = shift;
+    my ($orig, $self, $key, $data, $expires) = @_;
 
-    my $max_expires = $self->max_expires();
-    return $self->$orig( @_ ) if !defined $max_expires;
+    $expires = $self->calculate_expires( $expires );
 
-    my ($key, $data, $expires) = @_;
-    return $self->$orig( @_ ) if $expires <= $max_expires;
-
-    return $self->$orig( $key, $data, $max_expires );
+    return $self->$orig( $key, $data, $expires );
 };
 
 =head1 REQUIRED ARGUMENTS
 
-=head2 factory
+=head2 manager
 
-A L<Web::Starch::Factory> object which is used by stores to
+The L<Web::Starch> object which is used by stores to
 create sub-stores (such as the Layered store's outer and inner
 stores).  This is automatically set when the stores are built by
 L<Web::Starch::Factory>.
 
 =cut
 
-has factory => (
+has manager => (
     is       => 'ro',
-    isa      => InstanceOf[ 'Web::Starch::Factory' ],
+    isa      => InstanceOf[ 'Web::Starch' ],
     required => 1,
+    weak_ref => 1,
+    handles => ['factory'],
 );
 
 =head1 OPTIONAL ARGUMENTS
@@ -80,8 +77,66 @@ if the session's expires is larger.
 
 has max_expires => (
   is  => 'ro',
-  isa => PositiveOrZeroInt,
+  isa => PositiveOrZeroInt | Undef,
 );
+
+=head1 METHODS
+
+=head2 new_sub_store
+
+Builds a new store object.  Any arguments passed will be
+combined with the L</sub_store_args>.
+
+=cut
+
+sub new_sub_store {
+    my $self = shift;
+
+    my $args = $self->sub_store_args( @_ );
+
+    return $self->factory->new_store( $args );
+}
+
+=head2 sub_store_args
+
+Returns the arguments needed to create a sub-store.  Any arguments
+passed will be combined with the default arguments.  The default
+arguments will be L</manager> and L</max_expires> (if set).  More
+arguments may be present if any plugins extend this method.
+
+=cut
+
+sub sub_store_args {
+    my $self = shift;
+
+    my $max_expires = $self->max_expires();
+
+    my $args = $self->BUILDARGS( @_ );
+
+    return {
+        manager => $self->manager(),
+        defined($max_expires) ? (max_expires => $max_expires) : (),
+        %$args,
+    };
+}
+
+=head2 calculate_expires
+
+Given an expires value this will calculate the expires that this store
+should use considering what L</max_expires> is set to.
+
+=cut
+
+sub calculate_expires {
+    my ($self, $expires) = @_;
+
+    my $max_expires = $self->max_expires();
+    return $expires if !defined $max_expires;
+
+    return $max_expires if $expires > $max_expires;
+
+    return $expires;
+}
 
 1;
 __END__

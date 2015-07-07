@@ -90,14 +90,8 @@ has outer => (
 );
 sub _build_outer {
     my ($self) = @_;
-
     my $store = $self->_outer_arg();
-    my $max_expires = $self->max_expires();
-
-    return $self->factory->new_store(
-        defined($max_expires) ? (max_expires => $max_expires) : (),
-        %$store,
-    );
+    return $self->new_sub_store( %$store );
 }
 
 =head2 inner
@@ -123,14 +117,8 @@ has inner => (
 );
 sub _build_inner {
     my ($self) = @_;
-
     my $store = $self->_inner_arg();
-    my $max_expires = $self->max_expires();
-
-    return $self->factory->new_store(
-        defined($max_expires) ? (max_expires => $max_expires) : (),
-        %$store,
-    );
+    return $self->new_sub_store( %$store );
 }
 
 =head1 STORE METHODS
@@ -148,9 +136,28 @@ sub set {
 }
 
 sub get {
-    my $self = shift;
-    my $data = $self->outer->get( @_ );
-    $data = $self->inner->get( @_ ) if !$data;
+    my ($self, $key) = @_;
+
+    my $data = $self->outer->get( $key );
+    return $data if $data;
+
+    $data = $self->inner->get( $key );
+    return undef if !$data;
+
+    # Now we got the data from the inner store but not the outer store.
+    # Let's set it on the outer store so that we can retrieve it from
+    # there next time.
+
+    my $expires = $data->{ $self->manager->expires_session_key() };
+    # The session data is incomplete if it doesn't contain expires data.
+    # Maybe we should log this as an error or warning?
+    return $data if !defined $expires;
+
+    # Make sure we take into account max_expires.
+    $expires = $self->calculate_expires( $expires );
+
+    $self->outer->set( $key, $data, $expires );
+
     return $data;
 }
 
