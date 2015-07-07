@@ -69,11 +69,14 @@ foreach my $method (qw( set get remove )) {
         my @args = @_;
 
         return try {
-            local $SIG{ALRM} = sub{ die 'STARCH TIMEOUT ALARM TRIGGERED' };
+            local $SIG{ALRM} = sub{
+                die 'STARCH TIMEOUT ALARM TRIGGERED';
+            };
             Time::HiRes::alarm( $timeout );
-            my @ret = $self->$orig( @args );
+            my @ret;
+            @ret = $self->$orig( @args );
             Time::HiRes::alarm( 0 );
-            return @ret;
+            return( @ret ? $ret[0] : () );
         }
         catch {
             croak sprintf(

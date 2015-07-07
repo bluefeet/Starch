@@ -36,8 +36,10 @@ foreach my $method (qw( set get remove )) {
         my $orig = shift;
         my $self = shift;
 
+        my @args = @_;
+
         return try {
-            return $self->$orig( @_ );
+            return $self->$orig( @args );
         }
         catch {
             $self->log->errorf(
