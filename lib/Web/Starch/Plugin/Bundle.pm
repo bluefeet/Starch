@@ -34,6 +34,7 @@ on writing plugins.
 =cut
 
 use Types::Standard -types;
+use Types::Common::String -types;
 use Web::Starch::Util qw( load_prefixed_module );
 
 use Moo::Role;
@@ -81,7 +82,7 @@ absolute.
 
 has resolved_plugins => (
     is       => 'lazy',
-    isa      => ArrayRef[ ClassName | RoleName ],
+    isa      => ArrayRef[ NonEmptySimpleStr ],
     init_arg => undef,
 );
 sub _build_resolved_plugins {
@@ -107,7 +108,7 @@ their roles.
 
 has roles => (
     is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
+    isa      => ArrayRef[ NonEmptySimpleStr ],
     init_arg => undef,
 );
 sub _build_roles {
@@ -143,7 +144,7 @@ L<Web::Starch::Plugin::ForManager> role.
 
 has manager_roles => (
     is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
+    isa      => ArrayRef[ NonEmptySimpleStr ],
     init_arg => undef,
 );
 sub _build_manager_roles {
@@ -161,7 +162,7 @@ L<Web::Starch::Plugin::ForSession> role.
 
 has session_roles => (
     is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
+    isa      => ArrayRef[ NonEmptySimpleStr ],
     init_arg => undef,
 );
 sub _build_session_roles {
@@ -179,7 +180,7 @@ L<Web::Starch::Plugin::ForStore> role.
 
 has store_roles => (
     is       => 'lazy',
-    isa      => ArrayRef[ RoleName ],
+    isa      => ArrayRef[ NonEmptySimpleStr ],
     init_arg => undef,
 );
 sub _build_store_roles {

@@ -305,6 +305,10 @@ L<Web::Starch::Plugin::CookieArgs>
 
 =item *
 
+L<Web::Starch::Plugin::LogStoreExceptions>
+
+=item *
+
 L<Web::Starch::Plugin::RenewExpiration>
 
 =item *

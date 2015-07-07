@@ -65,21 +65,21 @@ which all stores implement.
 =cut
 
 sub set {
-    my ($self, $id, $data) = @_;
+    my ($self, $key, $data) = @_;
 
-    $self->memory->{$id} = $data;
+    $self->memory->{$key} = $data;
 
     return;
 }
 
 sub get {
-    my ($self, $id) = @_;
-    return $self->memory->{$id};
+    my ($self, $key) = @_;
+    return $self->memory->{$key};
 }
 
 sub remove {
-    my ($self, $id) = @_;
-    delete( $self->memory->{$id} );
+    my ($self, $key) = @_;
+    delete( $self->memory->{$key} );
     return;
 }
 

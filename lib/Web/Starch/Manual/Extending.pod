@@ -106,6 +106,8 @@ as anything meaningful to the store, since stores can have their
 L<Web::Starch::Store/max_expires> argument set which will automatically
 change the value of the C<expires> argument passed to C<set>.
 
+=head2 REQUIRED METHODS
+
 A more detailed description of the methods that a store must
 implement:
 
@@ -129,6 +131,17 @@ B<remove> - Deletes the data for the key.  If the data does not exist then
 this is just a no-op.
 
 =back
+
+While these three methods typically receive a session ID as their first
+argument, the store code should be written more generically to treat it
+as just a key.  This is because there may be plugins wich alter the key,
+perhaps by extending it or dividing a single session's data into many keys.
+
+=head2 EXCEPTIONS
+
+Stores should detect issues and throw exceptions loudly.  If the user
+would like to automatically turn store exceptions into log messages
+they can use the L<Web::Starch::Plugin::LogStoreExceptions> plugin.
 
 =head1 OBJECT REFERENCES
 
