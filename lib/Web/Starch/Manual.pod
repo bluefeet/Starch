@@ -269,6 +269,10 @@ These stores are distributed separately on CPAN:
 
 =item *
 
+L<Web::Starch::Store::AmazonDynamoDB>
+
+=item *
+
 L<Web::Starch::Store::CHI>
 
 =back
