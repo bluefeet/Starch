@@ -19,6 +19,9 @@ called on a store to produce an error log message instead of an exception.
 Typically you'll want to use this in production, as the session store being
 down is often not enough of a reason to produce 500 errors on every page.
 
+This plugin should be listed last in the plugin list so that it catches
+exceptions produced by other plugins.
+
 =cut
 
 use Try::Tiny;

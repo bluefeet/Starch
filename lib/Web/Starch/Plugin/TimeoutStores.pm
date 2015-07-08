@@ -88,4 +88,16 @@ foreach my $method (qw( set get remove )) {
     };
 }
 
+around sub_store_args => sub{
+    my $orig = shift;
+    my $self = shift;
+
+    my $args = $self->$orig( @_ );
+
+    return {
+        %$args,
+        timeout => $self->timeout(),
+    };
+};
+
 1;
