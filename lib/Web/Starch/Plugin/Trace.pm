@@ -129,7 +129,7 @@ log will produced of the format C<starch.store.$store_name.get.$session_id.missi
 Every call to L<Web::Starch::Store/remove> is logged in the
 format of C<starch.store.$store_name.remove.$session_id>.
 
-=head1 AUTHOR AND LICENSE
+=head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
 

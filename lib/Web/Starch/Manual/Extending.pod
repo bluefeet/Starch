@@ -1,14 +1,20 @@
 
 =pod
 
+
+
 =head1 NAME
 
 Web::Starch::Manual::Extending - How to alter and add functionality Web::Starch.
+
+
 
 =head1 DESCRIPTION
 
 Starch was designed from the ground-up to be easy to extend.  Read below
 about the various ways that Starch can be extended.
+
+
 
 =head1 PLUGINS
 
@@ -28,6 +34,8 @@ for some decent boilerplate for writing new plugins.
 
 Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
 acts as a dynamic plugin bundle.
+
+
 
 =head1 STORES
 
@@ -106,6 +114,8 @@ as anything meaningful to the store, since stores can have their
 L<Web::Starch::Store/max_expires> argument set which will automatically
 change the value of the C<expires> argument passed to C<set>.
 
+
+
 =head2 REQUIRED METHODS
 
 A more detailed description of the methods that a store must
@@ -137,11 +147,15 @@ argument, the store code should be written more generically to treat it
 as just a key.  This is because there may be plugins wich alter the key,
 perhaps by extending it or dividing a single session's data into many keys.
 
+
+
 =head2 EXCEPTIONS
 
 Stores should detect issues and throw exceptions loudly.  If the user
 would like to automatically turn store exceptions into log messages
 they can use the L<Web::Starch::Plugin::LogStoreExceptions> plugin.
+
+
 
 =head1 INTERNAL STRUCTURE
 
@@ -192,9 +206,13 @@ and other parts of starch.  It holds a strong reference to the manager.
 
 =back
 
-=head1 AUTHOR AND LICENSE
 
-See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+
+=head1 AUTHORS AND LICENSE
+
+See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+
+
 
 =cut
 

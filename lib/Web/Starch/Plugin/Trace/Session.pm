@@ -1,4 +1,5 @@
-package Web::Starch::Plugin::Trace::Session;
+package # hide from PAUSE
+    Web::Starch::Plugin::Trace::Session;
 
 use Moo::Role;
 use strictures 2;

@@ -1,4 +1,5 @@
-package Web::Starch::Plugin::RenewExpiration::Session;
+package # hide from PAUSE
+    Web::Starch::Plugin::RenewExpiration::Session;
 
 use Moo::Role;
 use strictures 2;

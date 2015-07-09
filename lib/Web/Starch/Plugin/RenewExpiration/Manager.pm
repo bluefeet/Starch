@@ -1,4 +1,5 @@
-package Web::Starch::Plugin::RenewExpiration::Manager;
+package # hide from PAUSE
+    Web::Starch::Plugin::RenewExpiration::Manager;
 
 use Types::Standard -types;
 use Types::Common::String -types;

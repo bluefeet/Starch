@@ -55,3 +55,9 @@ foreach my $method (qw( set get remove )) {
 }
 
 1;
+__END__
+
+=head1 AUTHORS AND LICENSE
+
+See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+

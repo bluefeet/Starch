@@ -240,6 +240,16 @@ __END__
 
 Aran Clary Deltac <bluefeetE<64>gmail.com>
 
+=head1 CONTRIBUTORS
+
+=over
+
+=item *
+
+Arthur Axel "fREW" Schmidt <frioux+cpanE<64>gmail.com>
+
+=back
+
 =head1 ACKNOWLEDGEMENTS
 
 Thanks to L<ZipRecruiter|https://www.ziprecruiter.com/>

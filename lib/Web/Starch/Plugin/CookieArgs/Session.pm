@@ -1,4 +1,5 @@
-package Web::Starch::Plugin::CookieArgs::Session;
+package # hide from PAUSE
+    Web::Starch::Plugin::CookieArgs::Session;
 
 use Moo::Role;
 use strictures 2;

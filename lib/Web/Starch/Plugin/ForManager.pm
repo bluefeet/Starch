@@ -36,7 +36,7 @@ use namespace::clean;
 1;
 __END__
 
-=head1 AUTHOR AND LICENSE
+=head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
 

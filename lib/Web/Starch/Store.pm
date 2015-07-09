@@ -145,7 +145,7 @@ __END__
 
 All store classes must implement the C<set>, C<get>, and C<remove> methods.
 
-=head1 AUTHOR AND LICENSE
+=head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR> and L<Web::Starch/LICENSE>.
+See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
 
