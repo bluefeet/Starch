@@ -21,7 +21,6 @@ This is the session class used by L<Web::Starch/session>.
 use Scalar::Util qw( refaddr );
 use Types::Standard -types;
 use Types::Common::String -types;
-use Types::Common::Numeric -types;
 use Digest::SHA qw( sha1_hex );
 use Carp qw( croak );
 use Storable qw( freeze dclone );
@@ -82,7 +81,6 @@ has _existing_id => (
 
 has id => (
     is       => 'lazy',
-    isa      => NonEmptySimpleStr,
     init_arg => undef,
     clearer  => '_clear_id',
 );
@@ -103,6 +101,7 @@ The session data at the state it was when the session was first instantiated.
 has original_data => (
     is        => 'lazy',
     isa       => HashRef,
+    init_arg  => undef,
     writer    => '_set_original_data',
     clearer   => '_clear_original_data',
     predicate => 'is_loaded',
@@ -126,7 +125,6 @@ The session data which is meant to be modified.
 
 has data => (
     is       => 'lazy',
-    isa      => HashRef,
     init_arg => undef,
     writer   => '_set_data',
     clearer  => '_clear_data',
@@ -145,7 +143,6 @@ under the L<Web::Starch/expires_session_key> key.
 
 has expires => (
     is       => 'lazy',
-    isa      => PositiveOrZeroInt,
     init_arg => undef,
     clearer  => '_clear_expires',
     writer   => '_set_expires',
@@ -170,7 +167,6 @@ L</data> under the L<Web::Starch/modified_session_key>.
 
 has modified => (
     is       => 'lazy',
-    isa      => PositiveInt,
     init_arg => undef,
     clearer  => '_clear_modified',
 );
@@ -195,7 +191,6 @@ under the L<Web::Starch/created_session_key>.
 
 has created => (
     is       => 'lazy',
-    isa      => PositiveInt,
     init_arg => undef,
     clearer  => '_clear_created',
 );
@@ -220,7 +215,6 @@ Returns true if the session is expected to exist in the store
 
 has in_store => (
     is       => 'lazy',
-    isa      => Bool,
     writer   => '_set_in_store',
     init_arg => undef,
 );
@@ -237,7 +231,6 @@ Returns true if L</delete> has been called on this session.
 
 has is_deleted => (
     is       => 'ro',
-    isa      => Bool,
     writer   => '_set_is_deleted',
     init_arg => undef,
     default  => 0,
@@ -281,7 +274,6 @@ Returns true if the session was saved and is not dirty.
 
 has _save_was_called => (
     is       => 'ro',
-    isa      => Bool,
     writer   => '_set_save_was_called',
     init_arg => undef,
 );

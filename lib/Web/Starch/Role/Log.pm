@@ -32,7 +32,6 @@ L<Web::Starch::Manual/LOGGING>.
 
 has log => (
     is       => 'lazy',
-    isa      => InstanceOf[ 'Log::Any::Proxy' ],
     init_arg => undef,
 );
 sub _build_log {
