@@ -305,11 +305,19 @@ L<Web::Starch::Plugin::AlwaysLoad>
 
 =item *
 
+L<Web::Starch::Plugin::AutoSave>
+
+=item *
+
 L<Web::Starch::Plugin::CookieArgs>
 
 =item *
 
 L<Web::Starch::Plugin::LogStoreExceptions>
+
+=item *
+
+L<Web::Starch::Plugin::LogUnsaved>
 
 =item *
 

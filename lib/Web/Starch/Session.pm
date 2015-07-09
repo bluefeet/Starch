@@ -33,19 +33,6 @@ with qw(
     Web::Starch::Role::Log
 );
 
-sub DEMOLISH {
-    my ($self) = @_;
-
-    if ($self->is_dirty()) {
-        $self->log->errorf(
-            'Starch session %s was changed and not saved.',
-            $self->id(),
-        );
-    }
-
-    return;
-}
-
 =head1 REQUIRED ARGUMENTS
 
 =head2 manager
