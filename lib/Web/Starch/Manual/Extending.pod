@@ -157,6 +157,34 @@ they can use the L<Web::Starch::Plugin::LogStoreExceptions> plugin.
 
 
 
+=head2 REAPING EXPIRED SESSIONS
+
+Stores may choose to support an interface for deleting old session data
+suitable for a cronjob.  To do this two methods must be declared:
+
+    sub can_reap_expired { 1 }
+    
+    sub reap_expired {
+        my ($self) = @_;
+
+        # Do whatever it takes to delete expired session data.
+        ...
+        # and, call $self->log() at important moments so that user
+        # can see some progress.
+
+        return;
+    }
+
+The actual implementation of how to reap old session data is a per-store
+and is something that will differ greatly between them.
+
+Consider adding extra arguments to your store class to control how session
+reaping functions.  For example, a DBI store may allow the user to reap
+the sessions in batches, and a DynamoDB store may allow the user to specify
+a secondary global index to do the scan on.
+
+
+
 =head1 INTERNAL STRUCTURE
 
                                                           +------+

@@ -121,6 +121,43 @@ sub _build_inner {
     return $self->new_sub_store( %$store );
 }
 
+=head1 ATTRIBUTES
+
+=head2 can_reap_expired
+
+Return true if either the L</inner> or L</outer> stores support the
+L<Web::Starch::Store/reap_expired> method.
+
+=cut
+
+sub can_reap_expired {
+    my ($self) = @_;
+    return 1 if $self->outer->can_reap_expired();
+    return 1 if $self->inner->can_reap_expired();
+    return 0;
+}
+
+=head1 METHODS
+
+=head2 reap_expired
+
+Calls L<Web::Starch::Store/reap_expired> on the L</outer> and L</inner>
+stores, if they support expired session reaping.
+
+=cut
+
+around reap_expired => sub{
+    my ($orig, $self) = @_;
+
+    # Go ahead and throw the exception provided by Web::Starch::Store::reap_expired.
+    return $self->$orig() if !$self->can_reap_expired();
+
+    $self->outer->reap_expired() if $self->outer->can_reap_expired();
+    $self->inner->reap_expired() if $self->inner->can_reap_expired();
+
+    return;
+};
+
 =head1 STORE METHODS
 
 See L<Web::Starch::Store> for more documentation about the methods

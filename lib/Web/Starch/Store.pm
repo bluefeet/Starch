@@ -23,6 +23,7 @@ described in L<Web::Starch::Manual/METHOD PROXIES>.
 
 use Types::Standard -types;
 use Types::Common::Numeric -types;
+use Carp qw( croak );
 
 use Moo::Role;
 use strictures 2;
@@ -80,6 +81,16 @@ has max_expires => (
   isa => PositiveOrZeroInt | Undef,
 );
 
+=head1 ATTRIBUTES
+
+=head2 can_reap_expired
+
+Return true if the stores supports the L</reap_expired> method.
+
+=cut
+
+sub can_reap_expired { 0 }
+
 =head1 METHODS
 
 =head2 new_sub_store
@@ -136,6 +147,42 @@ sub calculate_expires {
     return $max_expires if $expires > $max_expires;
 
     return $expires;
+}
+
+=head2 reap_expired
+
+This triggers the store to find and delete all expired sessions.
+This is meant to be used in an offline process, such as a cronjob,
+as finding and deleting the sessions could take hours depending
+on the amount of data and the storage engine's speed.
+
+By default this method will throw an exception if the store does
+not define its own reap method.  You can check if a store supports
+this method by calling L</can_reap_expired>.
+
+=cut
+
+sub reap_expired {
+    my ($self) = @_;
+
+    croak sprintf(
+        '%s does not support expired session reaping',
+        $self->base_class_name(),
+    );
+}
+
+=head2 base_class_name
+
+Returns the store's class name minus the C<__WITH__.*> suffix put on
+by plugins.  This is used to produce more concise error output.
+
+=cut
+
+sub base_class_name {
+    my ($self) = @_;
+    my $class = ref( $self );
+    $class =~ s{__WITH__.*$}{};
+    return $class;
 }
 
 1;
