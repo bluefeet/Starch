@@ -28,7 +28,13 @@ a web page even if the underlying session backend is failing, so
 using this plugin with L<Web::Starch::Plugin::LogStoreExceptions> is
 probably a good idea.
 
+Note that this plugin does not behave well on Perl 5.8 or older and will
+error if you try to use it on a version of Perl older than 5.10.  The rest
+of Starch works well on 5.8 and up.
+
 =cut
+
+use 5.010_000;
 
 use Time::HiRes qw();
 use Try::Tiny;
