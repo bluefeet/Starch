@@ -49,7 +49,7 @@ with qw(
     Web::Starch::Plugin::ForStore
 );
 
-=head1 OPTIONAL ARGUMENTS
+=head1 OPTIONAL STORE ARGUMENTS
 
 =head2 timeout
 
@@ -101,8 +101,8 @@ around sub_store_args => sub{
     my $args = $self->$orig( @_ );
 
     return {
-        %$args,
         timeout => $self->timeout(),
+        %$args,
     };
 };
 

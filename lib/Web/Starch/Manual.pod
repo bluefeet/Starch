@@ -313,6 +313,10 @@ L<Web::Starch::Plugin::CookieArgs>
 
 =item *
 
+L<Web::Starch::Plugin::DisableStore>
+
+=item *
+
 L<Web::Starch::Plugin::LogStoreExceptions>
 
 =item *
