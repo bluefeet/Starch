@@ -273,6 +273,14 @@ L<Web::Starch::Store::AmazonDynamoDB>
 
 =item *
 
+L<Web::Starch::Store::DBI>
+
+=item *
+
+L<Web::Starch::Store::DBIxConnector>
+
+=item *
+
 L<Web::Starch::Store::CHI>
 
 =back

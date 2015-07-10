@@ -158,10 +158,17 @@ around reap_expired => sub{
     return;
 };
 
-=head1 STORE METHODS
+=head2 set
 
-See L<Web::Starch::Store> for more documentation about the methods
-which all stores implement.
+Set L<Web::Starch::Store/set>.
+
+=head2 get
+
+Set L<Web::Starch::Store/get>.
+
+=head2 remove
+
+Set L<Web::Starch::Store/remove>.
 
 =cut
 
