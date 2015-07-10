@@ -127,7 +127,7 @@ sub _build_session_class {
 
 =head2 base_store_class
 
-    my $class = $factory->base_store_class( 'Memory' );
+    my $class = $factory->base_store_class( '::Memory' );
     # Web::Starch::Store::Memory
     
     my $class = $factory->base_store_class( 'Web::Starch::Store::Memory' );
@@ -149,7 +149,7 @@ sub base_store_class {
 
 =head2 store_class
 
-    my $class = $factory->store_class( 'Memory' );
+    my $class = $factory->store_class( '::Memory' );
 
 Given an absolute or relative store class name this will
 return an anonymous class which extends the store class

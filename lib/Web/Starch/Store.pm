@@ -171,20 +171,6 @@ sub reap_expired {
     );
 }
 
-=head2 base_class_name
-
-Returns the store's class name minus the C<__WITH__.*> suffix put on
-by plugins.  This is used to produce more concise error output.
-
-=cut
-
-sub base_class_name {
-    my ($self) = @_;
-    my $class = ref( $self );
-    $class =~ s{__WITH__.*$}{};
-    return $class;
-}
-
 1;
 __END__
 

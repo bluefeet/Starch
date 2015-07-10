@@ -37,11 +37,43 @@ has log => (
 sub _build_log {
     my ($self) = @_;
 
-    my $category = ref( $self );
-    $category =~ s{__WITH__.*$}{};
-
-    return Log::Any->get_logger(category => $category);
+    return Log::Any->get_logger(
+        category => $self->base_class_name(),
+    );
 }
+
+=head2 base_class_name
+
+Returns the object's class name minus the C<__WITH__.*> suffix put on
+by plugins.  This is used to produce more concise logging output.
+
+=cut
+
+has base_class_name => (
+    is       => 'lazy',
+    init_arg => undef,
+);
+sub _build_base_class_name {
+    my ($self) = @_;
+    my $class = ref( $self );
+    $class =~ s{__WITH__.*$}{};
+    return $class;
+}
+
+=head2 short_class_name
+
+Returns L</base_class_name> with the C<Web::Starch::> prefix
+removed.
+
+=cut
+
+sub short_class_name {
+    my ($self) = @_;
+    my $class = $self->base_class_name();
+    $class =~ s{^Web::Starch::}{};
+    return $class;
+}
+
 
 1;
 __END__

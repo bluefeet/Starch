@@ -35,7 +35,7 @@ system which:
 
 Is as fast as possible by limiting method calls, implementing
 lazy-loading wherever it can be done, and using libraries which
-exhibit run-time effeciences which beat out their competitors.
+exhibit run-time efficiencies which beat out their competitors.
 
 =item *
 
@@ -58,7 +58,7 @@ hyper-linked, and containing thorough examples and tests.
 
 =back
 
-There are many L</ALTERNATIVES> to Stach to choose from, all of which
+There are many L</ALTERNATIVES> to Starch to choose from, all of which
 Starch was inspired from and hopes to be a superior choice to.
 
 
@@ -120,15 +120,15 @@ And now you can access the data you previously saved:
 
 Your framework integration, such as L<Catalyst::Plugin::Starch>,
 will wrap up and hide away most of these details from you, but
-its still good to know what is happening behind the scenes.
+it's still good to know what is happening behind the scenes.
 
 
 
 =head1 EXPIRATION
 
-Expiration can be specified globaly, when instantiating the L<Web::Starch>
+Expiration can be specified globally, when instantiating the L<Web::Starch>
 object, per-session, and per-store.  The expires value has
-various properties and behaviors that is important to understand:
+various properties and behaviors that are important to understand:
 
 =over
 

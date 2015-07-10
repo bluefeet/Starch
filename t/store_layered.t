@@ -2,8 +2,19 @@
 use strictures 2;
 
 use Test::More;
+use Test::Web::Starch;
 
 use Web::Starch;
+
+Test::Web::Starch->new(
+    args => {
+        store => {
+            class => '::Layered',
+            outer => { class=>'::Memory' },
+            inner => { class=>'::Memory' },
+        },
+    },
+)->test_store();
 
 subtest basics => sub{
     my $starch = Web::Starch->new(
