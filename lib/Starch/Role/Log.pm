@@ -49,11 +49,7 @@ by plugins.  This is used to produce more concise logging output.
 
 =cut
 
-has base_class_name => (
-    is       => 'lazy',
-    init_arg => undef,
-);
-sub _build_base_class_name {
+sub base_class_name {
     my ($self) = @_;
     my $class = ref( $self );
     $class =~ s{__WITH__.*$}{};
@@ -73,7 +69,6 @@ sub short_class_name {
     $class =~ s{^Starch::}{};
     return $class;
 }
-
 
 1;
 __END__

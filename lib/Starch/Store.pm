@@ -105,6 +105,20 @@ Return true if the stores supports the L</reap_expired> method.
 
 sub can_reap_expired { 0 }
 
+=head2 short_store_class_name
+
+Returns L<Starch::Role::Log/short_class_name> with the
+C<Store::> prefix remove.
+
+=cut
+
+sub short_store_class_name {
+    my ($self) = @_;
+    my $class = $self->short_class_name();
+    $class =~ s{^Store::}{};
+    return $class;
+}
+
 =head1 METHODS
 
 =head2 new_sub_store
@@ -184,8 +198,8 @@ sub combine_keys {
     my ($self, $id, $namespace) = @_;
     return join(
         $self->key_separator(),
-        $id,
         @$namespace,
+        $id,
     );
 }
 

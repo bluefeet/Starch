@@ -13,7 +13,7 @@ sub BUILD {
     my ($self) = @_;
     $self->log->tracef(
         'starch.store.%s.new',
-        $self->_trace_log_name(),
+        $self->short_store_class_name(),
     );
     return;
 }
@@ -21,11 +21,13 @@ sub BUILD {
 around set => sub{
     my $orig = shift;
     my $self = shift;
-    my ($id) = @_;
+    my ($id, $namespace) = @_;
+
+    my $key = $self->combine_keys( $id, $namespace );
 
     $self->log->tracef(
         'starch.store.%s.set.%s',
-        $self->_trace_log_name(), $id,
+        $self->short_store_class_name(), $key,
     );
 
     return $self->$orig( @_ );
@@ -34,18 +36,20 @@ around set => sub{
 around get => sub{
     my $orig = shift;
     my $self = shift;
-    my ($id) = @_;
+    my ($id, $namespace) = @_;
+
+    my $key = $self->combine_keys( $id, $namespace );
 
     $self->log->tracef(
         'starch.store.%s.get.%s',
-        $self->_trace_log_name(), $id,
+        $self->short_store_class_name(), $key,
     );
 
     my $data = $self->$orig( @_ );
 
     $self->log->tracef(
         'starch.store.%s.get.%s.missing',
-        $self->_trace_log_name(), $id,
+        $self->short_store_class_name(), $key,
     ) if !$data;
 
     return $data;
@@ -54,22 +58,16 @@ around get => sub{
 around remove => sub{
     my $orig = shift;
     my $self = shift;
-    my ($id) = @_;
+    my ($id, $namespace) = @_;
+
+    my $key = $self->combine_keys( $id, $namespace );
 
     $self->log->tracef(
         'starch.store.%s.remove.%s',
-        $self->_trace_log_name(), $id,
+        $self->short_store_class_name(), $key,
     );
 
     return $self->$orig( @_ );
 };
-
-sub _trace_log_name {
-    my ($self) = @_;
-    my $name = ref( $self );
-    $name =~ s{^Starch::Store::}{};
-    $name =~ s{__WITH__.*$}{};
-    return $name;
-}
 
 1;
