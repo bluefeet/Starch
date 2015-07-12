@@ -9,7 +9,13 @@ use Test::More;
 use Log::Any::Test;
 use Log::Any qw($log);
 
+use Test::Starch;
 use Starch;
+
+Test::Starch->new(
+    plugins => ['::Trace'],
+)->test();
+$log->clear();
 
 my $starch = Starch->new_with_plugins(
     ['::Trace'],
@@ -149,4 +155,5 @@ sub log_empty_ok {
     ok( (@$msgs == 0), $test_msg );
     use Data::Dumper;
     diag( Dumper($msgs) ) if @$msgs;
+    $log->clear();
 }

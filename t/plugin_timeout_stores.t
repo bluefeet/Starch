@@ -3,8 +3,12 @@ use strictures 2;
 
 use Test::More;
 use Test::Fatal;
-
+use Test::Starch;
 use Starch;
+
+Test::Starch->new(
+    plugins => ['::TimeoutStores'],
+)->test();
 
 if (!eval('use 5.010_000; 1')) {
     plan skip_all => 'This test will only function with Perl 5.10 or newer.';

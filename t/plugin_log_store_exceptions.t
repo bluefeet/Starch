@@ -3,10 +3,15 @@ use strictures 2;
 
 use Test::More;
 use Test::Fatal;
+use Test::Starch;
 use Log::Any::Test;
 use Log::Any qw($log);
-
 use Starch;
+
+Test::Starch->new(
+    plugins => ['::LogStoreExceptions'],
+)->test();
+$log->clear();
 
 {
     package Starch::Store::Test::LogStoreExceptions;

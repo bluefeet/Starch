@@ -2,8 +2,12 @@
 use strictures 2;
 
 use Test::More;
-
+use Test::Starch;
 use Starch;
+
+Test::Starch->new(
+    plugins => ['::CookieArgs'],
+)->test();
 
 my $expires = 60 * 60 * 8;
 my $arg_expires = '+' . $expires . 's';

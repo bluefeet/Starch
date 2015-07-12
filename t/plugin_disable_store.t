@@ -2,8 +2,12 @@
 use strictures 2;
 
 use Test::More;
-
+use Test::Starch;
 use Starch;
+
+Test::Starch->new(
+    plugins => ['::DisableStore'],
+)->test();
 
 my $enabled_store = Starch->new(
     store => {

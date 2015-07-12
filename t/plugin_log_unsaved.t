@@ -2,10 +2,15 @@
 use strictures 2;
 
 use Test::More;
+use Test::Starch;
 use Log::Any::Test;
 use Log::Any qw($log);
-
 use Starch;
+
+Test::Starch->new(
+    plugins => ['::LogUnsaved'],
+)->test();
+$log->clear();
 
 subtest 'without log' => sub{
     my $starch = Starch->new(

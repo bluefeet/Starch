@@ -2,7 +2,7 @@
 use strictures 2;
 
 use Test::More;
-
+use Test::Starch;
 use Starch;
 
 {
@@ -34,6 +34,10 @@ use Starch;
         ['MyPlugin::Manager', 'MyPlugin::Session', 'MyPlugin::Store'];
     }
 }
+
+Test::Starch->new(
+    plugins => ['MyPlugin'],
+)->test();
 
 subtest bundle => sub{
     my $starch = Starch->new_with_plugins(
