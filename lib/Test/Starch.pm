@@ -30,7 +30,7 @@ test suite.
 
 Along the same lines, it is recommended that if you use Starch that
 you make a test in your in-house test-suite which runs these tests
-againts your configuration.
+against your configuration.
 
 =cut
 

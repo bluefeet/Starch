@@ -72,7 +72,7 @@ has manager => (
 
 =head2 max_expires
 
-Set the per-store maximum expires wich will override the session's expires
+Set the per-store maximum expires which will override the session's expires
 if the session's expires is larger.
 
 =cut

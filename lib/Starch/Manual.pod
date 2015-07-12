@@ -12,7 +12,7 @@ Starch::Manual - Organized collection of Starch documentation.
 Welcome to Starch, a fancy implementation agnostic session state
 manager.  Sessions are server-side buckets of arbitrary information
 which is tracked using some implementation-specific technology, such
-as HTTP cookies.  While this modules uses are extend far beyind simply
+as HTTP cookies.  While this modules uses are extend far beyond simply
 making HTTP requests stateful, this documentation uses this paradigm
 extensively to explain how Starch works.
 

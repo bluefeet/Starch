@@ -66,7 +66,7 @@ browser figure it out.
 
 Whether the session cookie can only be transmitted over SSL.
 This defaults to true, as doing otherwise is a pretty terrible
-idea as a user's session cookie could be easly hijacker by
+idea as a user's session cookie could be easily hijacker by
 anyone sniffing network packets.
 
 =head2 cookie_http_only
@@ -91,7 +91,7 @@ Catalyst accepts for cookies.
 
 =head2 cookie_set_args
 
-Returns a hashref containing all the cookie args including the
+Returns a hash ref containing all the cookie args including the
 value being set to L<Starch::Session/id> and the expires being
 set to L<Starch::Session/expires>.
 

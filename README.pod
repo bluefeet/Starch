@@ -18,7 +18,7 @@ Starch - Implementation independent session state storage management.
 =head1 DESCRIPTION
 
 This module provides a generic interface to managing the storage of
-session state information and is often refered to as the "manager"
+session state information and is often referred to as the "manager"
 in this documentation.  Among other uses this module is a great fit
 for making HTTP requests stateful by pairing this module with HTTP
 cookies.

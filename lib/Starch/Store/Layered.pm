@@ -36,7 +36,7 @@ persistent storage engines.
 Another use case is for migrating from one store to another.  Your
 new store would be set as the inner store, and your old store
 would be set as the outer store.  Once sufficient time has passed,
-and the new store has been populdated, you could switch to using
+and the new store has been populated, you could switch to using
 just the new store.
 
 If you'd like to layer more than two stores you can use layered

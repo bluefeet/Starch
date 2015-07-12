@@ -20,7 +20,7 @@ __END__
 
 =head1 NAME
 
-Starch::Plugin::RenewExpiration - Trigger prediodic writes to the
+Starch::Plugin::RenewExpiration - Trigger periodic writes to the
 session store.
 
 =head1 SYNOPSIS
@@ -44,7 +44,7 @@ rather than on every request.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
 
-These areguments are added to the L<Starch> class.
+These arguments are added to the L<Starch> class.
 
 =head2 renew_threshold
 
