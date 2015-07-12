@@ -186,6 +186,24 @@ has created_session_key => (
     default => '__SESSION_CREATED__',
 );
 
+=head2 invalid_session_key
+
+This key is used by stores to mark session data as invalid,
+and when set in the session will disable the session from being
+written to the store.
+
+This is used by the L<Starch::Plugin::LogStoreExceptions> and
+L<Starch::Plugin::ThrottleStore> plugins to avoid losing session
+data in the store when errors or throttling is encountered.
+
+=cut
+
+has invalid_session_key => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '__SESSION_THROTTLED__',
+);
+
 =head2 factory
 
 The underlying L<Starch::Factory> object which manages all the plugins

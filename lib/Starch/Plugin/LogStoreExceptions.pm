@@ -49,7 +49,10 @@ foreach my $method (qw( set get remove )) {
                 'Starch store %s errored when %s was called: %s',
                 ref($self), $method, $_,
             );
-            return undef;
+            return {
+                $self->manager->invalid_session_key() => 1,
+            } if $method eq 'get';
+            return;
         };
     };
 }

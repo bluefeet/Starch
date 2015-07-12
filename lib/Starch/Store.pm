@@ -44,6 +44,9 @@ requires qw(
 around set => sub{
     my ($orig, $self, $id, $keys, $data, $expires) = @_;
 
+    # Short-circuit set operations if the data is invalid.
+    return if $data->{ $self->manager->invalid_session_key() };
+
     $expires = $self->calculate_expires( $expires );
 
     return $self->$orig( $id, $keys, $data, $expires );
