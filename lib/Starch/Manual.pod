@@ -338,7 +338,7 @@ L<Starch::Plugin::RenewExpiration>
 
 =item *
 
-L<Starch::Plugin::TimeoutStores>
+L<Starch::Plugin::TimeoutStore>
 
 =item *
 

@@ -1,13 +1,13 @@
-package Starch::Plugin::TimeoutStores;
+package Starch::Plugin::TimeoutStore;
 
 =head1 NAME
 
-Starch::Plugin::TimeoutStores - Throw an exception if stores surpass a timeout.
+Starch::Plugin::TimeoutStore - Throw an exception if store access surpass a timeout.
 
 =head1 SYNOPSIS
 
     my $starch = Starch->new_with_plugins(
-        ['::TimeoutStores'],
+        ['::TimeoutStore'],
         store => {
             class => '::Memory',
             timeout => 0.001, # 1 millisecond

@@ -6,16 +6,16 @@ use Test::Fatal;
 use Test::Starch;
 use Starch;
 
-Test::Starch->new(
-    plugins => ['::TimeoutStores'],
-)->test();
-
 if (!eval('use 5.010_000; 1')) {
     plan skip_all => 'This test will only function with Perl 5.10 or newer.';
 }
 
+Test::Starch->new(
+    plugins => ['::TimeoutStore'],
+)->test();
+
 {
-    package Starch::Store::Test::TimeoutStores;
+    package Starch::Store::Test::TimeoutStore;
     use Moo;
     with 'Starch::Store';
     sub set { _sleep_one() }
@@ -30,15 +30,17 @@ if (!eval('use 5.010_000; 1')) {
     }
 }
 
-my $timeout_store = Starch->new_with_plugins(
-    ['::TimeoutStores'],
-    store => { class=>'::Test::TimeoutStores', timeout=>0.01 },
-)->store();
+my $timeout_starch = Starch->new_with_plugins(
+    ['::TimeoutStore'],
+    store => { class=>'::Test::TimeoutStore', timeout=>0.01 },
+);
+my $timeout_store = $timeout_starch->store();
 
-my $normal_store = Starch->new_with_plugins(
-    ['::TimeoutStores'],
-    store => { class=>'::Test::TimeoutStores' },
-)->store();
+my $normal_starch = Starch->new_with_plugins(
+    ['::TimeoutStore'],
+    store => { class=>'::Test::TimeoutStore' },
+);
+my $normal_store = $normal_starch->store();
 
 foreach my $method (qw( set get remove )) {
     is(
