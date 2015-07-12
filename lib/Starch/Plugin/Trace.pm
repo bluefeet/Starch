@@ -114,20 +114,20 @@ logged in the format of C<starch.store.$store_name.new>.
 =head2 set
 
 Every call to L<Starch::Store/set> is logged in the
-format of C<starch.store.$store_name.set.$session_id>.
+format of C<starch.store.$store_name.set.$session_key>.
 
 =head2 get
 
 Every call to L<Starch::Store/get> is logged in the
-format of C<starch.store.$store_name.get.$session_id>.
+format of C<starch.store.$store_name.get.$session_key>.
 
 If the result of calling C<get> is undefined then an additional
-log will produced of the format C<starch.store.$store_name.get.$session_id.missing>.
+log will produced of the format C<starch.store.$store_name.get.$session_key.missing>.
 
 =head2 remove
 
 Every call to L<Starch::Store/remove> is logged in the
-format of C<starch.store.$store_name.remove.$session_id>.
+format of C<starch.store.$store_name.remove.$session_key>.
 
 =head1 AUTHORS AND LICENSE
 

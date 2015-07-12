@@ -81,18 +81,21 @@ Some boilerplate for getting a store going:
     }
     
     sub set {
-        my ($self, $key, $data, $expires) = @_;
+        my ($self, $id, $namespace, $data, $expires) = @_;
+        my $key = $self->combine_keys( $id, $namespace );
         $self->foobar->set( $key, $data, $expires );
         return;
     }
     
     sub get {
-        my ($self, $key) = @_;
+        my ($self, $id, $namespace) = @_;
+        my $key = $self->combine_keys( $id, $namespace );
         return $self->foobar->get( $key );
     }
     
     sub remove {
-        my ($self, $key) = @_;
+        my ($self, $id, $namespace) = @_;
+        my $key = $self->combine_keys( $id, $namespace );
         $self->foobar->remove( $key );
         return;
     }
@@ -142,10 +145,10 @@ this is just a no-op.
 
 =back
 
-While these three methods typically receive a session ID as their first
-argument, the store code should be written more generically to treat it
-as just a key.  This is because there may be plugins wich alter the key,
-perhaps by extending it or dividing a single session's data into many keys.
+These method receive a session ID and a namespace array ref as their
+first two arguments.  The combination of these two values should identify
+a unique storage location in the store.  They can be combined to create a
+single key string using L<Web::Starch::Store/combine_keys>.
 
 
 
