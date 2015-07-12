@@ -22,14 +22,16 @@ $log->clear();
     sub remove { die "REMOVE FAIL" }
 }
 
-my $log_store = Starch->new_with_plugins(
+my $log_starch = Starch->new_with_plugins(
     ['::LogStoreExceptions'],
     store => { class=>'::Test::LogStoreExceptions' },
-)->store();
+);
+my $log_store = $log_starch->store();
 
-my $die_store = Starch->new(
+my $die_starch = Starch->new(
     store => { class=>'::Test::LogStoreExceptions' },
-)->store();
+);
+my $die_store = $die_starch->store();
 
 foreach my $method (qw( set get remove )) {
 

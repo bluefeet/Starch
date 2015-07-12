@@ -9,14 +9,15 @@ Test::Starch->new(
     plugins => ['::DisableStore'],
 )->test();
 
-my $enabled_store = Starch->new(
+my $enabled_starch = Starch->new(
     store => {
         class => '::Memory',
         global => 1,
     },
-)->store();
+);
+my $enabled_store = $enabled_starch->store();
 
-my $disabled_store = Starch->new_with_plugins(
+my $disabled_starch = Starch->new_with_plugins(
     ['::DisableStore'],
     store => {
         class=>'::Memory',
@@ -25,7 +26,8 @@ my $disabled_store = Starch->new_with_plugins(
         disable_get => 1,
         disable_remove => 1,
     },
-)->store();
+);
+my $disabled_store = $disabled_starch->store();
 
 $enabled_store->set('foo1', [], {bar=>1}, 10);
 $disabled_store->set('foo2', [], {bar=>2}, 10);

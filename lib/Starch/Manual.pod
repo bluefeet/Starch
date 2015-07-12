@@ -338,6 +338,10 @@ L<Starch::Plugin::RenewExpiration>
 
 =item *
 
+L<Starch::Plugin::ThrottleStore>
+
+=item *
+
 L<Starch::Plugin::TimeoutStore>
 
 =item *
