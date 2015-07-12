@@ -98,7 +98,7 @@ sub _build_original_data {
 
     return {} if !$self->in_store();
 
-    my $data = $self->manager->store->get( $self->id() );
+    my $data = $self->manager->store->get( $self->id(), ['session'] );
     $data = {} if !$data;
 
     return $data;
@@ -308,6 +308,7 @@ sub force_save {
 
     $manager->store->set(
         $self->id(),
+        ['session'],
         $data,
         $self->expires(),
     );
@@ -421,7 +422,7 @@ the session is not L</in_store>.
 sub force_delete {
     my ($self) = @_;
 
-    $self->manager->store->remove( $self->id() );
+    $self->manager->store->remove( $self->id(), ['session'] );
 
     $self->_set_original_data( {} );
     $self->_set_data( {} );
@@ -493,7 +494,7 @@ sub reset_id {
     my ($self) = @_;
 
     # Remove the data for the current session ID.
-    $self->manager->store->remove( $self->id() ) if $self->in_store();
+    $self->manager->store->remove( $self->id(), ['session'] ) if $self->in_store();
 
     # Ensure that future calls to id generate a new one.
     $self->_clear_existing_id();

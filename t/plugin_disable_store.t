@@ -23,19 +23,19 @@ my $disabled_store = Starch->new_with_plugins(
     },
 )->store();
 
-$enabled_store->set('foo1', {bar=>1}, 10);
-$disabled_store->set('foo2', {bar=>2}, 10);
+$enabled_store->set('foo1', [], {bar=>1}, 10);
+$disabled_store->set('foo2', [], {bar=>2}, 10);
 
-is_deeply( $enabled_store->get('foo1'), {bar=>1}, 'set and get are enabled' );
-is( $disabled_store->get('foo1'), undef, 'get is disabled' );
-is( $enabled_store->get('foo2'), undef, 'set is disabled' );
+is_deeply( $enabled_store->get('foo1', []), {bar=>1}, 'set and get are enabled' );
+is( $disabled_store->get('foo1', []), undef, 'get is disabled' );
+is( $enabled_store->get('foo2', []), undef, 'set is disabled' );
 
-$enabled_store->set('foo2', {bar=>2}, 10);
+$enabled_store->set('foo2', [], {bar=>2}, 10);
 
-$enabled_store->remove('foo1');
-$disabled_store->remove('foo2');
+$enabled_store->remove('foo1', []);
+$disabled_store->remove('foo2', []);
 
-is( $enabled_store->get('foo1'), undef, 'remove is enabled' );
-is_deeply( $enabled_store->get('foo2'), {bar=>2}, 'remove is disabled' );
+is( $enabled_store->get('foo1', []), undef, 'remove is enabled' );
+is_deeply( $enabled_store->get('foo2', []), {bar=>2}, 'remove is disabled' );
 
 done_testing();

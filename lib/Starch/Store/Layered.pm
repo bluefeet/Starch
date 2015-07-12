@@ -180,12 +180,12 @@ sub set {
 }
 
 sub get {
-    my ($self, $key) = @_;
+    my ($self, $key, $namespace) = @_;
 
-    my $data = $self->outer->get( $key );
+    my $data = $self->outer->get( $key, $namespace );
     return $data if $data;
 
-    $data = $self->inner->get( $key );
+    $data = $self->inner->get( $key, $namespace );
     return undef if !$data;
 
     # Now we got the data from the inner store but not the outer store.
@@ -200,7 +200,7 @@ sub get {
     # Make sure we take into account max_expires.
     $expires = $self->calculate_expires( $expires );
 
-    $self->outer->set( $key, $data, $expires );
+    $self->outer->set( $key, $namespace, $data, $expires );
 
     return $data;
 }

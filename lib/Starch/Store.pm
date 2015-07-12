@@ -23,6 +23,7 @@ described in L<Starch::Manual/METHOD PROXIES>.
 
 use Types::Standard -types;
 use Types::Common::Numeric -types;
+use Types::Common::String -types;
 use Carp qw( croak );
 
 use Moo::Role;
@@ -41,11 +42,11 @@ requires qw(
 );
 
 around set => sub{
-    my ($orig, $self, $key, $data, $expires) = @_;
+    my ($orig, $self, $id, $keys, $data, $expires) = @_;
 
     $expires = $self->calculate_expires( $expires );
 
-    return $self->$orig( $key, $data, $expires );
+    return $self->$orig( $id, $keys, $data, $expires );
 };
 
 =head1 REQUIRED ARGUMENTS
@@ -64,7 +65,7 @@ has manager => (
     isa      => InstanceOf[ 'Starch' ],
     required => 1,
     weak_ref => 1,
-    handles => ['factory'],
+    handles  => ['factory'],
 );
 
 =head1 OPTIONAL ARGUMENTS
@@ -77,8 +78,21 @@ if the session's expires is larger.
 =cut
 
 has max_expires => (
-  is  => 'ro',
-  isa => PositiveOrZeroInt | Undef,
+    is  => 'ro',
+    isa => PositiveOrZeroInt | Undef,
+);
+
+=head2 key_separator
+
+Used by L</combine_keys> to combine the session keys.
+Defaults to C<:>.
+
+=cut
+
+has key_separator => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => ':',
 );
 
 =head1 ATTRIBUTES
@@ -125,8 +139,9 @@ sub sub_store_args {
     my $args = $self->BUILDARGS( @_ );
 
     return {
-        manager => $self->manager(),
-        defined($max_expires) ? (max_expires => $max_expires) : (),
+        manager       => $self->manager(),
+        max_expires   => $max_expires,
+        key_separator => $self->key_separator(),
         %$args,
     };
 }
@@ -147,6 +162,31 @@ sub calculate_expires {
     return $max_expires if $expires > $max_expires;
 
     return $expires;
+}
+
+=head2 combine_keys
+
+    my $store_key = $store->combine_keys(
+        $session_id,
+        \@namespace,
+    );
+
+This method is used by stores that store and lookup data by
+a string (all of them at this time).  It combines the session
+ID with the namespace of the key data for the store request
+(usually just C<['session']>).  Plugins may implement other
+namespace keys to segregate different session data into
+separate reads and writes in the store.
+
+=cut
+
+sub combine_keys {
+    my ($self, $id, $namespace) = @_;
+    return join(
+        $self->key_separator(),
+        $id,
+        @$namespace,
+    );
 }
 
 =head2 reap_expired

@@ -29,22 +29,22 @@ subtest basics => sub{
     my $outer = $layered->outer();
     my $inner = $layered->inner();
 
-    $layered->set( foo => {bar=>32} );
-    is_deeply( $layered->get('foo'), {bar=>32}, 'layered get' );
-    is_deeply( $outer->get('foo'), {bar=>32}, 'outer get' );
-    is_deeply( $inner->get('foo'), {bar=>32}, 'inner get' );
+    $layered->set( 'foo', [], {bar=>32} );
+    is_deeply( $layered->get('foo', []), {bar=>32}, 'layered get' );
+    is_deeply( $outer->get('foo', []), {bar=>32}, 'outer get' );
+    is_deeply( $inner->get('foo', []), {bar=>32}, 'inner get' );
 
-    $layered->set( foo => {bar=>59} );
-    $outer->remove('foo');
-    is_deeply( $layered->get('foo'), {bar=>59}, 'layered get (no outer)' );
-    is( $outer->get('foo'), undef, 'outer get (no outer)' );
-    is_deeply( $inner->get('foo'), {bar=>59}, 'inner get (no outer)' );
+    $layered->set( 'foo', [], {bar=>59} );
+    $outer->remove('foo', []);
+    is_deeply( $layered->get('foo', []), {bar=>59}, 'layered get (no outer)' );
+    is( $outer->get('foo', []), undef, 'outer get (no outer)' );
+    is_deeply( $inner->get('foo', []), {bar=>59}, 'inner get (no outer)' );
 
-    $layered->set( foo => {bar=>16} );
-    $inner->remove('foo');
-    is_deeply( $layered->get('foo'), {bar=>16}, 'layered get (no inner)' );
-    is_deeply( $outer->get('foo'), {bar=>16}, 'outer get (no inner)' );
-    is( $inner->get('foo'), undef, 'inner get (no inner)' );
+    $layered->set( 'foo', [], {bar=>16} );
+    $inner->remove('foo', []);
+    is_deeply( $layered->get('foo', []), {bar=>16}, 'layered get (no inner)' );
+    is_deeply( $outer->get('foo', []), {bar=>16}, 'outer get (no inner)' );
+    is( $inner->get('foo', []), undef, 'inner get (no inner)' );
 };
 
 subtest max_expires => sub{

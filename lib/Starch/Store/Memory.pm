@@ -74,21 +74,27 @@ Set L<Starch::Store/remove>.
 =cut
 
 sub set {
-    my ($self, $key, $data) = @_;
+    my ($self, $id, $namespace, $data) = @_;
 
-    $self->memory->{$key} = $data;
+    $self->memory->{
+        $self->combine_keys( $id, $namespace )
+    } = $data;
 
     return;
 }
 
 sub get {
-    my ($self, $key) = @_;
-    return $self->memory->{$key};
+    my ($self, $id, $namespace) = @_;
+    return $self->memory->{
+        $self->combine_keys( $id, $namespace )
+    };
 }
 
 sub remove {
-    my ($self, $key) = @_;
-    delete( $self->memory->{$key} );
+    my ($self, $id, $namespace) = @_;
+    delete( $self->memory->{
+        $self->combine_keys( $id, $namespace )
+    } );
     return;
 }
 

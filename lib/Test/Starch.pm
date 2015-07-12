@@ -371,16 +371,16 @@ sub test_store {
 
         subtest 'set, get, and remove' => sub{
             my $key = 'starch-test-key';
-            $store->remove( $key );
+            $store->remove( $key, [] );
 
-            is( $store->get( $key ), undef, 'no data before set' );
+            is( $store->get( $key, [] ), undef, 'no data before set' );
 
-            $store->set( $key, {foo=>6}, 10 );
-            is( $store->get( $key )->{foo}, 6, 'has data after set' );
+            $store->set( $key, [], {foo=>6}, 10 );
+            is( $store->get( $key, [] )->{foo}, 6, 'has data after set' );
 
-            $store->remove( $key );
+            $store->remove( $key, [] );
 
-            is( $store->get( $key ), undef, 'no data after remove' );
+            is( $store->get( $key, [] ), undef, 'no data after remove' );
         };
 
         subtest max_expires => sub{
