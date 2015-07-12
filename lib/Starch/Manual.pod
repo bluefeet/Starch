@@ -9,12 +9,12 @@ Starch::Manual - Organized collection of Starch documentation.
 
 =head1 INTRODUCTION
 
-Welcome to Starch, a fancy implementation agnostic session manager.
-Sessions are server-side buckets of arbitrary information which is
-tracked by the user's web browser (or mobile application, or...).
-Sessions typically store things like whether the user is logged in,
-which user they are, referer/source information, transient information
-which is stored when a user registers, and many other purposes.
+Welcome to Starch, a fancy implementation agnostic session state
+manager.  Sessions are server-side buckets of arbitrary information
+which is tracked using some implementation-specific technology, such
+as HTTP cookies.  While this modules uses are extend far beyind simply
+making HTTP requests stateful, this documentation uses this paradigm
+extensively to explain how Starch works.
 
 Documentation for extending Starch can be found at
 L<Starch::Manual::Extending>.
@@ -24,10 +24,11 @@ L<Catalyst> (see L</INTEGRATIONS> for other frameworks).  Whichever
 integration you are using it will likely pass-through arguments to
 the underlying L<Starch> object and provide a thin layer over
 the L<Starch::Session> objects.  This documentation will be using
-the core Starch classes for examples.
+the core Starch classes for examples.  Your integration layer may
+change, or completely replace, the interface documented here.
 
-C<Starch> is an attempt at creating a standalone session management
-system which:
+C<Starch> is an attempt at creating a standalone session state
+management system which:
 
 =over
 
