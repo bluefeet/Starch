@@ -14,7 +14,7 @@ Starch::Plugin::AutoSave - Automatically save changed session data.
 =head2 DESCRIPTION
 
 This plugin detects when a session object is being destroyed and is
-dirty (the session data has changed).  If this happens the save will
+dirty (the session data has changed).  If this happens then save will
 be called on the session.
 
 =cut

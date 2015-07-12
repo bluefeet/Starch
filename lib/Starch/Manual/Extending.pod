@@ -39,7 +39,7 @@ acts as a dynamic plugin bundle.
 
 =head1 STORES
 
-Stores provide the data persistance layers for stores so that, from HTTP request
+Stores provide the data persistence layers for stores so that, from HTTP request
 to request, the data set in the store is available to get.
 
 See L<Starch::Store::Memory> for a basic example store.  See
@@ -129,7 +129,7 @@ implement:
 =item *
 
 B<set> - Sets the data for the key.  The C<$expires> value will always be set and
-will be either C<0> or a postive integer representing the number of seconds
+will be either C<0> or a positive integer representing the number of seconds
 in the future that this session data should be expired.  If C<0> then the
 store may expire the data whenever it chooses.
 
@@ -194,7 +194,7 @@ a secondary global index to do the scan on.
                                                           v      |
     +------------------------+       +------------------------+  |
     |      1. manager        | ----> |       3. store         |--+
-    |     (Starch)      | < - - |  (Starch::Store)  |
+    |        (Starch)        | < - - |     (Starch::Store)    |
     +------------------------+       +------------------------+
                 ^    |
                 |    |
@@ -202,7 +202,7 @@ a secondary global index to do the scan on.
                 |                                V
     +------------------------+       +------------------------+
     |      4. session        |       |      2. factory        |
-    | (Starch::Session) |       | (Starch::Factory) |
+    |   (Starch::Session)    |       |   (Starch::Factory)    |
     +------------------------+       +------------------------+
 
 This diagram shows which objects hold references to other objects.  Solid
@@ -216,7 +216,7 @@ Weak references are used to avoid memory leaks.
 B<manager> - The manager is the entry point for configuration and retrieving
 session objects.  It holds a strong reference to the factory and the store.
 The manager doesn't have much logic in and of itself, as most of the compile-time
-work is handled by the factory, and the run-time work by the sessions and store.
+work is handled by the factory, and the runtime work by the sessions and store.
 
 =item 2.
 
@@ -226,13 +226,13 @@ classes and roles.
 =item 3.
 
 B<store> - The store does all of the backend heavy-lifting.  It holds a
-weak reference to the manager so that it can, primarly, get at the factory
+weak reference to the manager so that it can, primarily, get at the factory
 object and create sub-stores.  The L<Starch::Store::Layered> store depends
 on this functionality to create the inner and outer sub-stores.
 
 =item 4.
 
-B<session> - The session provides the run-time public interface to the store
+B<session> - The session provides the runtime public interface to the store
 and other parts of starch.  It holds a strong reference to the manager.
 
 =back
