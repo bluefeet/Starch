@@ -270,7 +270,7 @@ These stores are distributed separately on CPAN:
 
 =item *
 
-L<Starch::Store::AmazonDynamoDB>
+L<Starch::Store::Amazon::DynamoDB>
 
 =item *
 
@@ -278,7 +278,7 @@ L<Starch::Store::DBI>
 
 =item *
 
-L<Starch::Store::DBIxConnector>
+L<Starch::Store::DBIx::Connector>
 
 =item *
 
