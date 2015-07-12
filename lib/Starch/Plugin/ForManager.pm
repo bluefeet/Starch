@@ -1,17 +1,17 @@
-package Web::Starch::Plugin::ForManager;
+package Starch::Plugin::ForManager;
 
 =head1 NAME
 
-Web::Starch::Plugin::ForManager - Base role for Web::Starch plugins.
+Starch::Plugin::ForManager - Base role for Starch plugins.
 
 =head1 SYNOPSIS
 
     package MyPlugin::Manager;
     use Moo;
-    with 'Web::Starch::Plugin::ForManager';
+    with 'Starch::Plugin::ForManager';
     has foo => ( is=>'ro' );
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['MyPlugin::Manager'],
         foo => 'bar',
         ...,
@@ -24,7 +24,7 @@ This role provides no additional functionality to
 manager plugins.  All it does is labels a plugin as a manager
 plugin so that Starch knows which class type it applies to.
 
-See L<Web::Starch::Manual::Extending/PLUGINS> for more information
+See L<Starch::Manual::Extending/PLUGINS> for more information
 on writing plugins.
 
 =cut
@@ -38,5 +38,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

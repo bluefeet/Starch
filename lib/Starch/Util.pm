@@ -1,8 +1,8 @@
-package Web::Starch::Util;
+package Starch::Util;
 
 =head1 NAME
 
-Web::Starch::Util - Utility functions used internally by Starch.
+Starch::Util - Utility functions used internally by Starch.
 
 =cut
 
@@ -94,7 +94,7 @@ Is the same as:
     my @ret = Some::Package->some_method( @args );
 
 Method proxies are defined in more detail at
-L<Web::Starch::Manual/METHOD PROXIES>.
+L<Starch::Manual/METHOD PROXIES>.
 
 =cut
 
@@ -146,5 +146,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

@@ -1,8 +1,8 @@
-package Web::Starch::Store::Memory;
+package Starch::Store::Memory;
 
 =head1 NAME
 
-Web::Starch::Store::Memory - In-memory session store.
+Starch::Store::Memory - In-memory session store.
 
 =head1 DESCRIPTION
 
@@ -20,7 +20,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Store
+    Starch::Store
 );
 
 =head1 OPTIONAL ARGUMENTS
@@ -61,15 +61,15 @@ sub _build_memory {
 
 =head2 set
 
-Set L<Web::Starch::Store/set>.
+Set L<Starch::Store/set>.
 
 =head2 get
 
-Set L<Web::Starch::Store/get>.
+Set L<Starch::Store/get>.
 
 =head2 remove
 
-Set L<Web::Starch::Store/remove>.
+Set L<Starch::Store/remove>.
 
 =cut
 
@@ -97,5 +97,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

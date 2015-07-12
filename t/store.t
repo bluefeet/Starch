@@ -2,8 +2,8 @@
 use strictures 2;
 
 use Test::More;
-use Test::Web::Starch;
+use Test::Starch;
 
-Test::Web::Starch->new->test_store();
+Test::Starch->new->test_store();
 
 done_testing;

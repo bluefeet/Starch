@@ -3,10 +3,10 @@ use strictures 2;
 
 use Test::More;
 
-use Web::Starch;
+use Starch;
 
 subtest disabled => sub{
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => { class => '::Memory' },
     );
 
@@ -26,7 +26,7 @@ subtest disabled => sub{
 };
 
 subtest enabled => sub{
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::RenewExpiration'],
         store => { class => '::Memory' },
     );

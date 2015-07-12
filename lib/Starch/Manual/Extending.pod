@@ -5,7 +5,7 @@
 
 =head1 NAME
 
-Web::Starch::Manual::Extending - How to alter and add functionality Web::Starch.
+Starch::Manual::Extending - How to alter and add functionality Starch.
 
 
 
@@ -18,21 +18,21 @@ about the various ways that Starch can be extended.
 
 =head1 PLUGINS
 
-Plugins can modify any of the manager (L<Web::Starch>), session (L<Web::Starch::Session>),
-and store (L<Web::Starch::Store>) classes to extend functionality.
+Plugins can modify any of the manager (L<Starch>), session (L<Starch::Session>),
+and store (L<Starch::Store>) classes to extend functionality.
 
 A plugin may extend several of these classes, via plugin bundles, or just one.  A common
 setup is a plugin bundle which adds arguments to the manager object and then adds logic
 to the session objects which acts upon the arguments.
 
-See L<Web::Starch::Plugin::CookieArgs> for a basic example plugin.  See
-L<Web::Starch::Manual/PLUGINS> for more existing plugins.
+See L<Starch::Plugin::CookieArgs> for a basic example plugin.  See
+L<Starch::Manual/PLUGINS> for more existing plugins.
 
-See the SYNOPSIS in L<Web::Starch::Plugin::Bundle>, L<Web::Starch::Plugin::ForManager>,
-L<Web::Starch::Plugin::ForSession>, and L<Web::Starch::Plugin::ForStore> documentation
+See the SYNOPSIS in L<Starch::Plugin::Bundle>, L<Starch::Plugin::ForManager>,
+L<Starch::Plugin::ForSession>, and L<Starch::Plugin::ForStore> documentation
 for some decent boilerplate for writing new plugins.
 
-Plugins and plugin bundles are applied by L<Web::Starch::Factory>, which itself
+Plugins and plugin bundles are applied by L<Starch::Factory>, which itself
 acts as a dynamic plugin bundle.
 
 
@@ -42,11 +42,11 @@ acts as a dynamic plugin bundle.
 Stores provide the data persistance layers for stores so that, from HTTP request
 to request, the data set in the store is available to get.
 
-See L<Web::Starch::Store::Memory> for a basic example store.  See
-L<Web::Starch::Manual/STORES> for more existing stores.
+See L<Starch::Store::Memory> for a basic example store.  See
+L<Starch::Manual/STORES> for more existing stores.
 
 A store must implement the C<set>, C<get>, and C<remove> methods and consume
-the L<Web::Starch::Store> role.
+the L<Starch::Store> role.
 
 Writing new stores is generally a trivial process where the store class does
 nothing more than glue those three methods with some underlying implementation
@@ -54,12 +54,12 @@ such as L<DBI> or L<CHI>.
 
 Stores should be written so that the underlying driver object (the C<$dbh>
 for a DBI store, for example) can be passed as an argument.   This allows
-the user to utilize L<Web::Starch::Manual/METHOD PROXIES> to build their
+the user to utilize L<Starch::Manual/METHOD PROXIES> to build their
 own driver objects.
 
 Some boilerplate for getting a store going:
 
-    package Web::Starch::Store::FooBar;
+    package Starch::Store::FooBar;
     
     use Foo::Bar;
     use Types::Standard -types;
@@ -69,7 +69,7 @@ Some boilerplate for getting a store going:
     use Moo;
     
     with qw(
-        Web::Starch::Store
+        Starch::Store
     );
     
     has foobar => (
@@ -109,9 +109,9 @@ as in:
     }
 
 A session's expires duration is stored in the session data under the
-L<Web::Starch/expires_session_key>.  This should B<not> be considered
+L<Starch/expires_session_key>.  This should B<not> be considered
 as anything meaningful to the store, since stores can have their
-L<Web::Starch::Store/max_expires> argument set which will automatically
+L<Starch::Store/max_expires> argument set which will automatically
 change the value of the C<expires> argument passed to C<set>.
 
 
@@ -153,7 +153,7 @@ perhaps by extending it or dividing a single session's data into many keys.
 
 Stores should detect issues and throw exceptions loudly.  If the user
 would like to automatically turn store exceptions into log messages
-they can use the L<Web::Starch::Plugin::LogStoreExceptions> plugin.
+they can use the L<Starch::Plugin::LogStoreExceptions> plugin.
 
 
 
@@ -191,7 +191,7 @@ a secondary global index to do the scan on.
                                                           v      |
     +------------------------+       +------------------------+  |
     |      1. manager        | ----> |       3. store         |--+
-    |     (Web::Starch)      | < - - |  (Web::Starch::Store)  |
+    |     (Starch)      | < - - |  (Starch::Store)  |
     +------------------------+       +------------------------+
                 ^    |
                 |    |
@@ -199,7 +199,7 @@ a secondary global index to do the scan on.
                 |                                V
     +------------------------+       +------------------------+
     |      4. session        |       |      2. factory        |
-    | (Web::Starch::Session) |       | (Web::Starch::Factory) |
+    | (Starch::Session) |       | (Starch::Factory) |
     +------------------------+       +------------------------+
 
 This diagram shows which objects hold references to other objects.  Solid
@@ -224,7 +224,7 @@ classes and roles.
 
 B<store> - The store does all of the backend heavy-lifting.  It holds a
 weak reference to the manager so that it can, primarly, get at the factory
-object and create sub-stores.  The L<Web::Starch::Store::Layered> store depends
+object and create sub-stores.  The L<Starch::Store::Layered> store depends
 on this functionality to create the inner and outer sub-stores.
 
 =item 4.
@@ -238,7 +238,7 @@ and other parts of starch.  It holds a strong reference to the manager.
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 
 
 

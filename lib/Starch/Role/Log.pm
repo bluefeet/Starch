@@ -1,8 +1,8 @@
-package Web::Starch::Role::Log;
+package Starch::Role::Log;
 
 =head1 NAME
 
-Web::Starch::Role::Log - Logging capabilities used internally by Starch.
+Starch::Role::Log - Logging capabilities used internally by Starch.
 
 =cut
 
@@ -22,11 +22,11 @@ The category is set to the object's package name, minus any
 C<__WITH__.*> bits that Moo::Role adds when composing a class
 from roles.
 
-Very little logging is produced by the stock L<Web::Starch>.  The
-L<Web::Starch::Plugin::Trace> plugin logs extensively.
+Very little logging is produced by the stock L<Starch>.  The
+L<Starch::Plugin::Trace> plugin logs extensively.
 
 More info about logging can be found at
-L<Web::Starch::Manual/LOGGING>.
+L<Starch::Manual/LOGGING>.
 
 =cut
 
@@ -62,7 +62,7 @@ sub _build_base_class_name {
 
 =head2 short_class_name
 
-Returns L</base_class_name> with the C<Web::Starch::> prefix
+Returns L</base_class_name> with the C<Starch::> prefix
 removed.
 
 =cut
@@ -70,7 +70,7 @@ removed.
 sub short_class_name {
     my ($self) = @_;
     my $class = $self->base_class_name();
-    $class =~ s{^Web::Starch::}{};
+    $class =~ s{^Starch::}{};
     return $class;
 }
 
@@ -80,5 +80,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

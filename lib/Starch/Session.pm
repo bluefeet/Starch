@@ -1,8 +1,8 @@
-package Web::Starch::Session;
+package Starch::Session;
 
 =head1 NAME
 
-Web::Starch::Session - The Web::Starch session object.
+Starch::Session - The Starch session object.
 
 =head1 SYNOPSIS
 
@@ -14,7 +14,7 @@ Web::Starch::Session - The Web::Starch session object.
 
 =head1 DESCRIPTION
 
-This is the session class used by L<Web::Starch/session>.
+This is the session class used by L<Starch/session>.
 
 =cut
 
@@ -30,22 +30,22 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Role::Log
+    Starch::Role::Log
 );
 
 =head1 REQUIRED ARGUMENTS
 
 =head2 manager
 
-The L<Web::Starch> object that glues everything together.  The session
+The L<Starch> object that glues everything together.  The session
 object needs this to get at configuration information and the stores.
-This argument is automatically set by L<Web::Starch/session>.
+This argument is automatically set by L<Starch/session>.
 
 =cut
 
 has manager => (
     is       => 'ro',
-    isa      => InstanceOf[ 'Web::Starch' ],
+    isa      => InstanceOf[ 'Starch' ],
     required => 1,
 );
 
@@ -123,8 +123,8 @@ sub _build_data {
 
 =head2 expires
 
-This defaults to L<Web::Starch/expires> and is stored in the L</data>
-under the L<Web::Starch/expires_session_key> key.
+This defaults to L<Starch/expires> and is stored in the L</data>
+under the L<Starch/expires_session_key> key.
 
 =cut
 
@@ -148,7 +148,7 @@ sub _build_expires {
 =head2 modified
 
 Whenever the session is L</save>d this will be updated and stored in
-L</data> under the L<Web::Starch/modified_session_key>.
+L</data> under the L<Starch/modified_session_key>.
 
 =cut
 
@@ -172,7 +172,7 @@ sub _build_modified {
 =head2 created
 
 When the session is created this is set and stored in L</data>
-under the L<Web::Starch/created_session_key>.
+under the L<Starch/created_session_key>.
 
 =cut
 
@@ -277,7 +277,7 @@ sub is_saved {
 =head2 save
 
 If this session L</is_dirty> this will save the L</data> to the
-L<Web::Starch/store>.
+L<Starch/store>.
 
 =cut
 
@@ -397,7 +397,7 @@ sub rollback {
 
 =head2 delete
 
-Deletes the session from the L<Web::Starch/store> and marks it
+Deletes the session from the L<Starch/store> and marks it
 as L</is_deleted>.  Throws an exception if not L<in_store>.
 
 =cut
@@ -437,7 +437,7 @@ sub force_delete {
     $session->set_expires( $session->expires() + (2 * 60 * 60) );
 
 Use this to set the session's expires to a duration different than the
-global expires set by L<Web::Starch/expires>.  This is useful for,
+global expires set by L<Starch/expires>.  This is useful for,
 for example, to support a "Remember Me" checkbox that many login
 forms provide where the difference between the user checking it or not
 is just a matter of what the session's expires duration is set to.
@@ -542,5 +542,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

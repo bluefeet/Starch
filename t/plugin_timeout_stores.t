@@ -4,16 +4,16 @@ use strictures 2;
 use Test::More;
 use Test::Fatal;
 
-use Web::Starch;
+use Starch;
 
 if (!eval('use 5.010_000; 1')) {
     plan skip_all => 'This test will only function with Perl 5.10 or newer.';
 }
 
 {
-    package Web::Starch::Store::Test::TimeoutStores;
+    package Starch::Store::Test::TimeoutStores;
     use Moo;
-    with 'Web::Starch::Store';
+    with 'Starch::Store';
     sub set { _sleep_one() }
     sub get { _sleep_one() }
     sub remove { _sleep_one() }
@@ -26,12 +26,12 @@ if (!eval('use 5.010_000; 1')) {
     }
 }
 
-my $timeout_store = Web::Starch->new_with_plugins(
+my $timeout_store = Starch->new_with_plugins(
     ['::TimeoutStores'],
     store => { class=>'::Test::TimeoutStores', timeout=>0.01 },
 )->store();
 
-my $normal_store = Web::Starch->new_with_plugins(
+my $normal_store = Starch->new_with_plugins(
     ['::TimeoutStores'],
     store => { class=>'::Test::TimeoutStores' },
 )->store();

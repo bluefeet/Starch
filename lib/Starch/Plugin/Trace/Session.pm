@@ -1,12 +1,12 @@
 package # hide from PAUSE
-    Web::Starch::Plugin::Trace::Session;
+    Starch::Plugin::Trace::Session;
 
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForSession
+    Starch::Plugin::ForSession
 );
 
 sub BUILD {

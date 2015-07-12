@@ -1,12 +1,12 @@
-package Web::Starch;
+package Starch;
 
 =head1 NAME
 
-Web::Starch - Implementation independent session management.
+Starch - Implementation independent session management.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         expires => 60 * 15, # 15 minutes
         store => {
             class   => '::Memory',
@@ -20,16 +20,16 @@ Web::Starch - Implementation independent session management.
 This module provides a generic interface to managing sessions and is
 often refered to as the "manager" in this documentation.
 
-Please see L<Web::Starch::Manual> for some good holistic starter
+Please see L<Starch::Manual> for some good holistic starter
 documentation.
 
 This class support method proxies as described in
-L<Web::Starch::Manual/METHOD PROXIES>.
+L<Starch::Manual/METHOD PROXIES>.
 
 =cut
 
-use Web::Starch::Factory;
-use Web::Starch::Session;
+use Starch::Factory;
+use Starch::Session;
 
 use Types::Standard -types;
 use Types::Common::String -types;
@@ -40,8 +40,8 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Role::Log
-    Web::Starch::Role::MethodProxy
+    Starch::Role::Log
+    Starch::Role::MethodProxy
 );
 
 sub BUILD {
@@ -55,7 +55,7 @@ sub BUILD {
 
 =head1 PLUGINS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::CookieArgs'],
         store => { class=>'::Memory' },
         cookie_name => 'my_session',
@@ -65,10 +65,10 @@ sub BUILD {
 
 Starch plugins are applied using the C<new_with_plugins> constructor method.
 The first argument is an array ref of plugin names.  The plugin names can
-be fully qualified, or relative to the C<Web::Starch::Plugin> namespace.
+be fully qualified, or relative to the C<Starch::Plugin> namespace.
 A leading C<::> signifies that the plugin's package name is relative.
 
-More information about plugins can be found at L<Web::Starch::Manual/PLUGINS>.
+More information about plugins can be found at L<Starch::Manual/PLUGINS>.
 
 =cut
 
@@ -78,7 +78,7 @@ sub new_with_plugins {
 
     my $args = $class->BUILDARGS( @_ );
 
-    my $factory = Web::Starch::Factory->new(
+    my $factory = Starch::Factory->new(
         plugins => $plugins,
         base_manager_class => $class,
     );
@@ -93,14 +93,14 @@ sub new_with_plugins {
 
 =head2 store
 
-The L<Web::Starch::Store> storage backend to use for persisting the session
+The L<Starch::Store> storage backend to use for persisting the session
 data.  A hashref must be passed and it is expected to contain at least a
 C<class> key and will be converted into a store object automatically.
 
-The C<class> can be fully qualified, or relative to the C<Web::Starch::Store>
+The C<class> can be fully qualified, or relative to the C<Starch::Store>
 namespace.  A leading C<::> signifies that the store's package name is relative.
 
-More information about stores can be found at L<Web::Starch::Manual/STORES>.
+More information about stores can be found at L<Starch::Manual/STORES>.
 
 =cut
 
@@ -113,7 +113,7 @@ has _store_arg => (
 
 has store => (
     is       => 'lazy',
-    isa      => ConsumerOf[ 'Web::Starch::Store' ],
+    isa      => ConsumerOf[ 'Starch::Store' ],
     init_arg => undef,
 );
 sub _build_store {
@@ -134,7 +134,7 @@ sub _build_store {
 How long, in seconds, a session should live after the last time it was
 modified.  Defaults to C<60 * 60 * 2> (2 hours).
 
-See L<Web::Starch::Manual/EXPIRATION> for more information.
+See L<Starch::Manual/EXPIRATION> for more information.
 
 =cut
 
@@ -146,7 +146,7 @@ has expires => (
 
 =head2 expires_session_key
 
-The session key to store the L<Web::Starch::Session/expires>
+The session key to store the L<Starch::Session/expires>
 value in.  Defaults to C<__SESSION_EXPIRES__>.
 
 =cut
@@ -159,7 +159,7 @@ has expires_session_key => (
 
 =head2 modified_session_key
 
-The session key to store the L<Web::Starch::Session/modified>
+The session key to store the L<Starch::Session/modified>
 value in.  Defaults to C<__SESSION_MODIFIED__>.
 
 =cut
@@ -172,7 +172,7 @@ has modified_session_key => (
 
 =head2 created_session_key
 
-The session key to store the L<Web::Starch::Session/created>
+The session key to store the L<Starch::Session/created>
 value in.  Defaults to C<__SESSION_CREATED__>.
 
 =cut
@@ -185,18 +185,18 @@ has created_session_key => (
 
 =head2 factory
 
-The underlying L<Web::Starch::Factory> object which manages all the plugins
+The underlying L<Starch::Factory> object which manages all the plugins
 and session/store object construction.
 
 =cut
 
 has factory => (
     is  => 'lazy',
-    isa => InstanceOf[ 'Web::Starch::Factory' ],
+    isa => InstanceOf[ 'Starch::Factory' ],
 );
 sub _build_factory {
     my ($self) = @_;
-    return Web::Starch::Factory->new(
+    return Starch::Factory->new(
         base_manager_class => ref( $self ),
     );
 }
@@ -208,7 +208,7 @@ sub _build_factory {
     my $new_session = $starch->session();
     my $existing_session = $starch->session( $id );
 
-Returns a new L<Web::Starch::Session> (or whatever L<Web::Starch::Factory/session_class>
+Returns a new L<Starch::Session> (or whatever L<Starch::Factory/session_class>
 returns) object for the specified session ID.
 
 If no ID is specified, or is undef, then an ID will be automatically generated.

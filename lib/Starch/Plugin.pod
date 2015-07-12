@@ -2,18 +2,18 @@
 
 =head1 NAME
 
-Web::Starch::Plugin - Web::Starch plugin framework.
+Starch::Plugin - Starch plugin framework.
 
 =head1 DESCRIPTION
 
-See L<Web::Starch::Manual/PLUGINS> for instructions on using plugins and a
+See L<Starch::Manual/PLUGINS> for instructions on using plugins and a
 list of available plugins.
 
-See L<Web::Starch::Manual::Extending/PLUGINS> for instructions on writing
+See L<Starch::Manual::Extending/PLUGINS> for instructions on writing
 your own plugins.
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 
 =cut

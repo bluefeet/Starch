@@ -1,12 +1,12 @@
-package Web::Starch::Plugin::TimeoutStores;
+package Starch::Plugin::TimeoutStores;
 
 =head1 NAME
 
-Web::Starch::Plugin::TimeoutStores - Throw an exception if stores surpass a timeout.
+Starch::Plugin::TimeoutStores - Throw an exception if stores surpass a timeout.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::TimeoutStores'],
         store => {
             class => '::Memory',
@@ -25,7 +25,7 @@ which takes fractional seconds, and a localized C<$SIG{ALRM}> handler.
 
 The whole point of detecting timeouts is so that you can still serve
 a web page even if the underlying session backend is failing, so
-using this plugin with L<Web::Starch::Plugin::LogStoreExceptions> is
+using this plugin with L<Starch::Plugin::LogStoreExceptions> is
 probably a good idea.
 
 Note that this plugin does not behave well on Perl 5.8 or older and will
@@ -46,7 +46,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForStore
+    Starch::Plugin::ForStore
 );
 
 =head1 OPTIONAL STORE ARGUMENTS
@@ -111,5 +111,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

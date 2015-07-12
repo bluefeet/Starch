@@ -5,12 +5,12 @@ my $iters = 10_000;
 
 use Devel::NYTProf;
 
-use Web::Starch;
+use Starch;
 
-my $starch = Web::Starch->new(
+my $starch = Starch->new(
     store => { class=>'::Memory' },
 );
-#my $starch = Web::Starch->new_with_plugins(
+#my $starch = Starch->new_with_plugins(
 #    ['::Sereal'],
 #    store => { class=>'::Memory' },
 #);

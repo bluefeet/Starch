@@ -3,40 +3,40 @@ use strictures 2;
 
 use Test::More;
 
-use Web::Starch;
+use Starch;
 
 {
     package MyPlugin::Manager;
     use Moo::Role;
-    with 'Web::Starch::Plugin::ForManager';
+    with 'Starch::Plugin::ForManager';
     sub my_manager_plugin { 1 }
 }
 
 {
     package MyPlugin::Session;
     use Moo::Role;
-    with 'Web::Starch::Plugin::ForSession';
+    with 'Starch::Plugin::ForSession';
     sub my_session_plugin { 1 }
 }
 
 {
     package MyPlugin::Store;
     use Moo::Role;
-    with 'Web::Starch::Plugin::ForStore';
+    with 'Starch::Plugin::ForStore';
     sub my_store_plugin { 1 }
 }
 
 {
     package MyPlugin;
     use Moo;
-    with 'Web::Starch::Plugin::Bundle';
+    with 'Starch::Plugin::Bundle';
     sub bundled_plugins {
         ['MyPlugin::Manager', 'MyPlugin::Session', 'MyPlugin::Store'];
     }
 }
 
 subtest bundle => sub{
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['MyPlugin'],
         store => { class => '::Memory' },
     );
@@ -47,7 +47,7 @@ subtest bundle => sub{
 };
 
 subtest individual => sub{
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['MyPlugin::Manager', 'MyPlugin::Store'],
         store => { class => '::Memory' },
     );

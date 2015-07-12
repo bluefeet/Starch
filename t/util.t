@@ -4,7 +4,7 @@ use strictures 2;
 use Test::More;
 use Test::Fatal;
 
-use Web::Starch::Util qw(
+use Starch::Util qw(
     load_prefixed_module
     apply_method_proxies
     call_method_proxy
@@ -12,7 +12,7 @@ use Web::Starch::Util qw(
 );
 
 subtest load_prefixed_module => sub{
-    my $prefix = 'Web::Starch';
+    my $prefix = 'Starch';
     my $suffix = '::Test::LoadPrefixedModule';
     my $package = $prefix . $suffix;
     like(
@@ -25,13 +25,13 @@ subtest load_prefixed_module => sub{
 
     is(
         load_prefixed_module( $prefix, $package ),
-        'Web::Starch::Test::LoadPrefixedModule',
+        'Starch::Test::LoadPrefixedModule',
         'load_prefixed_module on absolute package name',
     );
 
     is(
         load_prefixed_module( $prefix, $suffix ),
-        'Web::Starch::Test::LoadPrefixedModule',
+        'Starch::Test::LoadPrefixedModule',
         'load_prefixed_module on relative package name',
     );
 };
@@ -49,12 +49,12 @@ subtest is_method_proxy => sub{
 };
 
 {
-    package Web::Starch::Test::CallMethodProxy;
+    package Starch::Test::CallMethodProxy;
     use Moo;
     sub foo { shift; return @_ }
 }
 
-my $package = 'Web::Starch::Test::CallMethodProxy';
+my $package = 'Starch::Test::CallMethodProxy';
 my $method = 'foo';
 
 subtest call_method_proxy => sub{

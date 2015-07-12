@@ -1,8 +1,8 @@
-package Web::Starch::Store;
+package Starch::Store;
 
 =head1 NAME
 
-Web::Starch::Store - Role for session stores.
+Starch::Store - Role for session stores.
 
 =head1 DESCRIPTION
 
@@ -10,14 +10,14 @@ This role defines an interfaces for session store classes.  Session store
 classes are meant to be thin wrappers around the store implementations
 (such as DBI, CHI, etc).
 
-See L<Web::Starch::Manual/STORES> for instructions on using stores and a
+See L<Starch::Manual/STORES> for instructions on using stores and a
 list of available session stores.
 
-See L<Web::Starch::Manual::Extending/STORES> for instructions on writing
+See L<Starch::Manual::Extending/STORES> for instructions on writing
 your own stores.
 
 This role adds support for method proxies to consuming classes as
-described in L<Web::Starch::Manual/METHOD PROXIES>.
+described in L<Starch::Manual/METHOD PROXIES>.
 
 =cut
 
@@ -30,8 +30,8 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Role::Log
-    Web::Starch::Role::MethodProxy
+    Starch::Role::Log
+    Starch::Role::MethodProxy
 );
 
 requires qw(
@@ -52,16 +52,16 @@ around set => sub{
 
 =head2 manager
 
-The L<Web::Starch> object which is used by stores to
+The L<Starch> object which is used by stores to
 create sub-stores (such as the Layered store's outer and inner
 stores).  This is automatically set when the stores are built by
-L<Web::Starch::Factory>.
+L<Starch::Factory>.
 
 =cut
 
 has manager => (
     is       => 'ro',
-    isa      => InstanceOf[ 'Web::Starch' ],
+    isa      => InstanceOf[ 'Starch' ],
     required => 1,
     weak_ref => 1,
     handles => ['factory'],
@@ -180,5 +180,5 @@ All store classes must implement the C<set>, C<get>, and C<remove> methods.
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

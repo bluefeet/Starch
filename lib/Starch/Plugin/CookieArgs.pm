@@ -1,11 +1,11 @@
-package Web::Starch::Plugin::CookieArgs;
+package Starch::Plugin::CookieArgs;
 
 use Moo;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::Bundle
+    Starch::Plugin::Bundle
 );
 
 sub bundled_plugins {
@@ -20,12 +20,12 @@ __END__
 
 =head1 NAME
 
-Web::Starch::Plugin::CookieArgs - Arguments and methods for dealing with
+Starch::Plugin::CookieArgs - Arguments and methods for dealing with
 HTTP cookies.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::CookieArgs'],
         cookie_name => 'my_session',
         store => { ... },
@@ -42,7 +42,7 @@ with existing web frameworks.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
 
-These arguments are added to the L<Web::Starch> class.
+These arguments are added to the L<Starch> class.
 
 A detailed description of what these arguments mean and what
 they can contain is in the L<CGI::Simple::Cookie> documentation.
@@ -78,11 +78,11 @@ have to explicitly declare that you want to turn this protection off.
 
 =head1 SESSION METHODS
 
-These methods are added to the L<Web::Starch::Session> class.
+These methods are added to the L<Starch::Session> class.
 
 =head2 cookie_args
 
-Returns L</cookie_delete_args> if the L<Web::Starch::Session/is_deleted>,
+Returns L</cookie_delete_args> if the L<Starch::Session/is_deleted>,
 otherwise returns L</cookie_set_args>.
 
 These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
@@ -92,8 +92,8 @@ Catalyst accepts for cookies.
 =head2 cookie_set_args
 
 Returns a hashref containing all the cookie args including the
-value being set to L<Web::Starch::Session/id> and the expires being
-set to L<Web::Starch::Session/expires>.
+value being set to L<Starch::Session/id> and the expires being
+set to L<Starch::Session/expires>.
 
 =head2 cookie_delete_args
 
@@ -103,5 +103,5 @@ to remove the cookie immediately.
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

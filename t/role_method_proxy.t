@@ -5,9 +5,9 @@ use Test::More;
 use Test::Fatal;
 
 {
-    package Web::Starch::Test::Role::MethodProxy;
+    package Starch::Test::Role::MethodProxy;
     use Moo;
-    with 'Web::Starch::Role::MethodProxy';
+    with 'Starch::Role::MethodProxy';
     around BUILDARGS => sub{
         my $orig = shift;
         my $class = shift;
@@ -18,13 +18,13 @@ use Test::Fatal;
 }
 
 {
-    package Web::Starch::Test::CallMethodProxy;
+    package Starch::Test::CallMethodProxy;
     use Moo;
     sub foo { shift; return @_ }
 }
 
-my $class = 'Web::Starch::Test::Role::MethodProxy';
-my $package = 'Web::Starch::Test::CallMethodProxy';
+my $class = 'Starch::Test::Role::MethodProxy';
+my $package = 'Starch::Test::CallMethodProxy';
 my $method = 'foo';
 
 my $complex_data_in = {

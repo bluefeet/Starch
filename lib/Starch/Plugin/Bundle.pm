@@ -1,21 +1,21 @@
-package Web::Starch::Plugin::Bundle;
+package Starch::Plugin::Bundle;
 
 =head1 NAME
 
-Web::Starch::Plugin::Bundle - Base role for Web::Starch plugin bundles.
+Starch::Plugin::Bundle - Base role for Starch plugin bundles.
 
 =head1 SYNOPSIS
 
     # Create a bundle.
     package MyDevPlugins;
     use Moo;
-    with 'Web::Starch::Plugin::Bundle';
+    with 'Starch::Plugin::Bundle';
     sub bundled_plugins {
         return ['::Trace', 'MyApp::Starch::CustomPLugin'];
     }
 
     # Use the bundle.
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['MyDevPlugin'],
         store => { ... },
         ...,
@@ -28,14 +28,14 @@ bundles.  To create a plugin bundle just make a new class that consumes
 this role and defines the C<bundled_plugins> method.  This method
 should return an array ref of plugin names (absolute or relative).
 
-See L<Web::Starch::Manual::Extending/PLUGINS> for more information
+See L<Starch::Manual::Extending/PLUGINS> for more information
 on writing plugins.
 
 =cut
 
 use Types::Standard -types;
 use Types::Common::String -types;
-use Web::Starch::Util qw( load_prefixed_module );
+use Starch::Util qw( load_prefixed_module );
 
 use Moo::Role;
 use strictures 2;
@@ -46,7 +46,7 @@ requires( 'bundled_plugins' );
 sub _roles_for {
     my ($self, $prefix) = @_;
 
-    my $for_role = "Web::Starch::Plugin::For$prefix";
+    my $for_role = "Starch::Plugin::For$prefix";
 
     my @roles;
     foreach my $role (@{ $self->roles() }) {
@@ -91,7 +91,7 @@ sub _build_resolved_plugins {
     my @plugins;
     foreach my $plugin (@{ $self->plugins() }) {
         push @plugins, load_prefixed_module(
-            'Web::Starch::Plugin',
+            'Starch::Plugin',
             $plugin,
         );
     }
@@ -117,7 +117,7 @@ sub _build_roles {
     my @roles;
 
     foreach my $plugin (@{ $self->resolved_plugins() }) {
-        if (Moo::Role::does_role( $plugin, 'Web::Starch::Plugin::Bundle')) {
+        if (Moo::Role::does_role( $plugin, 'Starch::Plugin::Bundle')) {
             die "Plugin bundle $plugin is not a class"
                 if !$plugin->can('new');
 
@@ -138,7 +138,7 @@ sub _build_roles {
 =head2 manager_roles
 
 Of the L</roles> this returns the ones that consume the
-L<Web::Starch::Plugin::ForManager> role.
+L<Starch::Plugin::ForManager> role.
 
 =cut
 
@@ -156,7 +156,7 @@ sub _build_manager_roles {
 =head2 session_roles
 
 Of the L</roles> this returns the ones that consume the
-L<Web::Starch::Plugin::ForSession> role.
+L<Starch::Plugin::ForSession> role.
 
 =cut
 
@@ -174,7 +174,7 @@ sub _build_session_roles {
 =head2 store_roles
 
 Of the L</roles> this returns the ones that consume the
-L<Web::Starch::Plugin::ForStore> role.
+L<Starch::Plugin::ForStore> role.
 
 =cut
 
@@ -194,5 +194,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

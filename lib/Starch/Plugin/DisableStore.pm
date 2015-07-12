@@ -1,12 +1,12 @@
-package Web::Starch::Plugin::DisableStore;
+package Starch::Plugin::DisableStore;
 
 =head1 NAME
 
-Web::Starch::Plugin::DisableStore - Disable store read and/or write operations.
+Starch::Plugin::DisableStore - Disable store read and/or write operations.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::DisableStore'],
         store => {
             class => ...,
@@ -30,7 +30,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForStore
+    Starch::Plugin::ForStore
 );
 
 =head1 OPTIONAL STORE ARGUMENTS
@@ -88,5 +88,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

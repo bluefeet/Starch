@@ -1,12 +1,12 @@
 package # hide from PAUSE
-    Web::Starch::Plugin::Trace::Store;
+    Starch::Plugin::Trace::Store;
 
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForStore
+    Starch::Plugin::ForStore
 );
 
 sub BUILD {
@@ -67,7 +67,7 @@ around remove => sub{
 sub _trace_log_name {
     my ($self) = @_;
     my $name = ref( $self );
-    $name =~ s{^Web::Starch::Store::}{};
+    $name =~ s{^Starch::Store::}{};
     $name =~ s{__WITH__.*$}{};
     return $name;
 }

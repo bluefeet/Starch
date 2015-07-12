@@ -3,12 +3,12 @@ use strictures 2;
 
 use Test::More;
 
-use Web::Starch;
+use Starch;
 
 my $id = 123;
 
 {
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => { class => '::Memory', global => 1 },
     );
     my $session = $starch->session( $id );
@@ -17,7 +17,7 @@ my $id = 123;
 }
 
 subtest disabled => sub{
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => { class => '::Memory', global => 1 },
     );
 
@@ -28,7 +28,7 @@ subtest disabled => sub{
 };
 
 subtest enabled => sub{
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::AlwaysLoad'],
         store => { class => '::Memory', global => 1 },
     );

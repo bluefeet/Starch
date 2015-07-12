@@ -1,12 +1,12 @@
-package Web::Starch::Plugin::AutoSave;
+package Starch::Plugin::AutoSave;
 
 =head1 NAME
 
-Web::Starch::Plugin::AutoSave - Automatically save changed session data.
+Starch::Plugin::AutoSave - Automatically save changed session data.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::AutoSave'],
         ...,
     );
@@ -24,7 +24,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForSession
+    Starch::Plugin::ForSession
 );
 
 sub DEMOLISH {

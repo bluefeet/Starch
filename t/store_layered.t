@@ -2,11 +2,11 @@
 use strictures 2;
 
 use Test::More;
-use Test::Web::Starch;
+use Test::Starch;
 
-use Web::Starch;
+use Starch;
 
-Test::Web::Starch->new(
+Test::Starch->new(
     args => {
         store => {
             class => '::Layered',
@@ -17,7 +17,7 @@ Test::Web::Starch->new(
 )->test_store();
 
 subtest basics => sub{
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => {
             class => '::Layered',
             outer => { class=>'::Memory' },
@@ -48,7 +48,7 @@ subtest basics => sub{
 };
 
 subtest max_expires => sub{
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => {
             class => '::Layered',
             outer => { class=>'::Memory' },
@@ -60,7 +60,7 @@ subtest max_expires => sub{
     is( $starch->store->outer->max_expires(), undef, 'the outer store got undef max_expires' );
     is( $starch->store->inner->max_expires(), 23, 'the inner store got the explicit max_expires' );
 
-    $starch = Web::Starch->new(
+    $starch = Starch->new(
         store => {
             class => '::Layered',
             max_expires => 45,

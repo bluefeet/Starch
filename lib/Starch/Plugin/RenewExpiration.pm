@@ -1,11 +1,11 @@
-package Web::Starch::Plugin::RenewExpiration;
+package Starch::Plugin::RenewExpiration;
 
 use Moo;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::Bundle
+    Starch::Plugin::Bundle
 );
 
 sub bundled_plugins {
@@ -20,12 +20,12 @@ __END__
 
 =head1 NAME
 
-Web::Starch::Plugin::RenewExpiration - Trigger prediodic writes to the
+Starch::Plugin::RenewExpiration - Trigger prediodic writes to the
 session store.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::RenewExpiration'],
         renew_threshold => 10 * 60, # 10 minutes
         ...,
@@ -44,7 +44,7 @@ rather than on every request.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
 
-These areguments are added to the L<Web::Starch> class.
+These areguments are added to the L<Starch> class.
 
 =head2 renew_threshold
 
@@ -55,5 +55,5 @@ Defaults to zero which will renew the session expiration on every request.
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

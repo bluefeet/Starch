@@ -3,16 +3,16 @@ use strictures 2;
 
 use Test::More;
 
-use Web::Starch;
+use Starch;
 
-my $enabled_store = Web::Starch->new(
+my $enabled_store = Starch->new(
     store => {
         class => '::Memory',
         global => 1,
     },
 )->store();
 
-my $disabled_store = Web::Starch->new_with_plugins(
+my $disabled_store = Starch->new_with_plugins(
     ['::DisableStore'],
     store => {
         class=>'::Memory',

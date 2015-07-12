@@ -9,16 +9,16 @@ use Test::More;
 use Log::Any::Test;
 use Log::Any qw($log);
 
-use Web::Starch;
+use Starch;
 
-my $starch = Web::Starch->new_with_plugins(
+my $starch = Starch->new_with_plugins(
     ['::Trace'],
     store => { class => '::Memory' },
 );
 
-my $manager_class = 'Web::Starch';
-my $session_class = 'Web::Starch::Session';
-my $store_class   = 'Web::Starch::Store::Memory';
+my $manager_class = 'Starch';
+my $session_class = 'Starch::Session';
+my $store_class   = 'Starch::Store::Memory';
 
 subtest 'manager created with store' => sub{
     $log->category_contains_ok(

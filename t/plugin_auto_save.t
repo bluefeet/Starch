@@ -3,10 +3,10 @@ use strictures 2;
 
 use Test::More;
 
-use Web::Starch;
+use Starch;
 
 subtest 'without auto save' => sub{
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => { class => '::Memory' },
     );
 
@@ -17,7 +17,7 @@ subtest 'without auto save' => sub{
 };
 
 subtest 'with auto save' => sub{
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::AutoSave'],
         store => { class => '::Memory' },
     );

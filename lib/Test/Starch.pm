@@ -1,14 +1,14 @@
-package Test::Web::Starch;
+package Test::Starch;
 
 =head1 NAME
 
-Test::Web::Starch - Test core features of starch.
+Test::Starch - Test core features of starch.
 
 =head1 SYNOPSIS
 
     use Test::More;
     
-    my $tester = Test::Web::Starch->new(
+    my $tester = Test::Starch->new(
         plugins => [ ... ],
         args => { ... },
     );
@@ -18,9 +18,9 @@ Test::Web::Starch - Test core features of starch.
 
 =head1 DESCRIPTION
 
-This class runs the core L<Web::Starch> test suite by testing public
-interfaces of L<Web::Starch>, L<Web::Starch::Session>, and
-L<Web::Starch::Store>.  These are the same tests that Starch runs
+This class runs the core L<Starch> test suite by testing public
+interfaces of L<Starch>, L<Starch::Session>, and
+L<Starch::Store>.  These are the same tests that Starch runs
 when you install it from CPAN.
 
 This module is used by stores and plugins to ensure that they have
@@ -37,7 +37,7 @@ againts your configuration.
 use Types::Standard -types;
 use Types::Common::String -types;
 
-use Web::Starch;
+use Starch;
 use Test::More;
 use Test::Fatal;
 
@@ -62,7 +62,7 @@ has args => (
 has manager_class => (
     is      => 'ro',
     isa     => NonEmptySimpleStr,
-    default => 'Web::Starch',
+    default => 'Starch',
 );
 
 sub new_manager {
@@ -93,7 +93,7 @@ sub test {
 
 =head2 test_manager
 
-Tests L<Web::Starch>.
+Tests L<Starch>.
 
 =cut
 
@@ -111,7 +111,7 @@ sub test_manager {
 
 =head2 test_session
 
-Test L<Web::Starch::Session>.
+Test L<Starch::Session>.
 
 =cut
 
@@ -357,7 +357,7 @@ sub test_session {
 
 =head2 test_store
 
-Tests the L<Web::Starch::Store>.
+Tests the L<Starch::Store>.
 
 =cut
 
@@ -405,5 +405,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

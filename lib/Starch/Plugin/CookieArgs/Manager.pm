@@ -1,5 +1,5 @@
 package # hide from PAUSE
-    Web::Starch::Plugin::CookieArgs::Manager;
+    Starch::Plugin::CookieArgs::Manager;
 
 use Types::Standard -types;
 use Types::Common::String -types;
@@ -10,7 +10,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForManager
+    Starch::Plugin::ForManager
 );
 
 has cookie_name => (

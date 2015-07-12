@@ -1,12 +1,12 @@
-package Web::Starch::Store::Layered;
+package Starch::Store::Layered;
 
 =head1 NAME
 
-Web::Starch::Store::Layered - Layer multiple stores.
+Starch::Store::Layered - Layer multiple stores.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         expires => 2 * 60 * 60, # 2 hours
         store => {
             class => '::Layered',
@@ -52,7 +52,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Store
+    Starch::Store
 );
 
 sub BUILD {
@@ -72,7 +72,7 @@ sub BUILD {
 This is the outer store, the one that tries to handle read requests
 first before falling back to the L</inner> store.
 
-Accepts the same value as L<Web::Starch/store>.
+Accepts the same value as L<Starch/store>.
 
 =cut
 
@@ -85,7 +85,7 @@ has _outer_arg => (
 
 has outer => (
     is       => 'lazy',
-    isa      => ConsumerOf[ 'Web::Starch::Store' ],
+    isa      => ConsumerOf[ 'Starch::Store' ],
     init_arg => undef,
 );
 sub _build_outer {
@@ -99,7 +99,7 @@ sub _build_outer {
 This is the inner store, the one that only handles read requests
 if the L</outer> store was unable to.
 
-Accepts the same value as L<Web::Starch/store>.
+Accepts the same value as L<Starch/store>.
 
 =cut
 
@@ -112,7 +112,7 @@ has _inner_arg => (
 
 has inner => (
     is       => 'lazy',
-    isa      => ConsumerOf[ 'Web::Starch::Store' ],
+    isa      => ConsumerOf[ 'Starch::Store' ],
     init_arg => undef,
 );
 sub _build_inner {
@@ -126,7 +126,7 @@ sub _build_inner {
 =head2 can_reap_expired
 
 Return true if either the L</inner> or L</outer> stores support the
-L<Web::Starch::Store/reap_expired> method.
+L<Starch::Store/reap_expired> method.
 
 =cut
 
@@ -141,7 +141,7 @@ sub can_reap_expired {
 
 =head2 reap_expired
 
-Calls L<Web::Starch::Store/reap_expired> on the L</outer> and L</inner>
+Calls L<Starch::Store/reap_expired> on the L</outer> and L</inner>
 stores, if they support expired session reaping.
 
 =cut
@@ -149,7 +149,7 @@ stores, if they support expired session reaping.
 around reap_expired => sub{
     my ($orig, $self) = @_;
 
-    # Go ahead and throw the exception provided by Web::Starch::Store::reap_expired.
+    # Go ahead and throw the exception provided by Starch::Store::reap_expired.
     return $self->$orig() if !$self->can_reap_expired();
 
     $self->outer->reap_expired() if $self->outer->can_reap_expired();
@@ -160,15 +160,15 @@ around reap_expired => sub{
 
 =head2 set
 
-Set L<Web::Starch::Store/set>.
+Set L<Starch::Store/set>.
 
 =head2 get
 
-Set L<Web::Starch::Store/get>.
+Set L<Starch::Store/get>.
 
 =head2 remove
 
-Set L<Web::Starch::Store/remove>.
+Set L<Starch::Store/remove>.
 
 =cut
 
@@ -217,5 +217,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

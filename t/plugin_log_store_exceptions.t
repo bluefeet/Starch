@@ -6,23 +6,23 @@ use Test::Fatal;
 use Log::Any::Test;
 use Log::Any qw($log);
 
-use Web::Starch;
+use Starch;
 
 {
-    package Web::Starch::Store::Test::LogStoreExceptions;
+    package Starch::Store::Test::LogStoreExceptions;
     use Moo;
-    with 'Web::Starch::Store';
+    with 'Starch::Store';
     sub set { die "SET FAIL" }
     sub get { die "GET FAIL" }
     sub remove { die "REMOVE FAIL" }
 }
 
-my $log_store = Web::Starch->new_with_plugins(
+my $log_store = Starch->new_with_plugins(
     ['::LogStoreExceptions'],
     store => { class=>'::Test::LogStoreExceptions' },
 )->store();
 
-my $die_store = Web::Starch->new(
+my $die_store = Starch->new(
     store => { class=>'::Test::LogStoreExceptions' },
 )->store();
 
@@ -32,7 +32,7 @@ foreach my $method (qw( set get remove )) {
     my $uc_method = uc( $method );
 
     $log->category_contains_ok(
-        'Web::Starch::Store::Test::LogStoreExceptions',
+        'Starch::Store::Test::LogStoreExceptions',
         qr{$uc_method FAIL},
         "$method exception logged",
     );

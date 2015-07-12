@@ -2,9 +2,9 @@
 use strictures 2;
 
 use Test::More;
-use Test::Web::Starch;
+use Test::Starch;
 
-Test::Web::Starch->new(
+Test::Starch->new(
     args => {
         store => { class=>'::Memory' },
     },

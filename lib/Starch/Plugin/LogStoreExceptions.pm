@@ -1,12 +1,12 @@
-package Web::Starch::Plugin::LogStoreExceptions;
+package Starch::Plugin::LogStoreExceptions;
 
 =head1 NAME
 
-Web::Starch::Plugin::LogStoreExceptions - Turn Starch store exceptions into log messages.
+Starch::Plugin::LogStoreExceptions - Turn Starch store exceptions into log messages.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::LogStoreExceptions'],
         ...,
     );
@@ -31,7 +31,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForStore
+    Starch::Plugin::ForStore
 );
 
 foreach my $method (qw( set get remove )) {
@@ -59,5 +59,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

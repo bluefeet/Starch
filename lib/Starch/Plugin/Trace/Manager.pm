@@ -1,12 +1,12 @@
 package # hide from PAUSE
-    Web::Starch::Plugin::Trace::Manager;
+    Starch::Plugin::Trace::Manager;
 
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForManager
+    Starch::Plugin::ForManager
 );
 
 sub BUILD {

@@ -3,12 +3,12 @@ use strictures 2;
 
 use Test::More;
 
-use Web::Starch;
+use Starch;
 
 my $expires = 60 * 60 * 8;
 my $arg_expires = '+' . $expires . 's';
 
-my $starch = Web::Starch->new_with_plugins(
+my $starch = Starch->new_with_plugins(
     ['::CookieArgs'],
     store => { class => '::Memory' },
     expires          => $expires,

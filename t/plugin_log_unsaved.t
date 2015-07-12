@@ -5,10 +5,10 @@ use Test::More;
 use Log::Any::Test;
 use Log::Any qw($log);
 
-use Web::Starch;
+use Starch;
 
 subtest 'without log' => sub{
-    my $starch = Web::Starch->new(
+    my $starch = Starch->new(
         store => { class => '::Memory' },
     );
 
@@ -18,7 +18,7 @@ subtest 'without log' => sub{
 };
 
 subtest 'with log' => sub{
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::LogUnsaved'],
         store => { class => '::Memory' },
     );

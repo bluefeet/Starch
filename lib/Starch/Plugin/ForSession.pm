@@ -1,17 +1,17 @@
-package Web::Starch::Plugin::ForSession;
+package Starch::Plugin::ForSession;
 
 =head1 NAME
 
-Web::Starch::Plugin::ForSession - Base role for Web::Starch::Session plugins.
+Starch::Plugin::ForSession - Base role for Starch::Session plugins.
 
 =head1 SYNOPSIS
 
     package MyPlugin::Session;
     use Moo;
-    with 'Web::Starch::Plugin::ForSession';
+    with 'Starch::Plugin::ForSession';
     sub foo { print 'bar' }
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['MyPlugin::Session'],
         ...,
     );
@@ -23,7 +23,7 @@ This role provides no additional functionality to
 session plugins.  All it does is labels a plugin as a session
 plugin so that Starch knows which class type it applies to.
 
-See L<Web::Starch::Manual::Extending/PLUGINS> for more information
+See L<Starch::Manual::Extending/PLUGINS> for more information
 on writing plugins.
 
 =cut
@@ -37,5 +37,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 

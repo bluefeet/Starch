@@ -1,12 +1,12 @@
-package Web::Starch::Plugin::LogUnsaved;
+package Starch::Plugin::LogUnsaved;
 
 =head1 NAME
 
-Web::Starch::Plugin::LogUnsaved - Complain when session data is lost.
+Starch::Plugin::LogUnsaved - Complain when session data is lost.
 
 =head1 SYNOPSIS
 
-    my $starch = Web::Starch->new_with_plugins(
+    my $starch = Starch->new_with_plugins(
         ['::LogUnsaved'],
         ...,
     );
@@ -26,7 +26,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Web::Starch::Plugin::ForSession
+    Starch::Plugin::ForSession
 );
 
 sub DEMOLISH {

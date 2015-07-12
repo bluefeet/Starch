@@ -1,8 +1,8 @@
-package Web::Starch::Role::MethodProxy;
+package Starch::Role::MethodProxy;
 
 =head1 NAME
 
-Web::Starch::Role::MethodProxy - General purpose method proxy
+Starch::Role::MethodProxy - General purpose method proxy
 support used internally by Starch.
 
 =head1 DESCRIPTION
@@ -13,7 +13,7 @@ object is constructed.
 
 =cut
 
-use Web::Starch::Util qw(
+use Starch::Util qw(
     apply_method_proxies
     call_method_proxy
     is_method_proxy
@@ -43,5 +43,5 @@ __END__
 
 =head1 AUTHORS AND LICENSE
 
-See L<Web::Starch/AUTHOR>, L<Web::Starch/CONTRIBUTORS>, and L<Web::Starch/LICENSE>.
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 
