@@ -118,8 +118,16 @@ sub test_manager {
     my $starch = $self->new_manager();
 
     subtest 'core tests for ' . ref($starch) => sub{
-        ok( 1 );
+        subtest clone_data => sub{
+            my $old_data = { foo=>32, bar=>[1,2,3] };
+            my $new_data = $starch->clone_data( $old_data );
+
+            is_deeply( $new_data, $old_data, 'cloned data matches source data' );
+
+            isnt( "$old_data->{bar}", "$new_data->{bar}", 'clone data structure has different reference' );
+        };
     };
+
 
     return;
 }
@@ -353,17 +361,6 @@ sub test_state {
 
             my $old_state = $starch->state( $old_id );
             is( $old_state->data->{foo}, undef, 'old state data was deleted' );
-        };
-
-        subtest clone_data => sub{
-            my $state = $starch->state();
-
-            my $old_data = { foo=>32, bar=>[1,2,3] };
-            my $new_data = $state->clone_data( $old_data );
-
-            is_deeply( $new_data, $old_data, 'cloned data matches source data' );
-
-            isnt( "$old_data->{bar}", "$new_data->{bar}", 'clone data structure has different reference' );
         };
     };
 

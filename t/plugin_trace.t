@@ -96,8 +96,8 @@ subtest 'state methods' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.Memory\.set\.state:$state_id$},
-        'starch.store.Memory.set.state:$state_id',
+        qr{^starch\.store\.Memory\.set\.starch-state:$state_id$},
+        'starch.store.Memory.set.starch-state:$state_id',
     );
     $log->category_contains_ok(
         $state_class,
@@ -128,8 +128,8 @@ subtest 'state methods' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.Memory\.get\.state:$state_id$},
-        'starch.store.Memory.get.state:$state_id',
+        qr{^starch\.store\.Memory\.get\.starch-state:$state_id$},
+        'starch.store.Memory.get.starch-state:$state_id',
     );
     $log->category_contains_ok(
         $state_class,
@@ -138,8 +138,8 @@ subtest 'state methods' => sub{
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.Memory\.remove\.state:$state_id$},
-        'starch.store.Memory.remove.state:$state_id',
+        qr{^starch\.store\.Memory\.remove\.starch-state:$state_id$},
+        'starch.store.Memory.remove.starch-state:$state_id',
     );
     log_empty_ok();
 };

@@ -273,11 +273,11 @@ These stores are included with the C<Starch> distribution:
 
 =item *
 
-L<Starch::Store::Memory>
+L<Starch::Store::Layered>
 
 =item *
 
-L<Starch::Store::Layered>
+L<Starch::Store::Memory>
 
 =back
 
@@ -291,15 +291,15 @@ L<Starch::Store::Amazon::DynamoDB>
 
 =item *
 
+L<Starch::Store::CHI>
+
+=item *
+
 L<Starch::Store::DBI>
 
 =item *
 
 L<Starch::Store::DBIx::Connector>
-
-=item *
-
-L<Starch::Store::CHI>
 
 =back
 

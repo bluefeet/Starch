@@ -84,19 +84,6 @@ has max_expires => (
     isa => PositiveOrZeroInt | Undef,
 );
 
-=head2 key_separator
-
-Used by L</combine_keys> to combine the state keys.
-Defaults to C<:>.
-
-=cut
-
-has key_separator => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => ':',
-);
-
 =head1 ATTRIBUTES
 
 =head2 can_reap_expired
@@ -155,9 +142,8 @@ sub sub_store_args {
     my $args = $self->BUILDARGS( @_ );
 
     return {
-        manager       => $self->manager(),
-        max_expires   => $max_expires,
-        key_separator => $self->key_separator(),
+        manager     => $self->manager(),
+        max_expires => $max_expires,
         %$args,
     };
 }
@@ -199,7 +185,7 @@ separate reads and writes in the store.
 sub combine_keys {
     my ($self, $id, $namespace) = @_;
     return join(
-        $self->key_separator(),
+        $self->manager->key_separator(),
         @$namespace,
         $id,
     );
@@ -236,7 +222,7 @@ Stores provide the data persistence layers for stores so that, from HTTP request
 to request, the data set in the store is available to get.
 
 See L<Starch::Store::Memory> for a basic example store.  See
-L<Starch::Manual/STORES> for more existing stores.
+L<Starch/STORES> for more existing stores.
 
 A store must implement the C<set>, C<get>, and C<remove> methods and consume
 the L<Starch::Store> role.

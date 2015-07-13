@@ -23,7 +23,6 @@ use Types::Standard -types;
 use Types::Common::String -types;
 use Digest::SHA qw( sha1_hex );
 use Carp qw( croak );
-use Storable qw( freeze dclone );
 
 use Moo;
 use strictures 2;
@@ -98,7 +97,8 @@ sub _build_original_data {
 
     return {} if !$self->in_store();
 
-    my $data = $self->manager->store->get( $self->id(), ['state'] );
+    my $manager = $self->manager();
+    my $data = $manager->store->get( $self->id(), [$manager->namespace()] );
     $data = {} if !$data;
 
     return $data;
@@ -118,7 +118,7 @@ has data => (
 );
 sub _build_data {
     my ($self) = @_;
-    return $self->clone_data( $self->original_data() );
+    return $self->manager->clone_data( $self->original_data() );
 }
 
 =head2 expires
@@ -239,7 +239,7 @@ sub is_dirty {
     # there is no way we're dirty.
     return 0 if !$self->is_loaded();
 
-    return $self->is_data_diff( $self->original_data(), $self->data() );
+    return $self->manager->is_data_diff( $self->original_data(), $self->data() );
 }
 
 =head2 is_loaded
@@ -308,7 +308,7 @@ sub force_save {
 
     $manager->store->set(
         $self->id(),
-        ['state'],
+        [$manager->namespace()],
         $data,
         $self->expires(),
     );
@@ -372,7 +372,7 @@ sub mark_clean {
     return if $self->is_deleted();
 
     $self->_set_original_data(
-        $self->clone_data( $self->data() ),
+        $self->manager->clone_data( $self->data() ),
     );
 
     return;
@@ -390,7 +390,7 @@ sub rollback {
     return if $self->is_deleted();
 
     $self->_set_data(
-        $self->clone_data( $self->original_data() ),
+        $self->manager->clone_data( $self->original_data() ),
     );
 
     return;
@@ -422,7 +422,8 @@ the state is not L</in_store>.
 sub force_delete {
     my ($self) = @_;
 
-    $self->manager->store->remove( $self->id(), ['state'] );
+    my $manager = $self->manager();
+    $manager->store->remove( $self->id(), [$manager->namespace()] );
 
     $self->_set_original_data( {} );
     $self->_set_data( {} );
@@ -488,13 +489,21 @@ sub generate_id {
 
 =head2 reset_id
 
+This re-generates a new L</id> and marks the L</data> as dirty.
+Often this is used to avoid
+L<session fixation|https://en.wikipedia.org/wiki/Session_fixation>
+as part of authentication and de-authentication (login/logout).
+
 =cut
 
 sub reset_id {
     my ($self) = @_;
 
     # Remove the data for the current state ID.
-    $self->manager->store->remove( $self->id(), ['state'] ) if $self->in_store();
+    if ($self->in_store()) {
+        my $manager = $self->manager();
+        $manager->store->remove( $self->id(), [$manager->namespace()] );
+    }
 
     # Ensure that future calls to id generate a new one.
     $self->_clear_existing_id();
@@ -505,37 +514,6 @@ sub reset_id {
     $self->_set_save_was_called( 0 );
 
     return;
-}
-
-=head2 clone_data
-
-Clones complex perl data structures.  Used internally to build
-L</data> from L</original_data>.
-
-=cut
-
-sub clone_data {
-    my ($self, $data) = @_;
-    return dclone( $data );
-}
-
-=head2 is_data_diff
-
-Given two bits of data (scalar, array ref, or hash ref) this returns
-true if the data is different.  Used internally by L</is_dirty>.
-
-=cut
-
-sub is_data_diff {
-    my ($self, $old, $new) = @_;
-
-    local $Storable::canonical = 1;
-
-    $old = freeze( $old );
-    $new = freeze( $new );
-
-    return 0 if $new eq $old;
-    return 1;
 }
 
 1;

@@ -94,7 +94,7 @@ Is the same as:
     my @ret = Some::Package->some_method( @args );
 
 Method proxies are defined in more detail at
-L<Starch::Manual/METHOD PROXIES>.
+L<Starch/METHOD PROXIES>.
 
 =cut
 

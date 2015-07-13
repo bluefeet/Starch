@@ -26,7 +26,7 @@ Very little logging is produced by the stock L<Starch>.  The
 L<Starch::Plugin::Trace> plugin logs extensively.
 
 More info about logging can be found at
-L<Starch::Manual/LOGGING>.
+L<Starch/LOGGING>.
 
 =cut
 

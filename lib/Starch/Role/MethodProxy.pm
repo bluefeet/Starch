@@ -8,8 +8,8 @@ support used internally by Starch.
 =head1 DESCRIPTION
 
 Any class that consumes this role will have their C<BUILDARGS> method
-modified to call L</apply_method_proxies> on the arguments before the
-object is constructed.
+modified to call L<Starch::Util/apply_method_proxies> on the arguments
+before the object is constructed.
 
 =cut
 

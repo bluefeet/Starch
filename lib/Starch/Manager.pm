@@ -17,11 +17,12 @@ Typically you will be using the L<Starch> module to create this
 object.
 
 This class support method proxies as described in
-L<Starch::Manual/METHOD PROXIES>.
+L<Starch/METHOD PROXIES>.
 
 =cut
 
 use Starch::State;
+use Storable qw( freeze dclone );
 
 use Types::Standard -types;
 use Types::Common::String -types;
@@ -56,7 +57,7 @@ C<class> key and will be converted into a store object automatically.
 The C<class> can be fully qualified, or relative to the C<Starch::Store>
 namespace.  A leading C<::> signifies that the store's package name is relative.
 
-More information about stores can be found at L<Starch::Manual/STORES>.
+More information about stores can be found at L<Starch/STORES>.
 
 =cut
 
@@ -90,7 +91,7 @@ sub _build_store {
 How long, in seconds, a state should live after the last time it was
 modified.  Defaults to C<60 * 60 * 2> (2 hours).
 
-See L<Starch::Manual/EXPIRATION> for more information.
+See L<Starch/EXPIRATION> for more information.
 
 =cut
 
@@ -102,14 +103,6 @@ has expires => (
 
 =head2 plugins
 
-    my $starch = Starch->new(
-        plugins     => ['::CookieArgs'],
-        store       => ...,
-        cookie_name => 'my_session',
-    );
-    my $state = $starch->state();
-    print $state->cookie_args->{name}; # my_session
-
 Which plugins to apply to the Starch objects, specified as an array
 ref of plugin names.  The plugin names can be fully qualified, or
 relative to the C<Starch::Plugin> namespace.  A leading C<::> signifies
@@ -117,12 +110,39 @@ that the plugin's package name is relative.
 
 Plugins can modify nearly any functionality in Starch.  More information
 about plugins, as well as which plugins are available, can be found at
-L<Starch::Manual/PLUGINS>.
+L<Starch/PLUGINS>.
 
 =cut
 
-# This is a "virtual" argument of sorts handled in the modified new
-# method.  The plugins end up being stored in the factory object.
+# This is a "virtual" argument of sorts handled in Starch->new.
+# The plugins end up being stored in the factory object, not here.
+
+=head2 namespace
+
+The root namespace to put starch data in.  In most cases this is just
+prepended to the state ID and used as the key for storing the state
+data.  Defaults to C<starch-state>.
+
+=cut
+
+has namespace => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => 'starch-state',
+);
+
+=head2 key_separator
+
+Used by L<Starch::Store/combine_keys> to combine the state namespace
+and ID.  Defaults to C<:>.
+
+=cut
+
+has key_separator => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => ':',
+);
 
 =head2 expires_state_key
 
@@ -160,44 +180,43 @@ value in.  Defaults to C<__STARCH_CREATED__>.
 has created_state_key => (
     is      => 'ro',
     isa     => NonEmptySimpleStr,
-    default => '__STATE_CREATED__',
+    default => '__STARCH_CREATED__',
 );
 
 =head2 invalid_state_key
 
 This key is used by stores to mark state data as invalid,
 and when set in the state will disable the state from being
-written to the store.
+written to the store.  Defaults to C<__STARCH_INVALID__>.
 
 This is used by the L<Starch::Plugin::LogStoreExceptions> and
 L<Starch::Plugin::ThrottleStore> plugins to avoid losing state
-data in the store when errors or throttling is encountered.
+datain the store when errors or throttling is encountered.
 
 =cut
 
 has invalid_state_key => (
     is      => 'ro',
     isa     => NonEmptySimpleStr,
-    default => '__STARCH_THROTTLED__',
+    default => '__STARCH_INVALID__',
 );
+
+=head1 REQUIRED ARGUMENTS
 
 =head2 factory
 
 The underlying L<Starch::Factory> object which manages all the plugins
 and state/store object construction.
 
+This argument is automatically set when calling C<new> on L<Starch>.
+
 =cut
 
 has factory => (
-    is  => 'lazy',
-    isa => InstanceOf[ 'Starch::Factory' ],
+    is       => 'ro',
+    isa      => InstanceOf[ 'Starch::Factory' ],
+    required => 1,
 );
-sub _build_factory {
-    my ($self) = @_;
-    return Starch::Factory->new(
-        base_manager_class => ref( $self ),
-    );
-}
 
 =head1 METHODS
 
@@ -229,6 +248,37 @@ sub state {
         manager => $self,
         defined($id) ? (id => $id) : (),
     );
+}
+
+=head2 clone_data
+
+Clones complex perl data structures.  Used internally to build
+L<Starch::State/data> from L<Starch::State/original_data>.
+
+=cut
+
+sub clone_data {
+    my ($self, $data) = @_;
+    return dclone( $data );
+}
+
+=head2 is_data_diff
+
+Given two bits of data (scalar, array ref, or hash ref) this returns
+true if the data is different.  Used internally by L<Starch::State/is_dirty>.
+
+=cut
+
+sub is_data_diff {
+    my ($self, $old, $new) = @_;
+
+    local $Storable::canonical = 1;
+
+    $old = freeze( $old );
+    $new = freeze( $new );
+
+    return 0 if $new eq $old;
+    return 1;
 }
 
 1;
