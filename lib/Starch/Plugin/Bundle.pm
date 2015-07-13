@@ -15,9 +15,8 @@ Starch::Plugin::Bundle - Base role for Starch plugin bundles.
     }
 
     # Use the bundle.
-    my $starch = Starch->new_with_plugins(
-        ['MyDevPlugin'],
-        store => { ... },
+    my $starch = Starch->new(
+        plugins => ['MyDevPlugin'],
         ...,
     );
 
@@ -28,8 +27,7 @@ bundles.  To create a plugin bundle just make a new class that consumes
 this role and defines the C<bundled_plugins> method.  This method
 should return an array ref of plugin names (absolute or relative).
 
-See L<Starch::Manual::Extending/PLUGINS> for more information
-on writing plugins.
+See L<Starch::Plugin/WRITING> for more information.
 
 =cut
 
@@ -153,22 +151,22 @@ sub _build_manager_roles {
     return $self->_roles_for('Manager');
 }
 
-=head2 session_roles
+=head2 state_roles
 
 Of the L</roles> this returns the ones that consume the
-L<Starch::Plugin::ForSession> role.
+L<Starch::Plugin::ForState> role.
 
 =cut
 
-has session_roles => (
+has state_roles => (
     is       => 'lazy',
     isa      => ArrayRef[ NonEmptySimpleStr ],
     init_arg => undef,
 );
-sub _build_session_roles {
+sub _build_state_roles {
     my ($self) = @_;
 
-    return $self->_roles_for('Session');
+    return $self->_roles_for('State');
 }
 
 =head2 store_roles
@@ -195,4 +193,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

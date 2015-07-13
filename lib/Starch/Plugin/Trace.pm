@@ -11,7 +11,7 @@ with qw(
 sub bundled_plugins {
     return [qw(
         ::Trace::Manager
-        ::Trace::Session
+        ::Trace::State
         ::Trace::Store
     )];
 }
@@ -22,12 +22,12 @@ __END__
 =head1 NAME
 
 Starch::Plugin::Trace - Add extra trace logging to your manager,
-sessions, and stores.
+states, and stores.
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::Trace'],
+    my $starch = Starch->new(
+        plugins => ['::Trace'],
         ....,
     );
 
@@ -43,61 +43,61 @@ This plugin is meant for non-production use, as logging will reduce performance.
 
 =head1 MANAGER LOGGING
 
-These messages are logged from the L<Starch> object.
+These messages are logged from the L<Starch::Manager> object.
 
 =head2 new
 
-Every time a L<Starch> object is created a message is
+Every time a L<Starch::Manager> object is created a message is
 logged in the format of C<starch.manager.new>.
 
-=head2 session
+=head2 state
 
-Every call to L<Starch/session> is logged in the
-format of C<starch.manager.session.$action.$session_id>, where
+Every call to L<Starch::Manager/state> is logged in the
+format of C<starch.manager.state.$action.$state_id>, where
 C<$action> is either C<retrieve> or C<create> depending
-on if the session ID was provided.
+on if the state ID was provided.
 
-=head1 SESSION LOGGING
+=head1 STATE LOGGING
 
-These messages are logged from the L<Starch::Session> object.
+These messages are logged from the L<Starch::State> object.
 
 =head2 new
 
-Every time a L<Starch::Session> object is created a message is
-logged in the format of C<starch.session.new.$session_key>.
+Every time a L<Starch::State> object is created a message is
+logged in the format of C<starch.state.new.$state_key>.
 
 =head2 save
 
-Every call to L<Starch::Session/force_save> (which C<save> calls
-if the session isn't dirty) is logged in the format of
-C<starch.session.save.$session_id>.
+Every call to L<Starch::State/force_save> (which C<save> calls
+if the state isn't dirty) is logged in the format of
+C<starch.state.save.$state_id>.
 
 =head2 reload
 
-Every call to L<Starch::Session/force_reload> (which C<reload> calls
-if the session isn't dirty) is logged in the format of
-C<starch.session.reload.$session_id>.
+Every call to L<Starch::State/force_reload> (which C<reload> calls
+if the state isn't dirty) is logged in the format of
+C<starch.state.reload.$state_id>.
 
 =head2 mark_clean
 
-Every call to L<Starch::Session/mark_clean>
-is logged in the format of C<starch.session.mark_clean.$session_id>.
+Every call to L<Starch::State/mark_clean>
+is logged in the format of C<starch.state.mark_clean.$state_id>.
 
 =head2 rollback
 
-Every call to L<Starch::Session/rollback>
-is logged in the format of C<starch.session.rollback.$session_id>.
+Every call to L<Starch::State/rollback>
+is logged in the format of C<starch.state.rollback.$state_id>.
 
 =head2 delete
 
-Every call to L<Starch::Session/force_delete> (which C<delete> calls
-if the session is in the store) is logged in the format of
-C<starch.session.delete.$session_id>.
+Every call to L<Starch::State/force_delete> (which C<delete> calls
+if the state is in the store) is logged in the format of
+C<starch.state.delete.$state_id>.
 
 =head2 generate_id
 
-Every call to L<Starch::Session/generate_id>
-is logged in the format of C<starch.session.generate_id.$session_id>.
+Every call to L<Starch::State/generate_id>
+is logged in the format of C<starch.state.generate_id.$state_id>.
 
 =head1 STORE LOGGING
 
@@ -114,22 +114,24 @@ logged in the format of C<starch.store.$store_name.new>.
 =head2 set
 
 Every call to L<Starch::Store/set> is logged in the
-format of C<starch.store.$store_name.set.$session_key>.
+format of C<starch.store.$store_name.set.$state_key>.
 
 =head2 get
 
 Every call to L<Starch::Store/get> is logged in the
-format of C<starch.store.$store_name.get.$session_key>.
+format of C<starch.store.$store_name.get.$state_key>.
 
 If the result of calling C<get> is undefined then an additional
-log will produced of the format C<starch.store.$store_name.get.$session_key.missing>.
+log will produced of the format C<starch.store.$store_name.get.$state_key.missing>.
 
 =head2 remove
 
 Every call to L<Starch::Store/remove> is logged in the
-format of C<starch.store.$store_name.remove.$session_key>.
+format of C<starch.store.$store_name.remove.$state_key>.
 
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

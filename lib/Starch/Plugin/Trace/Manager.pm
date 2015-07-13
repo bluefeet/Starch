@@ -15,20 +15,20 @@ sub BUILD {
     return;
 }
 
-around session => sub{
+around state => sub{
     my $orig = shift;
     my $self = shift;
     my ($id) = @_;
 
-    my $session = $self->$orig( @_ );
+    my $state = $self->$orig( @_ );
 
     $self->log->tracef(
-        'starch.manager.session.%s.%s',
+        'starch.manager.state.%s.%s',
         defined($id) ? 'retrieved' : 'created',
-        $session->id(),
+        $state->id(),
     );
 
-    return $session;
+    return $state;
 };
 
 1;

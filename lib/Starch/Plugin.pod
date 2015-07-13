@@ -6,14 +6,32 @@ Starch::Plugin - Starch plugin framework.
 
 =head1 DESCRIPTION
 
-See L<Starch::Manual/PLUGINS> for instructions on using plugins and a
-list of available plugins.
+See L<Starch/PLUGINS> for instructions on using plugins and a list of
+available plugins.
 
-See L<Starch::Manual::Extending/PLUGINS> for instructions on writing
-your own plugins.
+=head1 WRITING
+
+Plugins can modify any of the manager (L<Starch::Manager>), state
+(L<Starch::State>), and store (L<Starch::Store>) classes to extend
+functionality.
+
+A plugin may extend several of these classes, via plugin bundles, or just one.  A common
+setup is a plugin bundle which adds arguments to the manager object and then adds logic
+to the state objects which acts upon the arguments.
+
+See L<Starch::Plugin::CookieArgs> for a basic example plugin.  See
+L<Starch::Manual/PLUGINS> for more existing plugins.
+
+See the SYNOPSIS in L<Starch::Plugin::Bundle>, L<Starch::Plugin::ForManager>,
+L<Starch::Plugin::ForStore>, and L<Starch::Plugin::ForStore> documentation
+for some decent boilerplate for writing new plugins.
+
+Plugins and plugin bundles are applied by L<Starch::Factory>, which itself
+acts as a dynamic plugin bundle.
 
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 
 =cut
+

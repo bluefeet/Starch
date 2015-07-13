@@ -6,8 +6,8 @@ Starch::Plugin::DisableStore - Disable store read and/or write operations.
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::DisableStore'],
+    my $starch = Starch->new(
+        plugins => ['::DisableStore'],
         store => {
             class => ...,
             disable_set => 1,
@@ -89,4 +89,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

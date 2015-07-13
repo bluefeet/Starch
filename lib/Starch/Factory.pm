@@ -8,7 +8,7 @@ Starch::Factory - Role applicator and class creator.
 
 This class consumes the L<Starch::Plugin::Bundle> role and
 is used by L<Starch> to apply specified plugins to manager,
-session, and store classes.
+state, and store classes.
 
 Normally there is no need to interact with this class directly.
 
@@ -16,10 +16,14 @@ Normally there is no need to interact with this class directly.
 
 use Moo::Role qw();
 use Types::Standard -types;
+use Types::Common::String -types;
 use Carp qw( croak );
 use Moo::Object qw();
 use Starch::Util qw( load_prefixed_module );
 use Module::Runtime qw( require_module );
+
+use Starch::Manager;
+use Starch::State;
 
 use Moo;
 use strictures 2;
@@ -47,31 +51,27 @@ sub bundled_plugins {
 
 =head2 base_manager_class
 
-The base class of the Starch manager object.  Default to C<Starch>.
+The base class of the Starch manager object.  Default to C<Starch::Manager>.
 
 =cut
 
 has base_manager_class => (
-    is  => 'lazy',
-    isa => ClassName,
+    is      => 'lazy',
+    isa     => NonEmptySimpleStr,
+    default => 'Starch::Manager',
 );
-sub _build_base_manager_class {
-    return 'Starch';
-}
 
-=head2 base_session_class
+=head2 base_state_class
 
-The base class of Starch session objects.  Default to C<Starch::Session>.
+The base class of Starch state objects.  Default to C<Starch::State>.
 
 =cut
 
-has base_session_class => (
-    is  => 'lazy',
-    isa => ClassName,
+has base_state_class => (
+    is      => 'lazy',
+    isa     => NonEmptySimpleStr,
+    default => 'Starch::State',
 );
-sub _build_base_session_class {
-    return 'Starch::Session';
-}
 
 =head1 ATTRIBUTES
 
@@ -99,23 +99,23 @@ sub _build_manager_class {
     return Moo::Role->create_class_with_roles( $class, @$roles );
 }
 
-=head2 session_class
+=head2 state_class
 
-The anonymous class which extends L</base_session_class> and has
-L</session_roles> applied to it.
+The anonymous class which extends L</base_state_class> and has
+L</state_roles> applied to it.
 
 =cut
 
-has session_class => (
+has state_class => (
     is       => 'lazy',
     isa      => ClassName,
     init_arg => undef,
 );
-sub _build_session_class {
+sub _build_state_class {
     my ($self) = @_;
 
-    my $roles = $self->session_roles();
-    my $class = $self->base_session_class();
+    my $roles = $self->state_roles();
+    my $class = $self->base_state_class();
     require_module( $class );
 
     return $class if !@$roles;
@@ -201,4 +201,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

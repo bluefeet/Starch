@@ -1,26 +1,26 @@
-package Starch::Plugin::ForStore;
+package Starch::Plugin::ForState;
 
 =head1 NAME
 
-Starch::Plugin::ForStore - Base role for Starch::Store plugins.
+Starch::Plugin::ForState - Base role for Starch::State plugins.
 
 =head1 SYNOPSIS
 
-    package MyPlugin::Store;
+    package MyPlugin::State;
     use Moo;
-    with 'Starch::Plugin::ForStore';
+    with 'Starch::Plugin::ForState';
     sub foo { print 'bar' }
 
     my $starch = Starch->new(
-        plugins => ['MyPlugin::Store'],
+        plugins => ['MyPlugin::State'],
         ...,
     );
-    $starch->store->foo(); # bar
+    $starch->state->foo(); # bar
 
 =head1 DESCRIPTION
 
 This role provides no additional functionality to
-store plugins.  All it does is labels a plugin as a store
+state plugins.  All it does is labels a plugin as a state
 plugin so that Starch knows which class type it applies to.
 
 See L<Starch::Plugin/WRITING> for more information.

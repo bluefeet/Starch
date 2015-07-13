@@ -1,20 +1,20 @@
-package Starch::Session;
+package Starch::State;
 
 =head1 NAME
 
-Starch::Session - The Starch session object.
+Starch::State - The Starch state object.
 
 =head1 SYNOPSIS
 
-    my $session = $starch->session();
-    $session->data->{foo} = 'bar';
-    $session->save();
-    $session = $starch->session( $session->id() );
-    print $session->data->{foo}; # bar
+    my $state = $starch->state();
+    $state->data->{foo} = 'bar';
+    $state->save();
+    $state = $starch->state( $state->id() );
+    print $state->data->{foo}; # bar
 
 =head1 DESCRIPTION
 
-This is the session class used by L<Starch/session>.
+This is the state class used by L<Starch::Manager/state>.
 
 =cut
 
@@ -37,15 +37,15 @@ with qw(
 
 =head2 manager
 
-The L<Starch> object that glues everything together.  The session
+The L<Starch::Manager> object that glues everything together.  The state
 object needs this to get at configuration information and the stores.
-This argument is automatically set by L<Starch/session>.
+This argument is automatically set by L<Starch::Manager/state>.
 
 =cut
 
 has manager => (
     is       => 'ro',
-    isa      => InstanceOf[ 'Starch' ],
+    isa      => InstanceOf[ 'Starch::Manager' ],
     required => 1,
 );
 
@@ -53,8 +53,8 @@ has manager => (
 
 =head2 id
 
-The session ID.  If one is not specified then one will be built and
-the session will be considered new.
+The state ID.  If one is not specified then one will be built and
+the state will be considered new.
 
 =cut
 
@@ -81,7 +81,7 @@ sub _build_id {
 
 =head2 original_data
 
-The session data at the state it was when the session was first instantiated.
+The state data at the point it was when the state object was first instantiated.
 
 =cut
 
@@ -98,7 +98,7 @@ sub _build_original_data {
 
     return {} if !$self->in_store();
 
-    my $data = $self->manager->store->get( $self->id(), ['session'] );
+    my $data = $self->manager->store->get( $self->id(), ['state'] );
     $data = {} if !$data;
 
     return $data;
@@ -106,7 +106,7 @@ sub _build_original_data {
 
 =head2 data
 
-The session data which is meant to be modified.
+The state data which is meant to be modified.
 
 =cut
 
@@ -123,8 +123,8 @@ sub _build_data {
 
 =head2 expires
 
-This defaults to L<Starch/expires> and is stored in the L</data>
-under the L<Starch/expires_session_key> key.
+This defaults to L<Starch::Manager/expires> and is stored in the L</data>
+under the L<Starch::Manager/expires_state_key> key.
 
 =cut
 
@@ -138,7 +138,7 @@ sub _build_expires {
     my ($self) = @_;
 
     my $manager = $self->manager();
-    my $expires = $self->original_data->{ $manager->expires_session_key() };
+    my $expires = $self->original_data->{ $manager->expires_state_key() };
 
     $expires = $manager->expires() if !defined $expires;
 
@@ -147,8 +147,8 @@ sub _build_expires {
 
 =head2 modified
 
-Whenever the session is L</save>d this will be updated and stored in
-L</data> under the L<Starch/modified_session_key>.
+Whenever the state is L</save>d this will be updated and stored in
+L</data> under the L<Starch::Manager/modified_state_key>.
 
 =cut
 
@@ -161,7 +161,7 @@ sub _build_modified {
     my ($self) = @_;
 
     my $modified = $self->original_data->{
-        $self->manager->modified_session_key()
+        $self->manager->modified_state_key()
     };
 
     $modified = $self->created() if !defined $modified;
@@ -171,8 +171,8 @@ sub _build_modified {
 
 =head2 created
 
-When the session is created this is set and stored in L</data>
-under the L<Starch/created_session_key>.
+When the state is created this is set and stored in L</data>
+under the L<Starch::Manager/created_state_key>.
 
 =cut
 
@@ -185,7 +185,7 @@ sub _build_created {
     my ($self) = @_;
 
     my $created = $self->original_data->{
-        $self->manager->created_session_key()
+        $self->manager->created_state_key()
     };
 
     $created = time() if !defined $created;
@@ -195,7 +195,7 @@ sub _build_created {
 
 =head2 in_store
 
-Returns true if the session is expected to exist in the store
+Returns true if the state is expected to exist in the store
 (AKA, if the L</id> argument was specified or L</save> was called).
 
 =cut
@@ -212,7 +212,7 @@ sub _build_in_store {
 
 =head2 is_deleted
 
-Returns true if L</delete> has been called on this session.
+Returns true if L</delete> has been called on this state.
 
 =cut
 
@@ -225,7 +225,7 @@ has is_deleted => (
 
 =head2 is_dirty
 
-Returns true if the session data has changed (if L</original_data>
+Returns true if the state data has changed (if L</original_data>
 and L</data> are different).
 
 =cut
@@ -245,7 +245,7 @@ sub is_dirty {
 =head2 is_loaded
 
 This returns true if the L</original_data> has been loaded up from
-the session store.  Note that L</original_data> will be automatically
+the store.  Note that L</original_data> will be automatically
 loaded if L</original_data>, L</data>, or any methods that call them,
 are called.
 
@@ -255,7 +255,7 @@ are called.
 
 =head2 is_saved
 
-Returns true if the session was saved and is not dirty.
+Returns true if the state was saved and is not dirty.
 
 =cut
 
@@ -276,8 +276,8 @@ sub is_saved {
 
 =head2 save
 
-If this session L</is_dirty> this will save the L</data> to the
-L<Starch/store>.
+If this state L</is_dirty> this will save the L</data> to the
+L<Starch::Manager/store>.
 
 =cut
 
@@ -296,19 +296,19 @@ Like L</save>, but saves even if L</is_dirty> is not set.
 sub force_save {
     my ($self) = @_;
 
-    croak 'Cannot call save or force_save on a deleted session'
+    croak 'Cannot call save or force_save on a deleted state'
         if $self->is_deleted();
 
     my $manager = $self->manager();
     my $data = $self->data();
 
-    $data->{ $manager->created_session_key() }  = $self->created();
-    $data->{ $manager->modified_session_key() } = time();
-    $data->{ $manager->expires_session_key() }  = $self->expires();
+    $data->{ $manager->created_state_key() }  = $self->created();
+    $data->{ $manager->modified_state_key() } = time();
+    $data->{ $manager->expires_state_key() }  = $self->expires();
 
     $manager->store->set(
         $self->id(),
-        ['session'],
+        ['state'],
         $data,
         $self->expires(),
     );
@@ -328,7 +328,7 @@ sub force_save {
 =head2 reload
 
 Clears L</original_data> and L</data> so that the next call to these
-will reload the session data from the store.  If the session L</is_dirty>
+will reload the state data from the store.  If the state L</is_dirty>
 then an exception will be thrown.
 
 =cut
@@ -336,7 +336,7 @@ then an exception will be thrown.
 sub reload {
     my ($self) = @_;
 
-    croak 'Cannot call reload on a dirty session'
+    croak 'Cannot call reload on a dirty state'
         if $self->is_dirty();
 
     return $self->force_reload();
@@ -344,7 +344,7 @@ sub reload {
 
 =head2 force_reload
 
-Just like L</reload>, but reloads even if the session L</is_dirty>.
+Just like L</reload>, but reloads even if the state L</is_dirty>.
 
 =cut
 
@@ -361,7 +361,7 @@ sub force_reload {
 
 =head2 mark_clean
 
-Marks the session as not L</is_dirty> by setting L</original_data> to
+Marks the state as not L</is_dirty> by setting L</original_data> to
 L</data>.
 
 =cut
@@ -398,7 +398,7 @@ sub rollback {
 
 =head2 delete
 
-Deletes the session from the L<Starch/store> and marks it
+Deletes the state from the L<Starch::Manager/store> and marks it
 as L</is_deleted>.  Throws an exception if not L<in_store>.
 
 =cut
@@ -406,7 +406,7 @@ as L</is_deleted>.  Throws an exception if not L<in_store>.
 sub delete {
     my ($self) = @_;
 
-    croak 'Cannot call delete on a session that is not stored yet'
+    croak 'Cannot call delete on a state that is not stored yet'
         if !$self->in_store();
 
     return $self->force_delete();
@@ -414,15 +414,15 @@ sub delete {
 
 =head2 force_delete
 
-Just like L</delete>, but remove the session from the store even if
-the session is not L</in_store>.
+Just like L</delete>, but remove the state from the store even if
+the state is not L</in_store>.
 
 =cut
 
 sub force_delete {
     my ($self) = @_;
 
-    $self->manager->store->remove( $self->id(), ['session'] );
+    $self->manager->store->remove( $self->id(), ['state'] );
 
     $self->_set_original_data( {} );
     $self->_set_data( {} );
@@ -434,17 +434,17 @@ sub force_delete {
 
 =head2 set_expires
 
-    # Extend this session's expires duration by two hours.
-    $session->set_expires( $session->expires() + (2 * 60 * 60) );
+    # Extend this state's expires duration by two hours.
+    $state->set_expires( $state->expires() + (2 * 60 * 60) );
 
-Use this to set the session's expires to a duration different than the
-global expires set by L<Starch/expires>.  This is useful for,
+Use this to set the state's expires to a duration different than the
+global expires set by L<Starch::Manager/expires>.  This is useful for,
 for example, to support a "Remember Me" checkbox that many login
 forms provide where the difference between the user checking it or not
-is just a matter of what the session's expires duration is set to.
+is just a matter of what the state's expires duration is set to.
 
 Remember that the "expires" duration is a measurement, in seconds, of
-how long the session will live in the store since the last modification,
+how long the state will live in the store since the last modification,
 and how long the cookie (if you are using cookies) will live since the
 last request.
 
@@ -457,7 +457,7 @@ sub set_expires {
     my ($self, $expires) = @_;
 
     $self->_set_expires( $expires );
-    $self->data->{ $self->manager->expires_session_key() } = $expires;
+    $self->data->{ $self->manager->expires_state_key() } = $expires;
 
     return;
 }
@@ -476,7 +476,7 @@ sub hash_seed {
 
 =head2 generate_id
 
-Generates and returns a new session ID which is a SHA-1 hex
+Generates and returns a new state ID which is a SHA-1 hex
 digest of calling L</hash_seed>.
 
 =cut
@@ -493,14 +493,14 @@ sub generate_id {
 sub reset_id {
     my ($self) = @_;
 
-    # Remove the data for the current session ID.
-    $self->manager->store->remove( $self->id(), ['session'] ) if $self->in_store();
+    # Remove the data for the current state ID.
+    $self->manager->store->remove( $self->id(), ['state'] ) if $self->in_store();
 
     # Ensure that future calls to id generate a new one.
     $self->_clear_existing_id();
     $self->_clear_id();
 
-    # Make sure the session data is now dirty so it gets saved.
+    # Make sure the state data is now dirty so it gets saved.
     $self->_set_original_data( {} );
     $self->_set_save_was_called( 0 );
 
@@ -544,4 +544,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

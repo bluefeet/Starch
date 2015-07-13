@@ -2,22 +2,21 @@ package Starch::Store;
 
 =head1 NAME
 
-Starch::Store - Role for session stores.
+Starch::Store - Base role for Starch stores.
 
 =head1 DESCRIPTION
 
-This role defines an interfaces for session store classes.  Session store
+This role defines an interfaces for Starch store classes.  Starch store
 classes are meant to be thin wrappers around the store implementations
 (such as DBI, CHI, etc).
 
-See L<Starch::Manual/STORES> for instructions on using stores and a
-list of available session stores.
+See L<Starch/STORES> for instructions on using stores and a list of
+available Starch stores.
 
-See L<Starch::Manual::Extending/STORES> for instructions on writing
-your own stores.
+See L</WRITING> for instructions on writing your own stores.
 
 This role adds support for method proxies to consuming classes as
-described in L<Starch::Manual/METHOD PROXIES>.
+described in L<Starch/METHOD PROXIES>.
 
 =cut
 
@@ -45,7 +44,7 @@ around set => sub{
     my ($orig, $self, $id, $keys, $data, $expires) = @_;
 
     # Short-circuit set operations if the data is invalid.
-    return if $data->{ $self->manager->invalid_session_key() };
+    return if $data->{ $self->manager->invalid_state_key() };
 
     $expires = $self->calculate_expires( $expires );
 
@@ -56,7 +55,7 @@ around set => sub{
 
 =head2 manager
 
-The L<Starch> object which is used by stores to
+The L<Starch::Manager> object which is used by stores to
 create sub-stores (such as the Layered store's outer and inner
 stores).  This is automatically set when the stores are built by
 L<Starch::Factory>.
@@ -65,7 +64,7 @@ L<Starch::Factory>.
 
 has manager => (
     is       => 'ro',
-    isa      => InstanceOf[ 'Starch' ],
+    isa      => InstanceOf[ 'Starch::Manager' ],
     required => 1,
     weak_ref => 1,
     handles  => ['factory'],
@@ -75,8 +74,8 @@ has manager => (
 
 =head2 max_expires
 
-Set the per-store maximum expires which will override the session's expires
-if the session's expires is larger.
+Set the per-store maximum expires which will override the state's expires
+if the state's expires is larger.
 
 =cut
 
@@ -87,7 +86,7 @@ has max_expires => (
 
 =head2 key_separator
 
-Used by L</combine_keys> to combine the session keys.
+Used by L</combine_keys> to combine the state keys.
 Defaults to C<:>.
 
 =cut
@@ -184,15 +183,15 @@ sub calculate_expires {
 =head2 combine_keys
 
     my $store_key = $store->combine_keys(
-        $session_id,
+        $state_id,
         \@namespace,
     );
 
 This method is used by stores that store and lookup data by
-a string (all of them at this time).  It combines the session
+a string (all of them at this time).  It combines the state
 ID with the namespace of the key data for the store request
-(usually just C<['session']>).  Plugins may implement other
-namespace keys to segregate different session data into
+(usually just C<['state']>).  Plugins may implement other
+namespace keys to segregate different state data into
 separate reads and writes in the store.
 
 =cut
@@ -208,9 +207,9 @@ sub combine_keys {
 
 =head2 reap_expired
 
-This triggers the store to find and delete all expired sessions.
+This triggers the store to find and delete all expired states.
 This is meant to be used in an offline process, such as a cronjob,
-as finding and deleting the sessions could take hours depending
+as finding and deleting the states could take hours depending
 on the amount of data and the storage engine's speed.
 
 By default this method will throw an exception if the store does
@@ -223,7 +222,7 @@ sub reap_expired {
     my ($self) = @_;
 
     croak sprintf(
-        '%s does not support expired session reaping',
+        '%s does not support expired state reaping',
         $self->base_class_name(),
     );
 }
@@ -231,11 +230,152 @@ sub reap_expired {
 1;
 __END__
 
-=head1 METHODS
+=head1 WRITING
 
-All store classes must implement the C<set>, C<get>, and C<remove> methods.
+Stores provide the data persistence layers for stores so that, from HTTP request
+to request, the data set in the store is available to get.
+
+See L<Starch::Store::Memory> for a basic example store.  See
+L<Starch::Manual/STORES> for more existing stores.
+
+A store must implement the C<set>, C<get>, and C<remove> methods and consume
+the L<Starch::Store> role.
+
+Writing new stores is generally a trivial process where the store class does
+nothing more than glue those three methods with some underlying implementation
+such as L<DBI> or L<CHI>.
+
+Stores should be written so that the underlying driver object (the C<$dbh>
+for a DBI store, for example) can be passed as an argument.   This allows
+the user to utilize L<Starch/METHOD PROXIES> to build their
+own driver objects.
+
+Some boilerplate for getting a store going:
+
+    package Starch::Store::FooBar;
+    
+    use Foo::Bar;
+    use Types::Standard -types;
+    
+    use strictures 2;
+    use namespace::clean;
+    use Moo;
+    
+    with qw(
+        Starch::Store
+    );
+    
+    has foobar => (
+        is => 'lazy',
+        isa => InstanceOf[ 'Foo::Bar' ],
+    );
+    sub _build_foobar {
+        return Foo::Bar->new();
+    }
+    
+    sub set {
+        my ($self, $id, $namespace, $data, $expires) = @_;
+        my $key = $self->combine_keys( $id, $namespace );
+        $self->foobar->set( $key, $data, $expires );
+        return;
+    }
+    
+    sub get {
+        my ($self, $id, $namespace) = @_;
+        my $key = $self->combine_keys( $id, $namespace );
+        return $self->foobar->get( $key );
+    }
+    
+    sub remove {
+        my ($self, $id, $namespace) = @_;
+        my $key = $self->combine_keys( $id, $namespace );
+        $self->foobar->remove( $key );
+        return;
+    }
+    
+    1;
+`
+Many stores benefit from building their lazy-loaded driver object early,
+as in:
+
+    sub BUILD {
+        my ($self) = @_;
+        $self->foobar();
+        return;
+    }
+
+A state's expires duration is stored in the state data under the
+L<Starch::Manager/expires_state_key>.  This should B<not> be considered
+as anything meaningful to the store, since stores can have their
+L<Starch::Store/max_expires> argument set which will automatically
+change the value of the C<expiration> argument passed to C<set>.
+
+=head2 REQUIRED METHODS
+
+A more detailed description of the methods that a store must
+implement:
+
+=over
+
+=item *
+
+B<set> - Sets the data for the key.  The C<$expires> value will always be set and
+will be either C<0> or a positive integer representing the number of seconds
+in the future that this state data should be expired.  If C<0> then the
+store may expire the data whenever it chooses.
+
+=item *
+
+B<get> - Returns the data for the given key.  If the data was not found then
+C<undef> is returned.
+
+=item *
+
+B<remove> - Deletes the data for the key.  If the data does not exist then
+this is just a no-op.
+
+=back
+
+These method receive a state ID and a namespace array ref as their
+first two arguments.  The combination of these two values should identify
+a unique storage location in the store.  They can be combined to create a
+single key string using L<Web::Starch::Store/combine_keys>.
+
+=head2 EXCEPTIONS
+
+Stores should detect issues and throw exceptions loudly.  If the user
+would like to automatically turn store exceptions into log messages
+they can use the L<Starch::Plugin::LogStoreExceptions> plugin.
+
+=head2 REAPING EXPIRED STATES
+
+Stores may choose to support an interface for deleting old state data
+suitable for a cronjob.  To do this two methods must be declared:
+
+    sub can_reap_expired { 1 }
+    
+    sub reap_expired {
+        my ($self) = @_;
+        
+        # Do whatever it takes to delete expired state data.
+        ...
+        # and, call $self->log->info() at important moments so that user
+        # can see some progress.
+        
+        return;
+    }
+
+The actual implementation of how to reap old state data is a per-store
+and is something that will differ greatly between them.
+
+Consider adding extra arguments to your store class to control how state
+reaping functions.  For example, a DBI store may allow the user to reap
+the states in batches, and a DynamoDB store may allow the user to specify
+a secondary global index to do the scan on.
 
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

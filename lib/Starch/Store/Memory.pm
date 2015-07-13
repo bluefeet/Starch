@@ -2,7 +2,7 @@ package Starch::Store::Memory;
 
 =head1 NAME
 
-Starch::Store::Memory - In-memory session store.
+Starch::Store::Memory - In-memory state store.
 
 =head1 DESCRIPTION
 
@@ -43,7 +43,7 @@ has global => (
 
 =head2 memory
 
-This is the hash ref which is used for storing sessions.
+This is the hash ref which is used for storing states.
 
 =cut
 
@@ -104,4 +104,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

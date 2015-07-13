@@ -1,12 +1,12 @@
 package # hide from PAUSE
-    Starch::Plugin::CookieArgs::Session;
+    Starch::Plugin::CookieArgs::State;
 
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Starch::Plugin::ForSession
+    Starch::Plugin::ForState
 );
 
 sub cookie_args {

@@ -11,7 +11,7 @@ with qw(
 sub bundled_plugins {
     return [qw(
         ::CookieArgs::Manager
-        ::CookieArgs::Session
+        ::CookieArgs::State
     )];
 }
 
@@ -25,19 +25,19 @@ HTTP cookies.
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::CookieArgs'],
+    my $starch = Starch->new(
+        plugins => ['::CookieArgs'],
         cookie_name => 'my_session',
-        store => { ... },
+        ...,
     );
-    my $session = $starch->session();
-    my $cookie_args = $session->cookie_args();
+    my $state = $starch->state();
+    my $cookie_args = $state->cookie_args();
     print $cookie_args->{name}; # my_session
 
 =head1 DESCRIPTION
 
 This plugin adds new arguments to the manager class and new methods to
-the session class which are intended to ease the integration of Starch
+the state class which are intended to ease the integration of Starch
 with existing web frameworks.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
@@ -76,13 +76,13 @@ data, mitigating certain XSS attacks.  This defaults to true as having
 JavaScript that needs access to cookies is a rare case and you should
 have to explicitly declare that you want to turn this protection off.
 
-=head1 SESSION METHODS
+=head1 STATE METHODS
 
-These methods are added to the L<Starch::Session> class.
+These methods are added to the L<Starch::State> class.
 
 =head2 cookie_args
 
-Returns L</cookie_delete_args> if the L<Starch::Session/is_deleted>,
+Returns L</cookie_delete_args> if the L<Starch::State/is_deleted>,
 otherwise returns L</cookie_set_args>.
 
 These args are meant to be compatible with L</CGI::Simple::Cookie>, minus
@@ -92,8 +92,8 @@ Catalyst accepts for cookies.
 =head2 cookie_set_args
 
 Returns a hash ref containing all the cookie args including the
-value being set to L<Starch::Session/id> and the expires being
-set to L<Starch::Session/expires>.
+value being set to L<Starch::State/id> and the expires being
+set to L<Starch::State/expires>.
 
 =head2 cookie_delete_args
 
@@ -104,4 +104,6 @@ to remove the cookie immediately.
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

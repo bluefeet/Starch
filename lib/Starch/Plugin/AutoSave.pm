@@ -2,20 +2,20 @@ package Starch::Plugin::AutoSave;
 
 =head1 NAME
 
-Starch::Plugin::AutoSave - Automatically save changed session data.
+Starch::Plugin::AutoSave - Automatically save changed state data.
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::AutoSave'],
+    my $starch = Starch->new(
+        plugins => ['::AutoSave'],
         ...,
     );
 
 =head2 DESCRIPTION
 
-This plugin detects when a session object is being destroyed and is
-dirty (the session data has changed).  If this happens then save will
-be called on the session.
+This plugin detects when a state object is being destroyed and is
+dirty (the state data has changed).  If this happens then save will
+be called on the state.
 
 =cut
 
@@ -24,7 +24,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Starch::Plugin::ForSession
+    Starch::Plugin::ForState
 );
 
 sub DEMOLISH {
@@ -36,3 +36,11 @@ sub DEMOLISH {
 }
 
 1;
+__END__
+
+=head1 AUTHORS AND LICENSE
+
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
+

@@ -17,8 +17,8 @@ my $enabled_starch = Starch->new(
 );
 my $enabled_store = $enabled_starch->store();
 
-my $disabled_starch = Starch->new_with_plugins(
-    ['::DisableStore'],
+my $disabled_starch = Starch->new(
+    plugins => ['::DisableStore'],
     store => {
         class=>'::Memory',
         global => 1,

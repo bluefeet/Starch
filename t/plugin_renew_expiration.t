@@ -9,40 +9,40 @@ subtest disabled => sub{
         store => { class => '::Memory' },
     );
 
-    my $session = $starch->session();
-    $session->data->{foo} = 32;
-    my $modified_first = $session->modified();
-    $session->save();
+    my $state = $starch->state();
+    $state->data->{foo} = 32;
+    my $modified_first = $state->modified();
+    $state->save();
 
     sleep 2;
-    $session = $starch->session( $session->id() );
-    $session->data();
+    $state = $starch->state( $state->id() );
+    $state->data();
 
-    $session = $starch->session( $session->id() );
-    my $modified_second = $session->modified();
+    $state = $starch->state( $state->id() );
+    my $modified_second = $state->modified();
 
-    is( $modified_second, $modified_first, 'session was not auto-saved' );
+    is( $modified_second, $modified_first, 'state was not auto-saved' );
 };
 
 subtest enabled => sub{
-    my $starch = Starch->new_with_plugins(
-        ['::RenewExpiration'],
+    my $starch = Starch->new(
+        plugins => ['::RenewExpiration'],
         store => { class => '::Memory' },
     );
 
-    my $session = $starch->session();
-    $session->data->{foo} = 32;
-    my $modified_first = $session->modified();
-    $session->save();
+    my $state = $starch->state();
+    $state->data->{foo} = 32;
+    my $modified_first = $state->modified();
+    $state->save();
 
     sleep 2;
-    $session = $starch->session( $session->id() );
-    $session->data();
+    $state = $starch->state( $state->id() );
+    $state->data();
 
-    $session = $starch->session( $session->id() );
-    my $modified_second = $session->modified();
+    $state = $starch->state( $state->id() );
+    my $modified_second = $state->modified();
 
-    cmp_ok( $modified_second, '>', $modified_first, 'session was auto-saved' );
+    cmp_ok( $modified_second, '>', $modified_first, 'state was auto-saved' );
 };
 
 done_testing;

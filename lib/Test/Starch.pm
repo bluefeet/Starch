@@ -10,7 +10,8 @@ Test::Starch - Test core features of starch.
     
     my $tester = Test::Starch->new(
         plugins => [ ... ],
-        args => { ... },
+        store => ...,
+        ...,
     );
     $tester->test();
     
@@ -19,7 +20,7 @@ Test::Starch - Test core features of starch.
 =head1 DESCRIPTION
 
 This class runs the core L<Starch> test suite by testing public
-interfaces of L<Starch>, L<Starch::Session>, and
+interfaces of L<Starch::Manager>, L<Starch::State>, and
 L<Starch::Store>.  These are the same tests that Starch runs
 when you install it from CPAN.
 
@@ -32,12 +33,17 @@ Along the same lines, it is recommended that if you use Starch that
 you make a test in your in-house test-suite which runs these tests
 against your configuration.
 
+This class takes all the same arguments as L<Starch> and saves them
+to be used when L</new_manager> is called by the tests.  Unlike L<Starch>,
+if the C<store> argument is not passed it will defailt to a Memory store.
+
 =cut
 
 use Types::Standard -types;
 use Types::Common::String -types;
 
 use Starch;
+use Starch::Manager;
 use Test::More;
 use Test::Fatal;
 
@@ -45,48 +51,57 @@ use Moo;
 use strictures 2;
 use namespace::clean;
 
-has plugins => (
-    is      => 'ro',
-    isa     => ArrayRef[ NonEmptySimpleStr ],
-    default => sub{ [] },
-);
+around BUILDARGS => sub{
+    my $orig = shift;
+    my $class = shift;
+
+    my $args = $class->$orig( @_ );
+
+    return {
+        args => {
+            store => { class=>'::Memory' },
+            %$args,
+        },
+    };
+};
 
 has args => (
     is       => 'ro',
     isa      => HashRef,
-    default  => sub{ {
-        store => { class=>'::Memory' },
-    } },
+    required => 1,
 );
 
-has manager_class => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => 'Starch',
-);
+=head1 METHODS
+
+=head2 new_manager
+
+Creates a new L<Starch::Manager> object and returns it.  Any arguments
+you specify to this method will override those specified when creating
+the L<Test::Starch> object.
+
+=cut
 
 sub new_manager {
     my $self = shift;
 
-    return $self->manager_class->new_with_plugins(
-        $self->plugins(),
+    my $extra_args = Starch::Manager->BUILDARGS( @_ );
+
+    return Starch->new(
         %{ $self->args() },
-        @_,
+        %{ $extra_args },
     );
 }
 
-=head1 METHODS
-
 =head2 test
 
-Calls L</test_manager>, L</test_session>, and L</test_store>.
+Calls L</test_manager>, L</test_state>, and L</test_store>.
 
 =cut
 
 sub test {
     my ($self) = @_;
     $self->test_manager();
-    $self->test_session();
+    $self->test_state();
     $self->test_store();
     return;
 }
@@ -109,242 +124,242 @@ sub test_manager {
     return;
 }
 
-=head2 test_session
+=head2 test_state
 
-Test L<Starch::Session>.
+Test L<Starch::State>.
 
 =cut
 
-sub test_session {
+sub test_state {
     my ($self) = @_;
 
     my $starch = $self->new_manager();
 
-    subtest 'core tests for ' . ref($starch->session()) => sub{
+    subtest 'core tests for ' . ref($starch->state()) => sub{
         subtest id => sub{
-            my $session1 = $starch->session();
-            my $session2 = $starch->session();
-            my $session3 = $starch->session( '1234' );
+            my $state1 = $starch->state();
+            my $state2 = $starch->state();
+            my $state3 = $starch->state( '1234' );
 
-            like( $session1->id(), qr{^\S+$}, 'ID looks good' );
-            isnt( $session1->id(), $session2->id(), 'two generated session IDs are not the same' );
-            is( $session3->id(), '1234', 'custom ID was used' );
+            like( $state1->id(), qr{^\S+$}, 'ID looks good' );
+            isnt( $state1->id(), $state2->id(), 'two generated state IDs are not the same' );
+            is( $state3->id(), '1234', 'custom ID was used' );
         };
 
         subtest expires => sub{
-            my $session = $starch->session();
-            is( $session->expires(), $starch->expires(), 'session expires inherited the global expires' );
+            my $state = $starch->state();
+            is( $state->expires(), $starch->expires(), 'state expires inherited the global expires' );
         };
 
         subtest modified => sub{
-            my $session = $starch->session();
-            is( $session->modified(), $session->created(), 'modfied is same as created in new session' );
+            my $state = $starch->state();
+            is( $state->modified(), $state->created(), 'modfied is same as created in new state' );
             sleep 2;
-            $session->force_save();
-            $session = $starch->session( $session->id() );
-            cmp_ok( $session->modified(), '>', $session->created(), 'modified was updated with save' );
+            $state->force_save();
+            $state = $starch->state( $state->id() );
+            cmp_ok( $state->modified(), '>', $state->created(), 'modified was updated with save' );
         };
 
         subtest created => sub{
             my $start_time = time();
-            my $session = $starch->session();
-            my $created_time = $session->created();
-            cmp_ok( $created_time, '>=', $start_time, 'session created on or after test start' );
-            cmp_ok( $created_time, '<=', $start_time+1, 'session created is on or just after test start' );
+            my $state = $starch->state();
+            my $created_time = $state->created();
+            cmp_ok( $created_time, '>=', $start_time, 'state created on or after test start' );
+            cmp_ok( $created_time, '<=', $start_time+1, 'state created is on or just after test start' );
             sleep 2;
-            $session->force_save();
-            $session = $starch->session( $session->id() );
-            is( $session->created(), $created_time, 'created was updated with save' );
+            $state->force_save();
+            $state = $starch->state( $state->id() );
+            is( $state->created(), $created_time, 'created was updated with save' );
         };
 
         subtest in_store => sub{
-            my $session1 = $starch->session();
-            my $session2 = $starch->session( $session1->id() );
+            my $state1 = $starch->state();
+            my $state2 = $starch->state( $state1->id() );
 
-            is( $session1->in_store(), 0, 'new session is_new' );
-            is( $session2->in_store(), 1, 'existing session is not is_new' );
+            is( $state1->in_store(), 0, 'new state is_new' );
+            is( $state2->in_store(), 1, 'existing state is not is_new' );
         };
 
         subtest is_deleted => sub{
-            my $session = $starch->session();
-            is( $session->is_deleted(), 0, 'new session is not deleted' );
-            $session->force_save();
-            $session->delete();
-            is( $session->is_deleted(), 1, 'deleted session is deleted' );
+            my $state = $starch->state();
+            is( $state->is_deleted(), 0, 'new state is not deleted' );
+            $state->force_save();
+            $state->delete();
+            is( $state->is_deleted(), 1, 'deleted state is deleted' );
         };
 
         subtest is_dirty => sub{
-            my $session = $starch->session();
-            is( $session->is_dirty(), 0, 'new session is not is_dirty' );
-            $session->data->{foo} = 543;
-            is( $session->is_dirty(), 1, 'modified session is_dirty' );
+            my $state = $starch->state();
+            is( $state->is_dirty(), 0, 'new state is not is_dirty' );
+            $state->data->{foo} = 543;
+            is( $state->is_dirty(), 1, 'modified state is_dirty' );
         };
 
         subtest is_loaded => sub{
-            my $session = $starch->session();
-            ok( (!$session->is_loaded()), 'session is not loaded' );
-            $session->data();
-            ok( $session->is_loaded(), 'session is loaded' );
+            my $state = $starch->state();
+            ok( (!$state->is_loaded()), 'state is not loaded' );
+            $state->data();
+            ok( $state->is_loaded(), 'state is loaded' );
         };
 
         subtest is_saved => sub{
-            my $session = $starch->session();
-            ok( (!$session->is_saved()), 'session is not saved' );
-            $session->force_save();
-            ok( $session->is_saved(), 'session is saved' );
+            my $state = $starch->state();
+            ok( (!$state->is_saved()), 'state is not saved' );
+            $state->force_save();
+            ok( $state->is_saved(), 'state is saved' );
         };
 
         subtest save => sub{
-            my $session1 = $starch->session();
+            my $state1 = $starch->state();
 
-            $session1->data->{foo} = 789;
-            my $session2 = $starch->session( $session1->id() );
-            is( $session2->data->{foo}, undef, 'new session did not receive data from old' );
+            $state1->data->{foo} = 789;
+            my $state2 = $starch->state( $state1->id() );
+            is( $state2->data->{foo}, undef, 'new state did not receive data from old' );
 
-            is( $session1->is_dirty(), 1, 'is dirty before save' );
-            $session1->save();
-            is( $session1->is_dirty(), 0, 'is not dirty after save' );
-            $session2 = $starch->session( $session1->id() );
-            is( $session2->data->{foo}, 789, 'new session did receive data from old' );
+            is( $state1->is_dirty(), 1, 'is dirty before save' );
+            $state1->save();
+            is( $state1->is_dirty(), 0, 'is not dirty after save' );
+            $state2 = $starch->state( $state1->id() );
+            is( $state2->data->{foo}, 789, 'new state did receive data from old' );
         };
 
         subtest force_save => sub{
-            my $session = $starch->session();
+            my $state = $starch->state();
 
-            $session->data->{foo} = 931;
-            $session->save();
+            $state->data->{foo} = 931;
+            $state->save();
 
-            $session = $starch->session( $session->id() );
-            $session->data();
+            $state = $starch->state( $state->id() );
+            $state->data();
 
-            $starch->session( $session->id() )->delete();
+            $starch->state( $state->id() )->delete();
 
-            $session->save();
+            $state->save();
             is(
-                $starch->session( $session->id() )->data->{foo},
+                $starch->state( $state->id() )->data->{foo},
                 undef,
                 'save did not save',
             );
 
-            $session->force_save();
+            $state->force_save();
             is(
-                $starch->session( $session->id() )->data->{foo},
+                $starch->state( $state->id() )->data->{foo},
                 931,
                 'force_save did save',
             );
         };
 
         subtest reload => sub{
-            my $session = $starch->session();
-            is( exception { $session->reload() }, undef, 'reloading a non-dirty session did not fail' );
-            $session->data->{foo} = 2;
-            like( exception { $session->reload() }, qr{dirty}, 'reloading a dirty session failed' );
+            my $state = $starch->state();
+            is( exception { $state->reload() }, undef, 'reloading a non-dirty state did not fail' );
+            $state->data->{foo} = 2;
+            like( exception { $state->reload() }, qr{dirty}, 'reloading a dirty state failed' );
         };
 
         subtest force_reload => sub{
-            my $session1 = $starch->session();
-            $session1->data->{foo} = 91;
-            $session1->save();
-            my $session2 = $starch->session( $session1->id() );
-            $session2->data->{foo} = 19;
-            $session2->save();
-            $session1->reload();
-            is( $session1->data->{foo}, 19, 'reload worked' );
+            my $state1 = $starch->state();
+            $state1->data->{foo} = 91;
+            $state1->save();
+            my $state2 = $starch->state( $state1->id() );
+            $state2->data->{foo} = 19;
+            $state2->save();
+            $state1->reload();
+            is( $state1->data->{foo}, 19, 'reload worked' );
         };
 
         subtest mark_clean => sub{
-            my $session = $starch->session();
-            $session->data->{foo} = 6934;
-            is( $session->is_dirty(), 1, 'is dirty' );
-            $session->mark_clean();
-            is( $session->is_dirty(), 0, 'is clean' );
-            is( $session->data->{foo}, 6934, 'data is intact' );
+            my $state = $starch->state();
+            $state->data->{foo} = 6934;
+            is( $state->is_dirty(), 1, 'is dirty' );
+            $state->mark_clean();
+            is( $state->is_dirty(), 0, 'is clean' );
+            is( $state->data->{foo}, 6934, 'data is intact' );
         };
 
         subtest rollback => sub{
-            my $session = $starch->session();
-            $session->data->{foo} = 6934;
-            is( $session->is_dirty(), 1, 'is dirty' );
-            $session->rollback();
-            is( $session->is_dirty(), 0, 'is clean' );
-            is( $session->data->{foo}, undef, 'data is rolled back' );
+            my $state = $starch->state();
+            $state->data->{foo} = 6934;
+            is( $state->is_dirty(), 1, 'is dirty' );
+            $state->rollback();
+            is( $state->is_dirty(), 0, 'is clean' );
+            is( $state->data->{foo}, undef, 'data is rolled back' );
 
-            $session->data->{foo} = 23;
-            $session->mark_clean();
-            $session->data->{foo} = 95;
-            $session->rollback();
-            is( $session->data->{foo}, 23, 'rollback to previous mark_clean' );
+            $state->data->{foo} = 23;
+            $state->mark_clean();
+            $state->data->{foo} = 95;
+            $state->rollback();
+            is( $state->data->{foo}, 23, 'rollback to previous mark_clean' );
         };
 
         subtest delete => sub{
-            my $session = $starch->session();
-            like( exception { $session->delete() }, qr{stored}, 'calling delete on un-stored session fails' );
-            $session->force_save();
-            is( exception { $session->delete() }, undef, 'deleting a stored session does not fail' );
+            my $state = $starch->state();
+            like( exception { $state->delete() }, qr{stored}, 'calling delete on un-stored state fails' );
+            $state->force_save();
+            is( exception { $state->delete() }, undef, 'deleting a stored state does not fail' );
         };
 
         subtest force_delete => sub{
-            my $session = $starch->session();
-            $session->data->{foo} = 39;
-            $session->save();
+            my $state = $starch->state();
+            $state->data->{foo} = 39;
+            $state->save();
 
-            $session = $starch->session( $session->id() );
-            is( $session->data->{foo}, 39, 'session persists' );
+            $state = $starch->state( $state->id() );
+            is( $state->data->{foo}, 39, 'state persists' );
 
-            $session->delete();
-            $session = $starch->session( $session->id() );
-            is( $session->data->{foo}, undef, 'session was deleted' );
+            $state->delete();
+            $state = $starch->state( $state->id() );
+            is( $state->data->{foo}, undef, 'state was deleted' );
         };
 
         subtest set_expires => sub{
-            my $session = $starch->session();
-            is( $session->expires(), $starch->expires(), 'double check a new session gets the global expires' );
-            $session->set_expires( 111 );
-            $session->save();
-            $session = $starch->session( $session->id() );
-            is( $session->expires(), 111, 'custom expires was saved' );
+            my $state = $starch->state();
+            is( $state->expires(), $starch->expires(), 'double check a new state gets the global expires' );
+            $state->set_expires( 111 );
+            $state->save();
+            $state = $starch->state( $state->id() );
+            is( $state->expires(), 111, 'custom expires was saved' );
         };
 
         subtest hash_seed => sub{
-            my $session = $starch->session();
-            isnt( $session->hash_seed(), $session->hash_seed(), 'two hash seeds are not the same' );
+            my $state = $starch->state();
+            isnt( $state->hash_seed(), $state->hash_seed(), 'two hash seeds are not the same' );
         };
 
         subtest generate_id => sub{
-            my $session = $starch->session();
+            my $state = $starch->state();
 
             isnt(
-                $session->generate_id(),
-                $session->generate_id(),
+                $state->generate_id(),
+                $state->generate_id(),
                 'two generated ids are not the same',
             );
         };
 
         subtest reset_id => sub{
-            my $session = $starch->session();
+            my $state = $starch->state();
 
-            $session->data->{foo} = 54;
-            ok( $session->is_dirty(), 'session is dirty before save' );
-            $session->save();
-            ok( (!$session->is_dirty()), 'session is not dirty after save' );
-            ok( $session->is_saved(), 'session is marked saved after save' );
+            $state->data->{foo} = 54;
+            ok( $state->is_dirty(), 'state is dirty before save' );
+            $state->save();
+            ok( (!$state->is_dirty()), 'state is not dirty after save' );
+            ok( $state->is_saved(), 'state is marked saved after save' );
 
-            my $old_id = $session->id();
-            $session->reset_id();
-            ok( (!$session->is_saved()), 'session is not marked saved after reset_id' );
-            ok( $session->is_dirty(), 'session is marked dirty after reset_id' );
-            isnt( $session->id(), $old_id, 'session has new id after reset_id' );
-            $session->save();
+            my $old_id = $state->id();
+            $state->reset_id();
+            ok( (!$state->is_saved()), 'state is not marked saved after reset_id' );
+            ok( $state->is_dirty(), 'state is marked dirty after reset_id' );
+            isnt( $state->id(), $old_id, 'state has new id after reset_id' );
+            $state->save();
 
-            my $old_session = $starch->session( $old_id );
-            is( $old_session->data->{foo}, undef, 'old session data was deleted' );
+            my $old_state = $starch->state( $old_id );
+            is( $old_state->data->{foo}, undef, 'old state data was deleted' );
         };
 
         subtest clone_data => sub{
-            my $session = $starch->session();
+            my $state = $starch->state();
 
             my $old_data = { foo=>32, bar=>[1,2,3] };
-            my $new_data = $session->clone_data( $old_data );
+            my $new_data = $state->clone_data( $old_data );
 
             is_deeply( $new_data, $old_data, 'cloned data matches source data' );
 
@@ -406,4 +421,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

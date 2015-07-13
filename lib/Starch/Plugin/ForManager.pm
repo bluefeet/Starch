@@ -11,8 +11,8 @@ Starch::Plugin::ForManager - Base role for Starch plugins.
     with 'Starch::Plugin::ForManager';
     has foo => ( is=>'ro' );
 
-    my $starch = Starch->new_with_plugins(
-        ['MyPlugin::Manager'],
+    my $starch = Starch->new(
+        plugins => ['MyPlugin::Manager'],
         foo => 'bar',
         ...,
     );
@@ -24,8 +24,7 @@ This role provides no additional functionality to
 manager plugins.  All it does is labels a plugin as a manager
 plugin so that Starch knows which class type it applies to.
 
-See L<Starch::Manual::Extending/PLUGINS> for more information
-on writing plugins.
+See L<Starch::Plugin/WRITING> for more information.
 
 =cut
 
@@ -39,4 +38,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

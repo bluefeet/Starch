@@ -17,13 +17,13 @@ Test::Starch->new(
 )->test();
 $log->clear();
 
-my $starch = Starch->new_with_plugins(
-    ['::Trace'],
+my $starch = Starch->new(
+    plugins => ['::Trace'],
     store => { class => '::Memory' },
 );
 
-my $manager_class = 'Starch';
-my $session_class = 'Starch::Session';
+my $manager_class = 'Starch::Manager';
+my $state_class = 'Starch::State';
 my $store_class   = 'Starch::Store::Memory';
 
 subtest 'manager created with store' => sub{
@@ -40,109 +40,108 @@ subtest 'manager created with store' => sub{
     log_empty_ok();
 };
 
-subtest 'create session' => sub{
-    my $session = $starch->session();
-    my $session_id = $session->id();
+subtest 'create state' => sub{
+    my $state = $starch->state();
+    my $state_id = $state->id();
 
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.new\.$session_id$},
-        'starch.session.new.$session_id',
+        $state_class,
+        qr{^starch\.state\.new\.$state_id$},
+        'starch.state.new.$state_id',
     );
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.generate_id\.$session_id$},
-        'starch.session.generate_id.$session_id',
+        $state_class,
+        qr{^starch\.state\.generate_id\.$state_id$},
+        'starch.state.generate_id.$state_id',
     );
     $log->category_contains_ok(
         $manager_class,
-        qr{^starch\.manager.session\.created\.$session_id$},
-        'starch.manager.session.created.$session_id',
+        qr{^starch\.manager.state\.created\.$state_id$},
+        'starch.manager.state.created.$state_id',
     );
     log_empty_ok();
 };
 
-subtest 'retrieve session' => sub{
-    my $session = $starch->session('1234');
-    my $session_id = $session->id();
+subtest 'retrieve state' => sub{
+    my $state = $starch->state('1234');
+    my $state_id = $state->id();
 
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.new\.$session_id$},
-        'starch.session.new.$session_id',
+        $state_class,
+        qr{^starch\.state\.new\.$state_id$},
+        'starch.state.new.$state_id',
     );
     $log->category_contains_ok(
         $manager_class,
-        qr{^starch\.manager.session\.retrieved\.$session_id$},
-        'starch.manager.session.retrieved.$session_id',
+        qr{^starch\.manager.state\.retrieved\.$state_id$},
+        'starch.manager.state.retrieved.$state_id',
     );
     log_empty_ok();
 };
 
-subtest 'session methods' => sub{
-    my $session = $starch->session();
-    my $session_id = $session->id();
+subtest 'state methods' => sub{
+    my $state = $starch->state();
+    my $state_id = $state->id();
     $log->clear();
 
-    $session->save();
+    $state->save();
     log_empty_ok('log is empty after non-dirty save');
 
-    $session->data->{foo} = 34;
-    $session->save();
+    $state->data->{foo} = 34;
+    $state->save();
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.save\.$session_id$},
-        'starch.session.save.$session_id',
+        $state_class,
+        qr{^starch\.state\.save\.$state_id$},
+        'starch.state.save.$state_id',
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.Memory\.set\.session:$session_id$},
-        'starch.store.Memory.set.session:$session_id',
+        qr{^starch\.store\.Memory\.set\.state:$state_id$},
+        'starch.store.Memory.set.state:$state_id',
     );
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.mark_clean\.$session_id$},
-        'starch.session.mark_clean.$session_id',
+        $state_class,
+        qr{^starch\.state\.mark_clean\.$state_id$},
+        'starch.state.mark_clean.$state_id',
     );
     log_empty_ok();
 
-    $session->reload();
-    $session->mark_clean();
-    $session->rollback();
-    $session->delete();
+    $state->reload();
+    $state->mark_clean();
+    $state->rollback();
+    $state->delete();
 
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.reload\.$session_id$},
-        'starch.session.reload.$session_id',
+        $state_class,
+        qr{^starch\.state\.reload\.$state_id$},
+        'starch.state.reload.$state_id',
     );
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.mark_clean\.$session_id$},
-        'starch.session.mark_clean.$session_id',
+        $state_class,
+        qr{^starch\.state\.mark_clean\.$state_id$},
+        'starch.state.mark_clean.$state_id',
     );
     $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.rollback\.$session_id$},
-        'starch.session.rollback.$session_id',
-    );
-    $log->category_contains_ok(
-        $store_class,
-        qr{^starch\.store\.Memory\.get\.session:$session_id$},
-        'starch.store.Memory.get.session:$session_id',
-    );
-    $log->category_contains_ok(
-        $session_class,
-        qr{^starch\.session\.delete\.$session_id$},
-        'starch.session.delete.$session_id',
+        $state_class,
+        qr{^starch\.state\.rollback\.$state_id$},
+        'starch.state.rollback.$state_id',
     );
     $log->category_contains_ok(
         $store_class,
-        qr{^starch\.store\.Memory\.remove\.session:$session_id$},
-        'starch.store.Memory.remove.session:$session_id',
+        qr{^starch\.store\.Memory\.get\.state:$state_id$},
+        'starch.store.Memory.get.state:$state_id',
+    );
+    $log->category_contains_ok(
+        $state_class,
+        qr{^starch\.state\.delete\.$state_id$},
+        'starch.state.delete.$state_id',
+    );
+    $log->category_contains_ok(
+        $store_class,
+        qr{^starch\.store\.Memory\.remove\.state:$state_id$},
+        'starch.store.Memory.remove.state:$state_id',
     );
     log_empty_ok();
-
 };
 
 done_testing;

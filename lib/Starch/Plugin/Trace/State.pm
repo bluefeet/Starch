@@ -1,18 +1,18 @@
 package # hide from PAUSE
-    Starch::Plugin::Trace::Session;
+    Starch::Plugin::Trace::State;
 
 use Moo::Role;
 use strictures 2;
 use namespace::clean;
 
 with qw(
-    Starch::Plugin::ForSession
+    Starch::Plugin::ForState
 );
 
 sub BUILD {
     my ($self) = @_;
     $self->log->tracef(
-        'starch.session.new.%s',
+        'starch.state.new.%s',
         $self->id(),
     );
     return;
@@ -23,7 +23,7 @@ around force_save => sub{
     my $self = shift;
 
     $self->log->tracef(
-        'starch.session.save.%s',
+        'starch.state.save.%s',
         $self->id(),
     );
 
@@ -35,7 +35,7 @@ around force_reload => sub{
     my $self = shift;
 
     $self->log->tracef(
-        'starch.session.reload.%s',
+        'starch.state.reload.%s',
         $self->id(),
     );
 
@@ -47,7 +47,7 @@ around mark_clean => sub{
     my $self = shift;
 
     $self->log->tracef(
-        'starch.session.mark_clean.%s',
+        'starch.state.mark_clean.%s',
         $self->id(),
     );
 
@@ -59,7 +59,7 @@ around rollback => sub{
     my $self = shift;
 
     $self->log->tracef(
-        'starch.session.rollback.%s',
+        'starch.state.rollback.%s',
         $self->id(),
     );
 
@@ -71,7 +71,7 @@ around force_delete => sub{
     my $self = shift;
 
     $self->log->tracef(
-        'starch.session.delete.%s',
+        'starch.state.delete.%s',
         $self->id(),
     );
 
@@ -85,7 +85,7 @@ around generate_id => sub{
     my $id = $self->$orig( @_ );
 
     $self->log->tracef(
-        'starch.session.generate_id.%s',
+        'starch.state.generate_id.%s',
         $id,
     );
 

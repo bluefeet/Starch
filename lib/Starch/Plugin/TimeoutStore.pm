@@ -6,8 +6,8 @@ Starch::Plugin::TimeoutStore - Throw an exception if store access surpass a time
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::TimeoutStore'],
+    my $starch = Starch->new(
+        plugins => ['::TimeoutStore'],
         store => {
             class => '::Memory',
             timeout => 0.001, # 1 millisecond
@@ -24,7 +24,7 @@ The timeout is implemented using L<Time::HiRes>'s C<alarm> function,
 which takes fractional seconds, and a localized C<$SIG{ALRM}> handler.
 
 The whole point of detecting timeouts is so that you can still serve
-a web page even if the underlying session backend is failing, so
+a web page even if the underlying store backend is failing, so
 using this plugin with L<Starch::Plugin::LogStoreExceptions> is
 probably a good idea.
 
@@ -112,4 +112,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

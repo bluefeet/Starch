@@ -10,25 +10,25 @@ use Starch;
 my $starch = Starch->new(
     store => { class=>'::Memory' },
 );
-#my $starch = Starch->new_with_plugins(
-#    ['::Sereal'],
+#my $starch = Starch->new_plugins(
+#    plugins => ['::Sereal'],
 #    store => { class=>'::Memory' },
 #);
 
 foreach (1..$iters) {
-    my $session = $starch->session();
+    my $state = $starch->state();
 
-    $session->data->{foo} = 32;
+    $state->data->{foo} = 32;
 
-    if ($session->data->{bar}) { ... }
+    if ($state->data->{bar}) { ... }
 
-    $session->save();
+    $state->save();
 
-    $session = $starch->session( $session->id() );
+    $state = $starch->state( $state->id() );
 
-    if ($session->data->{bar}) { ... }
+    if ($state->data->{bar}) { ... }
 
-    $session->save();
+    $state->save();
 
-    $session = $starch->session( $session->id() );
+    $state = $starch->state( $state->id() );
 }

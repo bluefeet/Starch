@@ -13,10 +13,10 @@ use Starch;
 }
 
 {
-    package MyPlugin::Session;
+    package MyPlugin::State;
     use Moo::Role;
-    with 'Starch::Plugin::ForSession';
-    sub my_session_plugin { 1 }
+    with 'Starch::Plugin::ForState';
+    sub my_state_plugin { 1 }
 }
 
 {
@@ -31,7 +31,7 @@ use Starch;
     use Moo;
     with 'Starch::Plugin::Bundle';
     sub bundled_plugins {
-        ['MyPlugin::Manager', 'MyPlugin::Session', 'MyPlugin::Store'];
+        ['MyPlugin::Manager', 'MyPlugin::State', 'MyPlugin::Store'];
     }
 }
 
@@ -40,19 +40,19 @@ Test::Starch->new(
 )->test();
 
 subtest bundle => sub{
-    my $starch = Starch->new_with_plugins(
-        ['MyPlugin'],
+    my $starch = Starch->new(
+        plugins => ['MyPlugin'],
         store => { class => '::Memory' },
     );
 
     can_ok( $starch, 'my_manager_plugin' );
-    can_ok( $starch->session(), 'my_session_plugin' );
+    can_ok( $starch->state(), 'my_state_plugin' );
     can_ok( $starch->store(), 'my_store_plugin' );
 };
 
 subtest individual => sub{
-    my $starch = Starch->new_with_plugins(
-        ['MyPlugin::Manager', 'MyPlugin::Store'],
+    my $starch = Starch->new(
+        plugins => ['MyPlugin::Manager', 'MyPlugin::Store'],
         store => { class => '::Memory' },
     );
 
@@ -60,8 +60,8 @@ subtest individual => sub{
     can_ok( $starch->store(), 'my_store_plugin' );
 
     ok(
-        (!$starch->session->can('my_session_plugin')),
-        '!' . $starch->factory->session_class() . q[->can('my_session_plugin')],
+        (!$starch->state->can('my_state_plugin')),
+        '!' . $starch->factory->state_class() . q[->can('my_state_plugin')],
     );
 };
 

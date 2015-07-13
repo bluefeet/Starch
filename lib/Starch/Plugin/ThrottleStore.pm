@@ -2,12 +2,12 @@ package Starch::Plugin::ThrottleStore;
 
 =head1 NAME
 
-Starch::Plugin::ThrottleStore - Throttle misbehaving session stores.
+Starch::Plugin::ThrottleStore - Throttle misbehaving Starch stores.
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::ThrottleStore'],
+    my $starch = Starch->new(
+        plugins => ['::ThrottleStore'],
         store => {
             class => ...,
             throttle_threshold => 2,
@@ -27,7 +27,7 @@ L</throttle_duration> seconds.
 When the error threshold has been reached an erorr log message
 will be produced stating that throttling is starting.  Each
 store access for the duration of the throttling will then produce
-a log message stating which session key is being throttled.
+a log message stating which state key is being throttled.
 
 =cut
 
@@ -118,11 +118,11 @@ foreach my $method (qw( set get remove )) {
                 my ($id, $namespace) = @_;
                 my $key = $self->combine_keys( $id, $namespace );
                 $self->log->errorf(
-                    'Throttling %s of session key %s on the %s store for the next %d seconds.',
+                    'Throttling %s of state key %s on the %s store for the next %d seconds.',
                     $method, $key, $self->short_store_class_name(), ($start + $duration) - time(),
                 );
                 return {
-                    $self->manager->invalid_session_key() => 1,
+                    $self->manager->invalid_state_key() => 1,
                 } if $method eq 'get';
                 return;
             }
@@ -154,3 +154,11 @@ foreach my $method (qw( set get remove )) {
 }
 
 1;
+__END__
+
+=head1 AUTHORS AND LICENSE
+
+See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
+

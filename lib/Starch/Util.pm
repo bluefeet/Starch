@@ -148,3 +148,5 @@ __END__
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
 
+=cut
+

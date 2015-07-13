@@ -22,8 +22,8 @@ $log->clear();
     sub remove { die "REMOVE FAIL" }
 }
 
-my $log_starch = Starch->new_with_plugins(
-    ['::LogStoreExceptions'],
+my $log_starch = Starch->new(
+    plugins => ['::LogStoreExceptions'],
     store => { class=>'::Test::LogStoreExceptions' },
 );
 my $log_store = $log_starch->store();

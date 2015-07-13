@@ -6,8 +6,8 @@ Starch::Plugin::LogStoreExceptions - Turn Starch store exceptions into log messa
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::LogStoreExceptions'],
+    my $starch = Starch->new(
+        plugins => ['::LogStoreExceptions'],
         ...,
     );
 
@@ -16,7 +16,7 @@ Starch::Plugin::LogStoreExceptions - Turn Starch store exceptions into log messa
 This plugin causes any exceptions thrown when C<set>, C<get>, or C<remove> is
 called on a store to produce an error log message instead of an exception.
 
-Typically you'll want to use this in production, as the session store being
+Typically you'll want to use this in production, as the state store being
 down is often not enough of a reason to produce 500 errors on every page.
 
 This plugin should be listed last in the plugin list so that it catches
@@ -50,7 +50,7 @@ foreach my $method (qw( set get remove )) {
                 ref($self), $method, $_,
             );
             return {
-                $self->manager->invalid_session_key() => 1,
+                $self->manager->invalid_state_key() => 1,
             } if $method eq 'get';
             return;
         };
@@ -63,4 +63,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

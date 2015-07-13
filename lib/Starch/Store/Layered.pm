@@ -72,7 +72,7 @@ sub BUILD {
 This is the outer store, the one that tries to handle read requests
 first before falling back to the L</inner> store.
 
-Accepts the same value as L<Starch/store>.
+Accepts the same value as L<Starch::Manager/store>.
 
 =cut
 
@@ -99,7 +99,7 @@ sub _build_outer {
 This is the inner store, the one that only handles read requests
 if the L</outer> store was unable to.
 
-Accepts the same value as L<Starch/store>.
+Accepts the same value as L<Starch::Manager/store>.
 
 =cut
 
@@ -142,7 +142,7 @@ sub can_reap_expired {
 =head2 reap_expired
 
 Calls L<Starch::Store/reap_expired> on the L</outer> and L</inner>
-stores, if they support expired session reaping.
+stores, if they support expired state reaping.
 
 =cut
 
@@ -192,8 +192,8 @@ sub get {
     # Let's set it on the outer store so that we can retrieve it from
     # there next time.
 
-    my $expires = $data->{ $self->manager->expires_session_key() };
-    # The session data is incomplete if it doesn't contain expires data.
+    my $expires = $data->{ $self->manager->expires_state_key() };
+    # The state data is incomplete if it doesn't contain expires data.
     # Maybe we should log this as an error or warning?
     return $data if !defined $expires;
 
@@ -218,4 +218,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

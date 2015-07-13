@@ -17,21 +17,21 @@ subtest 'without log' => sub{
         store => { class => '::Memory' },
     );
 
-    $starch->session->data->{foo} = 94;
+    $starch->state->data->{foo} = 94;
     sleep 1;
     log_empty_ok();
 };
 
 subtest 'with log' => sub{
-    my $starch = Starch->new_with_plugins(
-        ['::LogUnsaved'],
+    my $starch = Starch->new(
+        plugins => ['::LogUnsaved'],
         store => { class => '::Memory' },
     );
 
-    $starch->session->data->{foo} = 94;
+    $starch->state->data->{foo} = 94;
     sleep 1;
     $log->category_contains_ok(
-        $starch->factory->base_session_class(),
+        $starch->factory->base_state_class(),
         qr{was changed and not saved},
         'found log',
     );

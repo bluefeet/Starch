@@ -30,14 +30,14 @@ Test::Starch->new(
     }
 }
 
-my $timeout_starch = Starch->new_with_plugins(
-    ['::TimeoutStore'],
+my $timeout_starch = Starch->new(
+    plugins => ['::TimeoutStore'],
     store => { class=>'::Test::TimeoutStore', timeout=>0.01 },
 );
 my $timeout_store = $timeout_starch->store();
 
-my $normal_starch = Starch->new_with_plugins(
-    ['::TimeoutStore'],
+my $normal_starch = Starch->new(
+    plugins => ['::TimeoutStore'],
     store => { class=>'::Test::TimeoutStore' },
 );
 my $normal_store = $normal_starch->store();

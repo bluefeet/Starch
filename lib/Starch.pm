@@ -1,8 +1,32 @@
 package Starch;
 
+use Starch::Factory;
+use Moo::Object qw();
+
+use strictures 2;
+use namespace::clean;
+
+sub new {
+    my $class = shift;
+    my $args = Moo::Object->BUILDARGS( @_ );
+
+    my $plugins = delete( $args->{plugins} );
+    my $factory = Starch::Factory->new(
+        defined($plugins) ? (plugins=>$plugins) : (),
+    );
+
+    return $factory->manager_class->new(
+        %$args,
+        factory => $factory,
+    );
+}
+
+1;
+__END__
+
 =head1 NAME
 
-Starch - Implementation independent session state storage management.
+Starch - Implementation independent persistent statefulness.
 
 =head1 SYNOPSIS
 
@@ -12,250 +36,465 @@ Starch - Implementation independent session state storage management.
             class   => '::Memory',
         },
     );
-    my $new_session = $starch->session();
-    my $existing_session = $starch->session( $id );
+    my $new_state = $starch->state();
+    my $existing_state = $starch->sate( $id );
 
 =head1 DESCRIPTION
 
-This module provides a generic interface to managing the storage of
-session state information and is often referred to as the "manager"
-in this documentation.  Among other uses this module is a great fit
-for making HTTP requests stateful by pairing this module with HTTP
-cookies.
+Welcome to Starch, a fancy implementation agnostic state persistence
+manager.  Starch exposes stateful buckets of arbitrary information
+which are tracked using some implementation specific technology, such
+as HTTP cookies.  While this module's uses extend far beyond simply making
+HTTP requests stateful, this documentation uses the HTTP paradigm
+to explain how Starch works.
 
-Please see L<Starch::Manual> for some good holistic starter
-documentation.
+Typically you'll be integrating Starch with a web framework such as
+L<Catalyst> (see L</INTEGRATIONS> for other frameworks).  Whichever
+integration you are using it will likely pass-through arguments to
+the underlying L<Starch::Manager> object and provide a thin layer over
+the L<Starch::State> objects.  This documentation will be using
+the core Starch classes for examples.  Your integration layer may
+change, or completely replace, the interface documented here.
 
-This class support method proxies as described in
-L<Starch::Manual/METHOD PROXIES>.
+Starch has several design philosophies:
 
-=cut
+=over
 
-use Starch::Factory;
-use Starch::Session;
+=item *
 
-use Types::Standard -types;
-use Types::Common::String -types;
-use Types::Common::Numeric -types;
+Is as fast as possible by limiting method calls, implementing
+lazy-loading wherever it can be done, and using libraries which
+exhibit run-time efficiencies which beat out their competitors.
 
-use Moo;
-use strictures 2;
-use namespace::clean;
+=item *
 
-with qw(
-    Starch::Role::Log
-    Starch::Role::MethodProxy
-);
+Reduces data store reads and writes to just the most essential.
 
-sub BUILD {
-    my ($self) = @_;
+=item *
 
-    # Get this built as early as possible.
-    $self->store();
+Is independent from any particular framework (such as Catalyst or
+Plack).
 
-    return;
-}
+=item *
+
+Provides a straight-forward and powerful mechanism for customizing just
+about any part of Starch via stores and plugin bundles.
+
+=item *
+
+Is easy to understand due to everything being well documented,
+hyper-linked, and containing thorough examples and tests.
+
+=back
+
+There are many L</ALTERNATIVES> to Starch to choose from, all of which
+Starch was inspired from and hopes to be a superior choice to.
+
+=head1 BASIC USAGE
+
+When setting up you need to, at a minimum, define a store:
+
+    my $starch = Starch->new(
+        store => { class=>'::Memory' },
+    );
+
+A store is a hash ref of arguments which are used for constructing the
+store object.  A store object implements a very simple interface for
+setting, getting, and removing state data.  Beyond defining the
+store you will not be interacting with it as the L<Starch::State>
+objects do all the store interaction for you.
+
+When defining the store you must specify at least the C<class>
+argument which determines the store class to use.  This class name
+can be relative to C<Starch::Store> so that if you specify
+C<::Memory>, as in the example above, it will be resolved to the
+L<Starch::Store::Memory> class.  An absolute store class name
+may be used without the leading C<::> if you have a custom store in
+a different namespace.
+
+Calling the C<new> method on the C<Starch> package actually returns
+a L<Starch::Manager> object, so refer to its documentation for details
+on what arguments you can pass.
+
+Now that you have the C<$starch> object you can create a state object:
+
+    my $state = $starch->state();
+
+This creates a new L<Starch::State> object which you can then
+interact with:
+
+    $state->data->{some_key} = 'some_value';
+
+The L<Starch::State/data> attribute is a writeable hash ref
+which can contain any data you want.  This is the data which will
+be stored by, and retrieved from, the store.  Once you're done
+making changes to the data, call save:
+
+    $state->save();
+
+This stores the state data in the store.
+
+Each state gets assigned a state ID automatically which can be
+used to retrieve the state data at a later time.  The state ID
+is a randomly generated SHA-1 hex digest.
+
+    my $id = $state->id();
+
+To retrieve a previously saved state pass the state ID to the
+L<Starch::Manager/state> method:
+
+    my $state = $starch->state( $id );
+
+And now you can access the data you previously saved:
+
+    print $state->data->{some_key}; # "some_value"
+
+Your framework integration, such as L<Catalyst::Plugin::Starch>,
+will wrap up and hide away most of these details from you, but
+it's still good to know what is happening behind the scenes.
+
+=head1 EXPIRATION
+
+Expiration can be specified globally, when instantiating the L<Starch::Manager>
+object, per-state, and per-store.  The expires value has various properties
+and behaviors that are important to understand:
+
+=over
+
+=item *
+
+The C<expires> field is always specified as the number of seconds before
+the state will expire.
+
+=item *
+
+The L<Starch::Manager> class accepts an C<expires> argument which is used
+as the default expires for new state objects and used as the expiration
+for cookies via L<Starch::Plugin::CookieArgs>.
+
+=item *
+
+States have a C<expires> argument which defaults to the value of
+the global expires set in the L<Starch::Manager> object.  Each state
+can then have their individual expire extended or reduced via the
+L<Starch::State/set_expires> method.
+
+=item *
+
+Stores may have a C<max_expires> argument passed to them.  If the per-state
+expires is larger than the store's max_expires then the state's expires will
+be replaced with the store's max_expires when writing the data to the store.
+
+=back
+
+=head1 LOGGING
+
+Starch has built-in logging facilities via L<Log::Any>.  By default,
+nothing is logged.  Various plugins and stores do use logging, such
+as the C<LogStoreExceptions> and C<LogUnsaved> L</PLUGINS>.
+
+If you do not set up a log adapter then these log messages will disappear
+into the void.  Read the L<Log::Any> documentation for instructions on
+configuring an adapter to capture the log output.
+
+The L<Starch::Plugin::Trace> plugin adds a bunch of additional
+logging output useful for development.
+
+=head1 METHOD PROXIES
+
+The Starch manager (L<Starch::Manager>) and stores support method proxies
+out of the box for all arguments passed to them.  A method proxy is
+an array ref which is lightly inspired by JSON references.  This array
+ref must have the string C<&proxy> as the first value, a package name
+as the second value, a method name as the third value, and any number
+of arguments to pass to the method after that:
+
+    [ '&proxy', $package, $method, @args ]
+
+Method proxies are really useful when you are configuring Starch from
+static configuration where you cannot dynamically pass a value from Perl.
+
+An example from L<Starch::Store::CHI> illustrates how this works:
+
+    my $starch = Starch->new(
+        store => {
+            class => '::CHI',
+            chi => ['&proxy', 'My::CHI::Builder', 'get_chi'],
+        },
+    );
+
+This will cause C<My::CHI::Builder> to be loaded, if it hasn't already, and then
+C<My::CHI::Builder-E<gt>get_chi()> will be called and the return value used as
+the value for the C<chi> argument.
+
+Another practical example of using this is with L<DBI> where normally
+you would end up making a separate connection to your database for states.
+If your state database is the same database as you use for other things
+it may make sense to use the same C<$dbh> for both so that you do not
+double the number of connections you are making to your database.
+
+Method proxies can be used with the manager and store objects at any point in
+their arguments.  For example, if you have Perl code that builds the Starch
+configuration from the ground up you could:
+
+    my $starch = Starch->new(
+        [ '&proxy', 'My::Starch::Config', 'get_config' ],
+    );
+
+Which will call C<get_config> on the C<My::Starch::Config> package and use its
+return value as the arguments for instantiating the Starch object.
+
+=head1 PERFORMANCE
+
+On a decently-specced developer laptop Starch adds, at most, one half of one
+millisecond to every HTTP request.  This non-scientific benchmark was done using
+the C<Memory> store and a contrived example of the typical use of a state as the
+backend for an HTTP session.
+
+Starch is meant to be as fast as possible while still being flexible.
+Due to Starch avoiding having many dependencies, and having zero
+non-core XS dependencies, there are still same areas which could be
+slightly faster.  At this time there is one plugin which will provide a
+relatively large performance gain, L<Starch::Plugin::Sereal>.  This
+is relative as using this plugin might, if you're lucky, shave one tenth
+of one millisecond off of every HTTP request that uses Starch.
+
+Starch has gone through the wringer performance wise and there just are
+not many performance gains to be eked out of Starch.  Instead you'll
+likely find that your time in Starch is primarily spent in your store.
+So, when setting up Starch, picking a store is the most important
+decision you can make performance wise.
+
+=head1 STORES
+
+These stores are included with the C<Starch> distribution:
+
+=over
+
+=item *
+
+L<Starch::Store::Memory>
+
+=item *
+
+L<Starch::Store::Layered>
+
+=back
+
+These stores are distributed separately on CPAN:
+
+=over
+
+=item *
+
+L<Starch::Store::Amazon::DynamoDB>
+
+=item *
+
+L<Starch::Store::DBI>
+
+=item *
+
+L<Starch::Store::DBIx::Connector>
+
+=item *
+
+L<Starch::Store::CHI>
+
+=back
+
+More third-party stores can be found on
+L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3AStore>.
 
 =head1 PLUGINS
 
-    my $starch = Starch->new_with_plugins(
-        ['::CookieArgs'],
-        store => { class=>'::Memory' },
-        cookie_name => 'my_session',
-    );
-    my $session = $starch->session();
-    print $session->cookie_args->{name}; # my_session
+Plugins alter the behavior of the manager (L<Starch::Manager>),
+state (L<Starch:State>), and store (L<Starch::Store>)
+objects.  To use a plugin pass the C<plugins> argument when
+creating your Starch object:
 
-Starch plugins are applied using the C<new_with_plugins> constructor method.
-The first argument is an array ref of plugin names.  The plugin names can
-be fully qualified, or relative to the C<Starch::Plugin> namespace.
-A leading C<::> signifies that the plugin's package name is relative.
-
-More information about plugins can be found at L<Starch::Manual/PLUGINS>.
-
-=cut
-
-sub new_with_plugins {
-    my $class = shift;
-    my $plugins = shift;
-
-    my $args = $class->BUILDARGS( @_ );
-
-    my $factory = Starch::Factory->new(
-        plugins => $plugins,
-        base_manager_class => $class,
+    my $starch = Starch->new(
+        plugins => ['::Trace'],
+        store => { ... },
+        ...,
     );
 
-    return $factory->manager_class->new(
-        %$args,
-        factory => $factory,
-    );
-}
+These plugins are included with the C<Starch> distribution:
 
-=head1 REQUIRED ARGUMENTS
+=over
 
-=head2 store
+=item *
 
-The L<Starch::Store> storage backend to use for persisting the session
-data.  A hashref must be passed and it is expected to contain at least a
-C<class> key and will be converted into a store object automatically.
+L<Starch::Plugin::AlwaysLoad>
 
-The C<class> can be fully qualified, or relative to the C<Starch::Store>
-namespace.  A leading C<::> signifies that the store's package name is relative.
+=item *
 
-More information about stores can be found at L<Starch::Manual/STORES>.
+L<Starch::Plugin::AutoSave>
 
-=cut
+=item *
 
-has _store_arg => (
-    is       => 'ro',
-    isa      => HashRef,
-    required => 1,
-    init_arg => 'store',
-);
+L<Starch::Plugin::CookieArgs>
 
-has store => (
-    is       => 'lazy',
-    isa      => ConsumerOf[ 'Starch::Store' ],
-    init_arg => undef,
-);
-sub _build_store {
-    my ($self) = @_;
+=item *
 
-    my $store = $self->_store_arg();
+L<Starch::Plugin::DisableStore>
 
-    return $self->factory->new_store(
-        %$store,
-        manager => $self,
-    );
-}
+=item *
 
-=head1 OPTIONAL ARGUMENTS
+L<Starch::Plugin::LogStoreExceptions>
 
-=head2 expires
+=item *
 
-How long, in seconds, a session should live after the last time it was
-modified.  Defaults to C<60 * 60 * 2> (2 hours).
+L<Starch::Plugin::LogUnsaved>
 
-See L<Starch::Manual/EXPIRATION> for more information.
+=item *
 
-=cut
+L<Starch::Plugin::RenewExpiration>
 
-has expires => (
-    is       => 'ro',
-    isa      => PositiveOrZeroInt,
-    default => 60 * 60 * 2, # 2 hours
-);
+=item *
 
-=head2 expires_session_key
+L<Starch::Plugin::ThrottleStore>
 
-The session key to store the L<Starch::Session/expires>
-value in.  Defaults to C<__SESSION_EXPIRES__>.
+=item *
 
-=cut
+L<Starch::Plugin::TimeoutStore>
 
-has expires_session_key => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => '__SESSION_EXPIRES__',
-);
+=item *
 
-=head2 modified_session_key
+L<Starch::Plugin::Trace>
 
-The session key to store the L<Starch::Session/modified>
-value in.  Defaults to C<__SESSION_MODIFIED__>.
+=back
 
-=cut
+These plugins are distributed separately on CPAN:
 
-has modified_session_key => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => '__SESSION_MODIFIED__',
-);
+=over
 
-=head2 created_session_key
+=item *
 
-The session key to store the L<Starch::Session/created>
-value in.  Defaults to C<__SESSION_CREATED__>.
+L<Starch::Plugin::Sereal>
 
-=cut
+=back
 
-has created_session_key => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => '__SESSION_CREATED__',
-);
+More third-party plugins can be found on
+L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
 
-=head2 invalid_session_key
+=head1 INTEGRATIONS
 
-This key is used by stores to mark session data as invalid,
-and when set in the session will disable the session from being
-written to the store.
+The following Starch integrations are available:
 
-This is used by the L<Starch::Plugin::LogStoreExceptions> and
-L<Starch::Plugin::ThrottleStore> plugins to avoid losing session
-data in the store when errors or throttling is encountered.
+=over
 
-=cut
+=item *
 
-has invalid_session_key => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => '__SESSION_THROTTLED__',
-);
+L<Catalyst::Plugin::Starch>
 
-=head2 factory
+=back
 
-The underlying L<Starch::Factory> object which manages all the plugins
-and session/store object construction.
+Integrations for L<Plack>, L<Dancer2>, L<Mojolicious>, etc will
+be developed as needed by the people that need them.
 
-=cut
+=head1 EXTENDING
 
-has factory => (
-    is  => 'lazy',
-    isa => InstanceOf[ 'Starch::Factory' ],
-);
-sub _build_factory {
-    my ($self) = @_;
-    return Starch::Factory->new(
-        base_manager_class => ref( $self ),
-    );
-}
+Starch can be extended by L<writing stores|Starch::Store/WRITING>
+and L<writing plugins|Starch::Plugin/WRITING>.
 
-=head1 METHODS
+=head1 INTERNALS
 
-=head2 session
+                                                          +------+
+                                                          v      |
+    +------------------------+       +------------------------+  |
+    |      1. manager        | ----> |       3. store         |--+
+    |   (Starch::Manager)    | < - - |     (Starch::Store)    |
+    +------------------------+       +------------------------+
+                ^    |
+                |    |
+                |    +---------------------------+
+                |                                V
+    +------------------------+       +------------------------+
+    |      4. session        |       |      2. factory        |
+    |   (Starch::Session)    |       |   (Starch::Factory)    |
+    +------------------------+       +------------------------+
 
-    my $new_session = $starch->session();
-    my $existing_session = $starch->session( $id );
+This diagram shows which objects hold references to other objects.  Solid
+lines depict a hard reference while dashed lines depict a weak reference.
+Weak references are used to avoid memory leaks.
 
-Returns a new L<Starch::Session> (or whatever L<Starch::Factory/session_class>
-returns) object for the specified session ID.
+=over
 
-If no ID is specified, or is undef, then an ID will be automatically generated.
+=item 1.
 
-Additional arguments can be passed after the ID argument.  These extra
-arguments will be passed to the session object constructor.
+B<manager> - The manager is the entry point for configuration and retrieving
+session objects.  It holds a strong reference to the factory and the store.
+The manager doesn't have much logic in and of itself, as most of the compile-time
+work is handled by the factory, and the runtime work by the sessions and store.
 
-=cut
+=item 2.
 
-sub session {
-    my $self = shift;
-    my $id = shift;
+B<factory> - The factory handles constructing anonymous classes from base
+classes and roles.
 
-    my $class = $self->factory->session_class();
+=item 3.
 
-    my $extra_args = $class->BUILDARGS( @_ );
+B<store> - The store does all of the backend heavy-lifting.  It holds a
+weak reference to the manager so that it can, primarily, get at the factory
+object and create sub-stores.  The L<Starch::Store::Layered> store depends
+on this functionality to create the inner and outer sub-stores.
 
-    return $class->new(
-        %$extra_args,
-        manager => $self,
-        defined($id) ? (id => $id) : (),
-    );
-}
+=item 4.
 
-1;
-__END__
+B<session> - The session provides the runtime public interface to the store
+and other parts of starch.  It holds a strong reference to the manager.
+
+=back
+
+=head1 ALTERNATIVES
+
+=over
+
+=item *
+
+L<CGI::Session>
+
+=item *
+
+L<Data::Session>
+
+=item *
+
+L<HTTP::Session>
+
+=item *
+
+L<Catalyst::Plugin::Session>
+
+=item *
+
+L<Plack::Middleware::Session>
+
+=item *
+
+L<Dancer::Session>
+
+=item *
+
+L<Mojolicious::Sessions>
+
+=item *
+
+L<MojoX::Session>
+
+=back
+
+=head1 DEPENDENCIES
+
+The C<Starch> distribution is shipped with minimal dependencies
+and with no non-core XS requirements.  This is important for many people.
+
+=head1 SUPPORT
+
+Please submit bugs and feature requests on GitHub issues:
+
+L<https://github.com/bluefeet/Starch/issues>
 
 =head1 AUTHOR
 
@@ -282,4 +521,6 @@ development this distribution would not exist.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=cut
 

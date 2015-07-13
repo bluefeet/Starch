@@ -2,20 +2,20 @@ package Starch::Plugin::AlwaysLoad;
 
 =head1 NAME
 
-Starch::Plugin::AlwaysLoad - Always retrieve session data.
+Starch::Plugin::AlwaysLoad - Always retrieve state data.
 
 =head1 SYNOPSIS
 
-    my $starch = Starch->new_with_plugins(
-        ['::AlwaysLoad'],
+    my $starch = Starch->new(
+        plugins => ['::AlwaysLoad'],
         ...,
     );
 
 =head1 DESCRIPTION
 
-This plugin causes L<Starch::Session/data> to be always loaded
-from the store as soon as the session object is created.  By default
-the session data is only retrieved from the store when it is first
+This plugin causes L<Starch::State/data> to be always loaded
+from the store as soon as the state object is created.  By default
+the state data is only retrieved from the store when it is first
 accessed.
 
 =cut
@@ -25,7 +25,7 @@ use strictures 2;
 use namespace::clean;
 
 with qw(
-    Starch::Plugin::ForSession
+    Starch::Plugin::ForState
 );
 
 sub BUILD {
@@ -42,4 +42,6 @@ __END__
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.
+
+=cut
 

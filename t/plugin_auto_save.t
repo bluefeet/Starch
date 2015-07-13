@@ -10,22 +10,22 @@ subtest 'without auto save' => sub{
         store => { class => '::Memory' },
     );
 
-    my $session = $starch->session();
-    $session->data->{foo} = 54;
-    $session = $starch->session( $session->id() );
-    is( $session->data->{foo}, undef, 'did not auto save' );
+    my $state = $starch->state();
+    $state->data->{foo} = 54;
+    $state = $starch->state( $state->id() );
+    is( $state->data->{foo}, undef, 'did not auto save' );
 };
 
 subtest 'with auto save' => sub{
-    my $starch = Starch->new_with_plugins(
-        ['::AutoSave'],
+    my $starch = Starch->new(
+        plugins => ['::AutoSave'],
         store => { class => '::Memory' },
     );
 
-    my $session = $starch->session();
-    $session->data->{foo} = 76;
-    $session = $starch->session( $session->id() );
-    is( $session->data->{foo}, 76, 'did auto save' );
+    my $state = $starch->state();
+    $state->data->{foo} = 76;
+    $state = $starch->state( $state->id() );
+    is( $state->data->{foo}, 76, 'did auto save' );
 };
 
 done_testing;
