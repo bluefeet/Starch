@@ -468,7 +468,7 @@ and with no non-core XS requirements.  This is important for many people.
 
 =head1 SUPPORT
 
-Please submit bugs and feature requests on GitHub issues:
+Please submit bugs and feature requests to the Starch GitHub issue tracker:
 
 L<https://github.com/bluefeet/Starch/issues>
 
