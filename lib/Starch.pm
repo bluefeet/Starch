@@ -252,12 +252,11 @@ the C<Memory> store and a contrived example of the typical use of a state as the
 backend for an HTTP session.
 
 Starch is meant to be as fast as possible while still being flexible.
-Due to Starch avoiding having many dependencies, and having zero
-non-core XS dependencies, there are still same areas which could be
-slightly faster.  At this time there is one plugin which will provide a
-relatively large performance gain, L<Starch::Plugin::Sereal>.  This
-is relative as using this plugin might, if you're lucky, shave one tenth
-of one millisecond off of every HTTP request that uses Starch.
+Due to Starch avoiding dependencies, and having zero non-core XS dependencies,
+there are still same areas which could be slightly faster.  At this time there
+is one plugin which will provide a small performance gain L<Starch::Plugin::Sereal>.
+Even then, the gain using this plugin will be in the order of a fraction of a
+millisecond per each HTTP request.
 
 Starch has gone through the wringer performance wise and there just are
 not many performance gains to be eked out of Starch.  Instead you'll
