@@ -7,12 +7,10 @@ use Test::Starch;
 use Starch;
 
 Test::Starch->new(
-    args => {
-        store => {
-            class => '::Layered',
-            outer => { class=>'::Memory' },
-            inner => { class=>'::Memory' },
-        },
+    store => {
+        class => '::Layered',
+        outer => { class=>'::Memory' },
+        inner => { class=>'::Memory' },
     },
 )->test_store();
 

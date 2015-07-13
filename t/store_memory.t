@@ -5,9 +5,7 @@ use Test::More;
 use Test::Starch;
 
 Test::Starch->new(
-    args => {
-        store => { class=>'::Memory' },
-    },
+    store => { class=>'::Memory' },
 )->test_store();
 
 done_testing();

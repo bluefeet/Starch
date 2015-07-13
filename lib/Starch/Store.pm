@@ -339,7 +339,7 @@ this is just a no-op.
 These method receive a state ID and a namespace array ref as their
 first two arguments.  The combination of these two values should identify
 a unique storage location in the store.  They can be combined to create a
-single key string using L<Web::Starch::Store/combine_keys>.
+single key string using L<Starch::Store/combine_keys>.
 
 =head2 EXCEPTIONS
 
