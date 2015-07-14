@@ -23,7 +23,7 @@ See L<Starch::Plugin::CookieArgs> for a basic example plugin.  See
 L<Starch/PLUGINS> for more existing plugins.
 
 See the SYNOPSIS in L<Starch::Plugin::Bundle>, L<Starch::Plugin::ForManager>,
-L<Starch::Plugin::ForStore>, and L<Starch::Plugin::ForStore> documentation
+L<Starch::Plugin::ForState>, and L<Starch::Plugin::ForStore> documentation
 for some decent boilerplate for writing new plugins.
 
 Plugins and plugin bundles are applied by L<Starch::Factory>, which itself

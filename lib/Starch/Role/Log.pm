@@ -22,8 +22,8 @@ The category is set to the object's package name, minus any
 C<__WITH__.*> bits that Moo::Role adds when composing a class
 from roles.
 
-Very little logging is produced by the stock L<Starch>.  The
-L<Starch::Plugin::Trace> plugin logs extensively.
+No logging is produced by the stock L<Starch>.  The
+L<Starch::Plugin::Trace> plugin adds extensive logging.
 
 More info about logging can be found at
 L<Starch/LOGGING>.

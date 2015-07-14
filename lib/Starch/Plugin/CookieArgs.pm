@@ -42,7 +42,7 @@ with existing web frameworks.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
 
-These arguments are added to the L<Starch> class.
+These arguments are added to the L<Starch::Manager> class.
 
 A detailed description of what these arguments mean and what
 they can contain is in the L<CGI::Simple::Cookie> documentation.

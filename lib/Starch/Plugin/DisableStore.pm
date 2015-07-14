@@ -35,6 +35,9 @@ with qw(
 
 =head1 OPTIONAL STORE ARGUMENTS
 
+These arguments are added to classes which consume the
+L<Starch::Store> role.
+
 =head2 disable_set
 
 Setting this to true makes the C<set> method silently fail.

@@ -1,7 +1,6 @@
 package # hide from PAUSE
     Starch::Plugin::RenewExpiration::Manager;
 
-use Types::Standard -types;
 use Types::Common::String -types;
 use Types::Common::Numeric -types;
 
@@ -14,9 +13,21 @@ with qw(
 );
 
 has renew_threshold => (
-    is      => 'lazy',
+    is      => 'ro',
     isa     => PositiveOrZeroInt,
     default => 0,
+);
+
+has renew_variance => (
+    is      => 'ro',
+    isa     => PositiveOrZeroNum,
+    default => 0,
+);
+
+has renew_state_key => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '__STARCH_RENEW__',
 );
 
 1;

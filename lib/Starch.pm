@@ -41,7 +41,7 @@ Starch - Implementation independent persistent statefulness.
 
 =head1 DESCRIPTION
 
-Welcome to Starch, a fancy implementation agnostic state persistence
+Welcome to Starch, an implementation agnostic state persistence
 manager.  Starch exposes stateful buckets of arbitrary information
 which are tracked using some implementation specific technology, such
 as HTTP cookies.  While this module's uses extend far beyond simply making

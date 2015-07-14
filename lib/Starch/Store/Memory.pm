@@ -2,11 +2,11 @@ package Starch::Store::Memory;
 
 =head1 NAME
 
-Starch::Store::Memory - In-memory state store.
+Starch::Store::Memory - In-memory Starch store.
 
 =head1 DESCRIPTION
 
-This store provides an in-memory store using a Perl Hash to store the
+This store provides an in-memory store using a hash ref to store the
 data.  This store is mostly here as a proof of concept and for writing
 tests against.
 
@@ -39,11 +39,11 @@ has global => (
     isa => Bool,
 );
 
-=head1 ATTRIBUTES
-
 =head2 memory
 
 This is the hash ref which is used for storing states.
+Defaults to a global hash ref if L</global> is set, or
+a new hash ref if not.
 
 =cut
 
@@ -77,7 +77,7 @@ sub set {
     my ($self, $id, $namespace, $data) = @_;
 
     $self->memory->{
-        $self->combine_keys( $id, $namespace )
+        $self->manager->stringify_key( $id, $namespace )
     } = $data;
 
     return;
@@ -86,14 +86,14 @@ sub set {
 sub get {
     my ($self, $id, $namespace) = @_;
     return $self->memory->{
-        $self->combine_keys( $id, $namespace )
+        $self->manager->stringify_key( $id, $namespace )
     };
 }
 
 sub remove {
     my ($self, $id, $namespace) = @_;
     delete( $self->memory->{
-        $self->combine_keys( $id, $namespace )
+        $self->manager->stringify_key( $id, $namespace )
     } );
     return;
 }

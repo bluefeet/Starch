@@ -2,7 +2,7 @@ package Starch::Store::Layered;
 
 =head1 NAME
 
-Starch::Store::Layered - Layer multiple stores.
+Starch::Store::Layered - Layer multiple Starch stores.
 
 =head1 SYNOPSIS
 
@@ -25,9 +25,14 @@ Starch::Store::Layered - Layer multiple stores.
 =head1 DESCRIPTION
 
 This store provides the ability to declare two stores that act
-in a layered fashion where all writes are applied to both stores
-but all reads are attempted, first, on the L</outer> store, and if that
-fails the read is attempted in the L</inner> store.
+in a layered fashion where all writes (C<set> and C<remove>) are
+applied to both stores but all reads (C<get>) are attempted, first,
+on the L</outer> store, and if that fails the read is attempted in
+the L</inner> store.
+
+When C<get> is called, if the outer store did not have the data,
+but the inner store did, then the data will be automatically
+written to the outer store.
 
 The most common use-case for this store is for placing a cache in
 front of a persistent store.  Typically caches are much faster than

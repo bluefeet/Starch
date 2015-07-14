@@ -16,8 +16,16 @@ sub DEMOLISH {
     return if $self->is_saved();
     return if $self->is_deleted();
 
-    my $thresh = $self->manager->renew_threshold();
+    my $manager = $self->manager();
+
+    my $thresh = $manager->renew_threshold();
     if ($thresh > 0) {
+        my $variance = $self->renew_variance();
+        if ($variance > 0) {
+            my $delta = int($thresh * $variance);
+            $thresh = ($thresh - $delta) + int( rand($delta+1) );
+        }
+
         my $modified = $self->modified();
         return if $modified + $thresh > time();
     }

@@ -52,6 +52,19 @@ write in order to extend the state's expiration in the store.
 
 Defaults to zero which will renew the expiration on every request.
 
+=head2 renew_variance
+
+In order to avoid multiple simultaneous requests from trying to renew
+an expiration at the same time, stampeding the store, you can set this
+attribute to add some randomness to the L</renew_threshold> check.
+
+This must be a ratio between C<0.0> and C<1.0>.  A C<renew_variance>
+of C<0.5> and a C<renew_threshold> of C<60> would cause the expiration
+to be renewed somewhere between C<30> and C<60> seconds after it was
+last modified.
+
+Defaults to C<0.0> which means there will be no variance.
+
 =head1 AUTHORS AND LICENSE
 
 See L<Starch/AUTHOR>, L<Starch/CONTRIBUTORS>, and L<Starch/LICENSE>.

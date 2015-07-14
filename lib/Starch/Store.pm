@@ -56,9 +56,9 @@ around set => sub{
 =head2 manager
 
 The L<Starch::Manager> object which is used by stores to
-create sub-stores (such as the Layered store's outer and inner
-stores).  This is automatically set when the stores are built by
-L<Starch::Factory>.
+access configuration and create sub-stores (such as the Layered
+store's outer and inner stores).  This is automatically set when
+the stores are built by L<Starch::Factory>.
 
 =cut
 
@@ -166,31 +166,6 @@ sub calculate_expires {
     return $expires;
 }
 
-=head2 combine_keys
-
-    my $store_key = $store->combine_keys(
-        $state_id,
-        \@namespace,
-    );
-
-This method is used by stores that store and lookup data by
-a string (all of them at this time).  It combines the state
-ID with the namespace of the key data for the store request
-(usually just C<['state']>).  Plugins may implement other
-namespace keys to segregate different state data into
-separate reads and writes in the store.
-
-=cut
-
-sub combine_keys {
-    my ($self, $id, $namespace) = @_;
-    return join(
-        $self->manager->key_separator(),
-        @$namespace,
-        $id,
-    );
-}
-
 =head2 reap_expired
 
 This triggers the store to find and delete all expired states.
@@ -218,13 +193,10 @@ __END__
 
 =head1 WRITING
 
-Stores provide the data persistence layers for stores so that, from HTTP request
-to request, the data set in the store is available to get.
+The L<Starch::Store::CHI> store is a good example store to use for
+building new store classes.  See L<Starch/STORES> for more existing stores.
 
-See L<Starch::Store::Memory> for a basic example store.  See
-L<Starch/STORES> for more existing stores.
-
-A store must implement the C<set>, C<get>, and C<remove> methods and consume
+A store must implement the L</set>, L</get>, and L</remove> methods and consume
 the L<Starch::Store> role.
 
 Writing new stores is generally a trivial process where the store class does
@@ -233,62 +205,7 @@ such as L<DBI> or L<CHI>.
 
 Stores should be written so that the underlying driver object (the C<$dbh>
 for a DBI store, for example) can be passed as an argument.   This allows
-the user to utilize L<Starch/METHOD PROXIES> to build their
-own driver objects.
-
-Some boilerplate for getting a store going:
-
-    package Starch::Store::FooBar;
-    
-    use Foo::Bar;
-    use Types::Standard -types;
-    
-    use strictures 2;
-    use namespace::clean;
-    use Moo;
-    
-    with qw(
-        Starch::Store
-    );
-    
-    has foobar => (
-        is => 'lazy',
-        isa => InstanceOf[ 'Foo::Bar' ],
-    );
-    sub _build_foobar {
-        return Foo::Bar->new();
-    }
-    
-    sub set {
-        my ($self, $id, $namespace, $data, $expires) = @_;
-        my $key = $self->combine_keys( $id, $namespace );
-        $self->foobar->set( $key, $data, $expires );
-        return;
-    }
-    
-    sub get {
-        my ($self, $id, $namespace) = @_;
-        my $key = $self->combine_keys( $id, $namespace );
-        return $self->foobar->get( $key );
-    }
-    
-    sub remove {
-        my ($self, $id, $namespace) = @_;
-        my $key = $self->combine_keys( $id, $namespace );
-        $self->foobar->remove( $key );
-        return;
-    }
-    
-    1;
-`
-Many stores benefit from building their lazy-loaded driver object early,
-as in:
-
-    sub BUILD {
-        my ($self) = @_;
-        $self->foobar();
-        return;
-    }
+the user to utilize L<Starch/METHOD PROXIES> to build their own driver objects.
 
 A state's expires duration is stored in the state data under the
 L<Starch::Manager/expires_state_key>.  This should B<not> be considered
@@ -298,34 +215,31 @@ change the value of the C<expiration> argument passed to C<set>.
 
 =head2 REQUIRED METHODS
 
+Stores must implement three methods for setting, getting, and removing
+state data.  These methods receive a state ID and a namespace array ref
+as their first two arguments.  The combination of these two values should
+identify a unique location in the store.  They can be combined to create
+a single key string using L<Starch::Manager/stringify_key>.
+
 A more detailed description of the methods that a store must
 implement:
 
-=over
+=head3 set
 
-=item *
-
-B<set> - Sets the data for the key.  The C<$expires> value will always be set and
+Sets the data for the key.  The C<$expires> value will always be set and
 will be either C<0> or a positive integer representing the number of seconds
 in the future that this state data should be expired.  If C<0> then the
 store may expire the data whenever it chooses.
 
-=item *
+=head3 get
 
-B<get> - Returns the data for the given key.  If the data was not found then
+Returns the data for the given key.  If the data was not found then
 C<undef> is returned.
 
-=item *
+=head3 remove
 
-B<remove> - Deletes the data for the key.  If the data does not exist then
+Deletes the data for the key.  If the data does not exist then
 this is just a no-op.
-
-=back
-
-These method receive a state ID and a namespace array ref as their
-first two arguments.  The combination of these two values should identify
-a unique storage location in the store.  They can be combined to create a
-single key string using L<Starch::Store/combine_keys>.
 
 =head2 EXCEPTIONS
 
@@ -336,20 +250,10 @@ they can use the L<Starch::Plugin::LogStoreExceptions> plugin.
 =head2 REAPING EXPIRED STATES
 
 Stores may choose to support an interface for deleting old state data
-suitable for a cronjob.  To do this two methods must be declared:
-
-    sub can_reap_expired { 1 }
-    
-    sub reap_expired {
-        my ($self) = @_;
-        
-        # Do whatever it takes to delete expired state data.
-        ...
-        # and, call $self->log->info() at important moments so that user
-        # can see some progress.
-        
-        return;
-    }
+suitable for a cronjob.  To do this two methods must be declared,
+L</can_reap_expired> and L</reap_expires>.  See
+L<Starch::Store::Amazon::DynamoDB> for an example of a store which
+supports this feature.
 
 The actual implementation of how to reap old state data is a per-store
 and is something that will differ greatly between them.

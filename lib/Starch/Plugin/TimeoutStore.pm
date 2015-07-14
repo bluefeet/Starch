@@ -51,6 +51,9 @@ with qw(
 
 =head1 OPTIONAL STORE ARGUMENTS
 
+These arguments are added to classes which consume the
+L<Starch::Store> role.
+
 =head2 timeout
 
 How many seconds to timeout.  Set to C<0> to disable timeout

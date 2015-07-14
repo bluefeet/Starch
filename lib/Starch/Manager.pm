@@ -16,7 +16,7 @@ state data.
 Typically you will be using the L<Starch> module to create this
 object.
 
-This class support method proxies as described in
+This class supports method proxies as described in
 L<Starch/METHOD PROXIES>.
 
 =cut
@@ -133,7 +133,7 @@ has namespace => (
 
 =head2 key_separator
 
-Used by L<Starch::Store/combine_keys> to combine the state namespace
+Used by L</stringify_key> to combine the state namespace
 and ID.  Defaults to C<:>.
 
 =cut
@@ -247,6 +247,29 @@ sub state {
         %$extra_args,
         manager => $self,
         defined($id) ? (id => $id) : (),
+    );
+}
+
+=head2 stringify_key
+
+    my $store_key = $starch->stringify_key(
+        $state_id,
+        \@namespace,
+    );
+
+This method is used by stores that store and lookup data by
+a string (all of them at this time).  It combines the state
+ID with the L</namespace> of the key data for the store
+request.
+
+=cut
+
+sub stringify_key {
+    my ($self, $id, $namespace) = @_;
+    return join(
+        $self->key_separator(),
+        @$namespace,
+        $id,
     );
 }
 

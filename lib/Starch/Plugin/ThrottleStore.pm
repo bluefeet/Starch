@@ -44,6 +44,9 @@ with qw(
 
 =head1 OPTIONAL STORE ARGUMENTS
 
+These arguments are added to classes which consume the
+L<Starch::Store> role.
+
 =head2 throttle_threshold
 
 How many consecutive errors which will trigger throttling.
@@ -72,6 +75,9 @@ has throttle_duration => (
 );
 
 =head1 STORE ATTRIBUTES
+
+These attributes are added to classes which consume the
+L<Starch::Store> role.
 
 =head2 throttle_error_count
 
@@ -116,13 +122,14 @@ foreach my $method (qw( set get remove )) {
             }
             else {
                 my ($id, $namespace) = @_;
-                my $key = $self->combine_keys( $id, $namespace );
+                my $manager = $self->manager();
+                my $key = $manager->stringify_key( $id, $namespace );
                 $self->log->errorf(
                     'Throttling %s of state key %s on the %s store for the next %d seconds.',
                     $method, $key, $self->short_store_class_name(), ($start + $duration) - time(),
                 );
                 return {
-                    $self->manager->invalid_state_key() => 1,
+                    $manager->invalid_state_key() => 1,
                 } if $method eq 'get';
                 return;
             }

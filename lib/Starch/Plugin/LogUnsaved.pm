@@ -11,7 +11,7 @@ Starch::Plugin::LogUnsaved - Complain when state data is lost.
         ...,
     );
 
-=head2 DESCRIPTION
+=head1 DESCRIPTION
 
 This plugin detects when a state object is being destroyed and is
 dirty (the state data has changed).  If this happens an error log
