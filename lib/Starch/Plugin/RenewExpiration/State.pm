@@ -20,7 +20,7 @@ sub DEMOLISH {
 
     my $thresh = $manager->renew_threshold();
     if ($thresh > 0) {
-        my $variance = $self->renew_variance();
+        my $variance = $manager->renew_variance();
         if ($variance > 0) {
             my $delta = int($thresh * $variance);
             $thresh = ($thresh - $delta) + int( rand($delta+1) );

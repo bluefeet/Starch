@@ -27,18 +27,18 @@ subtest basics => sub{
     my $outer = $layered->outer();
     my $inner = $layered->inner();
 
-    $layered->set( 'foo', [], {bar=>32} );
+    $layered->set( 'foo', [], {bar=>32}, 10 );
     is_deeply( $layered->get('foo', []), {bar=>32}, 'layered get' );
     is_deeply( $outer->get('foo', []), {bar=>32}, 'outer get' );
     is_deeply( $inner->get('foo', []), {bar=>32}, 'inner get' );
 
-    $layered->set( 'foo', [], {bar=>59} );
+    $layered->set( 'foo', [], {bar=>59}, 10 );
     $outer->remove('foo', []);
-    is_deeply( $layered->get('foo', []), {bar=>59}, 'layered get (no outer)' );
     is( $outer->get('foo', []), undef, 'outer get (no outer)' );
+    is_deeply( $layered->get('foo', []), {bar=>59}, 'layered get (no outer)' );
     is_deeply( $inner->get('foo', []), {bar=>59}, 'inner get (no outer)' );
 
-    $layered->set( 'foo', [], {bar=>16} );
+    $layered->set( 'foo', [], {bar=>16}, 10 );
     $inner->remove('foo', []);
     is_deeply( $layered->get('foo', []), {bar=>16}, 'layered get (no inner)' );
     is_deeply( $outer->get('foo', []), {bar=>16}, 'outer get (no inner)' );

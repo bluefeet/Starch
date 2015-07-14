@@ -198,9 +198,7 @@ sub get {
     # there next time.
 
     my $expires = $data->{ $self->manager->expires_state_key() };
-    # The state data is incomplete if it doesn't contain expires data.
-    # Maybe we should log this as an error or warning?
-    return $data if !defined $expires;
+    $expires = $self->manager->expires() if !defined $expires;
 
     # Make sure we take into account max_expires.
     $expires = $self->calculate_expires( $expires );
