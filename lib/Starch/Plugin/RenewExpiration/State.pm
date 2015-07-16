@@ -9,8 +9,11 @@ with qw(
     Starch::Plugin::ForState
 );
 
-sub DEMOLISH {
-    my ($self) = @_;
+around save => sub{
+    my $orig = shift;
+    my $self = shift;
+
+    return $self->$orig( @_ ) if $self->is_dirty();
 
     return if !$self->is_loaded();
     return if $self->is_saved();
@@ -30,9 +33,7 @@ sub DEMOLISH {
         return if $modified + $thresh > time();
     }
 
-    $self->force_save();
-
-    return;
-}
+    return $self->force_save();
+};
 
 1;

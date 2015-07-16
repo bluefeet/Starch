@@ -36,10 +36,10 @@ If your state is used for reading more than writing you may find that your
 states expire in the store when they are still being used since your code
 has not triggered a write of the state data by changing it.
 
-This plugin triggers a write of the state data whether or not it has
-changed.  Typically you'll want to set the L</renew_threshold> argument
-so that this write only happens after the state has gotten a little stale
-rather than on every time it is used.
+This plugin causes L<Starch::State/save> to save even if the state data is
+not dirty (normally it would just silently return).  Typically you'll want
+to set the L</renew_threshold> argument so that this write only happens after
+the state has gotten a little stale rather than on every time it is used.
 
 =head1 OPTIONAL MANAGER ARGUMENTS
 
@@ -47,10 +47,11 @@ These arguments are added to the L<Starch::Manager> class.
 
 =head2 renew_threshold
 
-How long to wait, since the last state write, before forcing a new
-write in order to extend the state's expiration in the store.
+How long to wait, since the last state write, before forcing save
+to write to the store.
 
-Defaults to zero which will renew the expiration on every request.
+Defaults to zero which will renew the expiration every time save is
+called.
 
 =head2 renew_variance
 

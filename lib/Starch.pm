@@ -191,7 +191,7 @@ be replaced with the store's max_expires when writing the data to the store.
 
 Starch has built-in logging facilities via L<Log::Any>.  By default,
 nothing is logged.  Various plugins and stores do use logging, such
-as the C<LogStoreExceptions> and C<LogUnsaved> L</PLUGINS>.
+as the C<LogStoreExceptions> L<plugin|/PLUGINS>.
 
 If you do not set up a log adapter then these log messages will disappear
 into the void.  Read the L<Log::Any> documentation for instructions on
@@ -328,10 +328,6 @@ L<Starch::Plugin::AlwaysLoad>
 
 =item *
 
-L<Starch::Plugin::AutoSave>
-
-=item *
-
 L<Starch::Plugin::CookieArgs>
 
 =item *
@@ -341,10 +337,6 @@ L<Starch::Plugin::DisableStore>
 =item *
 
 L<Starch::Plugin::LogStoreExceptions>
-
-=item *
-
-L<Starch::Plugin::LogUnsaved>
 
 =item *
 

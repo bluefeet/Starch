@@ -17,6 +17,7 @@ subtest disabled => sub{
     sleep 2;
     $state = $starch->state( $state->id() );
     $state->data();
+    $state->save();
 
     $state = $starch->state( $state->id() );
     my $modified_second = $state->modified();
@@ -38,6 +39,7 @@ subtest enabled => sub{
     sleep 2;
     $state = $starch->state( $state->id() );
     $state->data();
+    $state->save();
 
     $state = $starch->state( $state->id() );
     my $modified_second = $state->modified();

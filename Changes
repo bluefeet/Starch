@@ -1,6 +1,9 @@
 Revision history for Perl extension Starch.
 
 {{$NEXT}}
+ - Remove all uses of DEMOLISH, they were causing race conditions in
+   some cases during global destruction.  Good by LogUnsaved and AutoSave
+   plugins.  :(
  - Fix Type::Tiny union constraints sometimes failing on Perl < 5.14.
 
 0.01 2015-07-16
