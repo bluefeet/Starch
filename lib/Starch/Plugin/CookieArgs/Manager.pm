@@ -21,12 +21,12 @@ has cookie_name => (
 
 has cookie_domain => (
     is => 'ro',
-    isa => NonEmptySimpleStr | Undef,
+    isa => (NonEmptySimpleStr) | Undef,
 );
 
 has cookie_path => (
     is  => 'ro',
-    isa => NonEmptySimpleStr | Undef,
+    isa => (NonEmptySimpleStr) | Undef,
 );
 
 has cookie_secure => (

@@ -81,7 +81,7 @@ if the state's expires is larger.
 
 has max_expires => (
     is  => 'ro',
-    isa => PositiveOrZeroInt | Undef,
+    isa => (PositiveOrZeroInt) | Undef,
 );
 
 =head1 ATTRIBUTES
