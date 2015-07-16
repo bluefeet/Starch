@@ -1,6 +1,8 @@
 Revision history for Perl extension Starch.
 
 {{$NEXT}}
+
+0.02 2015-07-16
  - Remove all uses of DEMOLISH, they were causing race conditions in
    some cases during global destruction.  Good by LogUnsaved and AutoSave
    plugins.  :(
