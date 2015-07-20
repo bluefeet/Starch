@@ -38,8 +38,8 @@ use 5.010_000;
 
 use Time::HiRes qw();
 use Try::Tiny;
-use Carp qw( croak );
 use Types::Common::Numeric -types;
+use Starch::Util qw( croak );
 
 use Moo::Role;
 use strictures 2;
@@ -89,8 +89,8 @@ foreach my $method (qw( set get remove )) {
         }
         catch {
             croak sprintf(
-                'Starch store %s method %s exceeded the timeout of %s seconds',
-                ref($self), $method, $timeout,
+                'The %s method %s exceeded the timeout of %s seconds',
+                $self->short_class_name(), $method, $timeout,
             ) if $_ =~ m{STARCH TIMEOUT ALARM TRIGGERED};
             die $_;
         };

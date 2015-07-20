@@ -17,9 +17,8 @@ Normally there is no need to interact with this class directly.
 use Moo::Role qw();
 use Types::Standard -types;
 use Types::Common::String -types;
-use Carp qw( croak );
 use Moo::Object qw();
-use Starch::Util qw( load_prefixed_module );
+use Starch::Util qw( load_prefixed_module croak );
 use Module::Runtime qw( require_module );
 
 use Starch::Manager;

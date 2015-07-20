@@ -176,6 +176,11 @@ configuring an adapter to capture the log output.
 The L<Starch::Plugin::Trace> plugin adds a bunch of additional
 logging output useful for development.
 
+=head1 EXCEPTIONS
+
+Exceptions for known issues are thrown using L<Croak>'s C<croak> function
+which will report the error at the line of the calling, non Starch, code.
+
 =head1 METHOD PROXIES
 
 The Starch manager (L<Starch::Manager>) and stores support method proxies

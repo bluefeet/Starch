@@ -23,7 +23,7 @@ described in L<Starch/METHOD PROXIES>.
 use Types::Standard -types;
 use Types::Common::Numeric -types;
 use Types::Common::String -types;
-use Carp qw( croak );
+use Starch::Util qw( croak );
 
 use Moo::Role;
 use strictures 2;
@@ -184,7 +184,7 @@ sub reap_expired {
 
     croak sprintf(
         '%s does not support expired state reaping',
-        $self->base_class_name(),
+        $self->short_class_name(),
     );
 }
 

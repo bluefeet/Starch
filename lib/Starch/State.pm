@@ -22,7 +22,7 @@ use Scalar::Util qw( refaddr );
 use Types::Standard -types;
 use Types::Common::String -types;
 use Digest::SHA qw( sha1_hex );
-use Carp qw( croak );
+use Starch::Util qw( croak );
 
 use Moo;
 use strictures 2;

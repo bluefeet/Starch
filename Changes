@@ -2,7 +2,11 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Better Carp handling by setting Starch modules as Internal so that
+   the caller information ends up in the user's code.
+
 0.02 2015-07-16
+
  - Remove all uses of DEMOLISH, they were causing race conditions in
    some cases during global destruction.  Good by LogUnsaved and AutoSave
    plugins.  :(
