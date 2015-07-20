@@ -10,13 +10,13 @@ This role defines an interfaces for Starch store classes.  Starch store
 classes are meant to be thin wrappers around the store implementations
 (such as DBI, CHI, etc).
 
-See L<Starch/STORES> for instructions on using stores and a list of
+See L<Starch::Manual/STORES> for instructions on using stores and a list of
 available Starch stores.
 
-See L</WRITING> for instructions on writing your own stores.
+See L<Starch::Extending/STORES> for instructions on writing your own stores.
 
 This role adds support for method proxies to consuming classes as
-described in L<Starch/METHOD PROXIES>.
+described in L<Starch::Manual/METHOD PROXIES>.
 
 =cut
 
@@ -190,78 +190,6 @@ sub reap_expired {
 
 1;
 __END__
-
-=head1 WRITING
-
-The L<Starch::Store::CHI> store is a good example store to use for
-building new store classes.  See L<Starch/STORES> for more existing stores.
-
-A store must implement the L</set>, L</get>, and L</remove> methods and consume
-the L<Starch::Store> role.
-
-Writing new stores is generally a trivial process where the store class does
-nothing more than glue those three methods with some underlying implementation
-such as L<DBI> or L<CHI>.
-
-Stores should be written so that the underlying driver object (the C<$dbh>
-for a DBI store, for example) can be passed as an argument.   This allows
-the user to utilize L<Starch/METHOD PROXIES> to build their own driver objects.
-
-A state's expires duration is stored in the state data under the
-L<Starch::Manager/expires_state_key>.  This should B<not> be considered
-as anything meaningful to the store, since stores can have their
-L<Starch::Store/max_expires> argument set which will automatically
-change the value of the C<expiration> argument passed to C<set>.
-
-=head2 REQUIRED METHODS
-
-Stores must implement three methods for setting, getting, and removing
-state data.  These methods receive a state ID and a namespace array ref
-as their first two arguments.  The combination of these two values should
-identify a unique location in the store.  They can be combined to create
-a single key string using L<Starch::Manager/stringify_key>.
-
-A more detailed description of the methods that a store must
-implement:
-
-=head3 set
-
-Sets the data for the key.  The C<$expires> value will always be set and
-will be either C<0> or a positive integer representing the number of seconds
-in the future that this state data should be expired.  If C<0> then the
-store may expire the data whenever it chooses.
-
-=head3 get
-
-Returns the data for the given key.  If the data was not found then
-C<undef> is returned.
-
-=head3 remove
-
-Deletes the data for the key.  If the data does not exist then
-this is just a no-op.
-
-=head2 EXCEPTIONS
-
-Stores should detect issues and throw exceptions loudly.  If the user
-would like to automatically turn store exceptions into log messages
-they can use the L<Starch::Plugin::LogStoreExceptions> plugin.
-
-=head2 REAPING EXPIRED STATES
-
-Stores may choose to support an interface for deleting old state data
-suitable for a cronjob.  To do this two methods must be declared,
-L</can_reap_expired> and L</reap_expires>.  See
-L<Starch::Store::Amazon::DynamoDB> for an example of a store which
-supports this feature.
-
-The actual implementation of how to reap old state data is a per-store
-and is something that will differ greatly between them.
-
-Consider adding extra arguments to your store class to control how state
-reaping functions.  For example, a DBI store may allow the user to reap
-the states in batches, and a DynamoDB store may allow the user to specify
-a secondary global index to do the scan on.
 
 =head1 AUTHORS AND LICENSE
 

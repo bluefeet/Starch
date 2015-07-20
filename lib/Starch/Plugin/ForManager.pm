@@ -24,7 +24,7 @@ This role provides no additional functionality to
 manager plugins.  All it does is labels a plugin as a manager
 plugin so that Starch knows which class type it applies to.
 
-See L<Starch::Plugin/WRITING> for more information.
+See L<Starch::Extending/PLUGINS> for more information.
 
 =cut
 

@@ -27,7 +27,7 @@ bundles.  To create a plugin bundle just make a new class that consumes
 this role and defines the C<bundled_plugins> method.  This method
 should return an array ref of plugin names (absolute or relative).
 
-See L<Starch::Plugin/WRITING> for more information.
+See L<Starch::Extending/PLUGINS> for more information.
 
 =cut
 

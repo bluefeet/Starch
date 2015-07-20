@@ -6,6 +6,7 @@ Revision history for Perl extension Starch.
    the caller information ends up in the user's code.
  - Move state ID validation up to the Manager so it is easier for
    integration libraries to validate the ID.
+ - Lots of documentation re-jiggery (still not 100% satisfied).
 
 0.02 2015-07-16
 
