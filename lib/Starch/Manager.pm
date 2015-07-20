@@ -85,6 +85,21 @@ sub _build_store {
     );
 }
 
+=head2 factory
+
+The underlying L<Starch::Factory> object which manages all the plugins
+and state/store object construction.
+
+This argument is automatically set when calling C<new> on L<Starch>.
+
+=cut
+
+has factory => (
+    is       => 'ro',
+    isa      => InstanceOf[ 'Starch::Factory' ],
+    required => 1,
+);
+
 =head1 OPTIONAL ARGUMENTS
 
 =head2 expires
@@ -200,23 +215,6 @@ has invalid_state_key => (
     is      => 'ro',
     isa     => NonEmptySimpleStr,
     default => '__STARCH_INVALID__',
-);
-
-=head1 REQUIRED ARGUMENTS
-
-=head2 factory
-
-The underlying L<Starch::Factory> object which manages all the plugins
-and state/store object construction.
-
-This argument is automatically set when calling C<new> on L<Starch>.
-
-=cut
-
-has factory => (
-    is       => 'ro',
-    isa      => InstanceOf[ 'Starch::Factory' ],
-    required => 1,
 );
 
 =head1 ATTRIBUTES

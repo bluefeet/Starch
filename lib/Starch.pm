@@ -88,7 +88,7 @@ hyper-linked, and containing thorough examples and tests.
 =back
 
 There are many L</ALTERNATIVES> to Starch to choose from, all of which
-Starch was inspired from and hopes to be a superior choice to.
+Starch was inspired from and may be a superior choice to.
 
 =head1 BASIC USAGE
 
@@ -295,7 +295,10 @@ L<Starch::Store::Amazon::DynamoDB>
 
 =item *
 
-L<Starch::Store::CHI>
+L<Starch::Store::CHI> - This store is a meta-store which provides
+access to many other stores such as L<CHI::Driver::Redis>,
+L<CHI::Driver::BerkleyDB>, L<CHI::Driver::File>, L<CHI::Driver::FastMmap>,
+L<CHI::Driver::Memcached>, and L<CHI::Driver::CacheCache>.
 
 =item *
 
