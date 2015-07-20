@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+0.03 2015-07-20
+
  - Better Carp handling by setting Starch modules as Internal so that
    the caller information ends up in the user's code.
  - Move state ID validation up to the Manager so it is easier for
