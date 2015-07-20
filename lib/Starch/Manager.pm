@@ -22,6 +22,7 @@ L<Starch/METHOD PROXIES>.
 =cut
 
 use Starch::State;
+use Starch::Util qw( croak );
 use Storable qw( freeze dclone );
 
 use Types::Standard -types;
@@ -218,6 +219,17 @@ has factory => (
     required => 1,
 );
 
+=head1 ATTRIBUTES
+
+=head2 state_id_type
+
+The L<Type::Tiny> object to validate the state ID when L</state>
+is called.  Defaults to L<NonEmptySimpleStr>.
+
+=cut
+
+sub state_id_type { NonEmptySimpleStr }
+
 =head1 METHODS
 
 =head2 state
@@ -238,6 +250,9 @@ arguments will be passed to the state object constructor.
 sub state {
     my $self = shift;
     my $id = shift;
+
+    croak 'Invalid Starch State ID: ' . $self->state_id_type->get_message( $id )
+        if defined($id) and !$self->state_id_type->check( $id );
 
     my $class = $self->factory->state_class();
 

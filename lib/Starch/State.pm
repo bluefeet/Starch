@@ -59,7 +59,6 @@ the state will be considered new.
 
 has _existing_id => (
     is        => 'ro',
-    isa       => NonEmptySimpleStr,
     init_arg  => 'id',
     predicate => 1,
     clearer   => '_clear_existing_id',
