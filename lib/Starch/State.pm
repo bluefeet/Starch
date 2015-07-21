@@ -98,9 +98,11 @@ sub _build_original_data {
 
     my $manager = $self->manager();
     my $data = $manager->store->get( $self->id(), [$manager->namespace()] );
-    $data = {} if !$data;
 
-    return $data;
+    return $data if $data;
+
+    $self->_set_in_store( 0 );
+    return {};
 }
 
 =head2 data
