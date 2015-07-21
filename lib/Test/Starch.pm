@@ -450,7 +450,8 @@ sub test_store {
         };
 
         subtest class_name => sub{
-            my $starch = $self->new_manager( store=>{class=>'::Memory'}, plugins=>['::TimeoutStore'] );
+            # Add a random plugin so the real class name has the __WITH__ bit.
+            my $starch = $self->new_manager( store=>{class=>'::Memory'}, plugins=>['::LogStoreExceptions'] );
             is( $starch->store->base_class_name(), 'Starch::Store::Memory', 'base_class_name' );
             is( $starch->store->short_class_name(), 'Store::Memory', 'short_class_name' );
             is( $starch->store->short_store_class_name(), 'Memory', 'short_store_class_name' );
