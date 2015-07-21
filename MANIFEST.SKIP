@@ -3,3 +3,4 @@ MANIFEST.SKIP
 author
 nytprof.out
 nytprof
+cover_db
