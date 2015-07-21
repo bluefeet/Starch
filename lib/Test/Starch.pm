@@ -470,6 +470,16 @@ sub test_store {
             is( $store->calculate_expires( 5 ), 5, 'expires less than max_expires' );
             is( $store->calculate_expires( 15 ), 10, 'expires more than max_expires' );
         };
+
+        subtest reap_expired => sub{
+            my $store = $store->new_sub_store( class=>'::Memory' );
+            ok( (!$store->can_reap_expired()), 'expiration reaping is disabled' );
+            like(
+                exception { $store->reap_expired() },
+                qr{does not support expired state reaping},
+                'reap_expired failed',
+            );
+        };
     };
 
     return;
