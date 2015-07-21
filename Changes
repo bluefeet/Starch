@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+0.04 2015-07-21
+
  - Update state's in_store if the store did not find any data.  This
    should provide some minor performance improvements and correct
    behavior.
