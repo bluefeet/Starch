@@ -5,17 +5,6 @@
 
 Starch::Manual - Implementation independent persistent statefulness.
 
-=head1 SYNOPSIS
-
-    my $starch = Starch->new(
-        expires => 60 * 15, # 15 minutes
-        store => {
-            class   => '::Memory',
-        },
-    );
-    my $new_state = $starch->state();
-    my $existing_state = $starch->sate( $id );
-
 =head1 DESCRIPTION
 
 Welcome to Starch, an implementation agnostic state persistence
@@ -368,55 +357,6 @@ be developed as needed by the people that need them.
 
 Starch can be extended by plugins and stores.  See L<Starch::Extending>
 for instructions on writing your own.
-
-=head1 INTERNALS
-
-                                                          +------+
-                                                          v      |
-    +------------------------+       +------------------------+  |
-    |      1. manager        | ----> |       3. store         |--+
-    |   (Starch::Manager)    | < - - |     (Starch::Store)    |
-    +------------------------+       +------------------------+
-                ^    |
-                |    |
-                |    +---------------------------+
-                |                                V
-    +------------------------+       +------------------------+
-    |      4. session        |       |      2. factory        |
-    |   (Starch::Session)    |       |   (Starch::Factory)    |
-    +------------------------+       +------------------------+
-
-This diagram shows which objects hold references to other objects.  Solid
-lines depict a hard reference while dashed lines depict a weak reference.
-Weak references are used to avoid memory leaks.
-
-=over
-
-=item 1.
-
-B<manager> - The manager is the entry point for configuration and retrieving
-session objects.  It holds a strong reference to the factory and the store.
-The manager doesn't have much logic in and of itself, as most of the compile-time
-work is handled by the factory, and the runtime work by the sessions and store.
-
-=item 2.
-
-B<factory> - The factory handles constructing anonymous classes from base
-classes and roles.
-
-=item 3.
-
-B<store> - The store does all of the backend heavy-lifting.  It holds a
-weak reference to the manager so that it can, primarily, get at the factory
-object and create sub-stores.  The L<Starch::Store::Layered> store depends
-on this functionality to create the inner and outer sub-stores.
-
-=item 4.
-
-B<session> - The session provides the runtime public interface to the store
-and other parts of starch.  It holds a strong reference to the manager.
-
-=back
 
 =head1 ALTERNATIVES
 

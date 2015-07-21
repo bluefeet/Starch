@@ -1,15 +1,11 @@
-package Starch::Cookbook;
 
-1;
-__END__
+=pod
 
 =head1 NAME
 
 Starch::Cookbook - Starch recipes for common situations.
 
-=head1 TOPICS
-
-=head2 Caching Stores
+=head1 CACHING STORES
 
 Often time states are stored in persistent stores which provide a high
 level of data reliability, but as a trade off do not perform as well
@@ -47,7 +43,7 @@ data is found in the DBI store then it will be written to Memcached
 before being returned.  Starch will handle all aspects of the caching
 automatically in a sensible and reliable manner.
 
-=head2 Migrating Stores
+=head1 MIGRATING STORES
 
 The L<Starch::Store::Layered> store provides a reliable
 mechanism for migrating stores.  Let's say you were using
@@ -124,7 +120,7 @@ and DBI.
 
 =item *
 
-Any sets issues against the store will only be applied to the DynamoDB
+Any sets issued against the store will only be applied to the DynamoDB
 store.
 
 =back
