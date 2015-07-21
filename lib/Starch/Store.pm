@@ -43,8 +43,8 @@ requires qw(
 around set => sub{
     my ($orig, $self, $id, $keys, $data, $expires) = @_;
 
-    # Short-circuit set operations if the data is invalid.
-    return if $data->{ $self->manager->invalid_state_key() };
+    # Short-circuit set operations if the data should not be stoed.
+    return if $data->{ $self->manager->no_store_state_key() };
 
     $expires = $self->calculate_expires( $expires );
 

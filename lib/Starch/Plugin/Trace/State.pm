@@ -78,18 +78,4 @@ around force_delete => sub{
     return $self->$orig( @_ );
 };
 
-around generate_id => sub{
-    my $orig = shift;
-    my $self = shift;
-
-    my $id = $self->$orig( @_ );
-
-    $self->log->tracef(
-        'starch.state.generate_id.%s',
-        $id,
-    );
-
-    return $id;
-};
-
 1;

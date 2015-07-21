@@ -24,6 +24,8 @@ L<Starch::Manual/METHOD PROXIES>.
 use Starch::State;
 use Starch::Util qw( croak );
 use Storable qw( freeze dclone );
+use Scalar::Util qw( refaddr );
+use Digest::SHA qw( sha1_hex );
 
 use Types::Standard -types;
 use Types::Common::String -types;
@@ -199,22 +201,21 @@ has created_state_key => (
     default => '__STARCH_CREATED__',
 );
 
-=head2 invalid_state_key
+=head2 no_store_state_key
 
-This key is used by stores to mark state data as invalid,
-and when set in the state will disable the state from being
-written to the store.  Defaults to C<__STARCH_INVALID__>.
+This key is used by stores to mark state data as not to be
+stored.  Defaults to C<__STARCH_NO_STORE__>.
 
 This is used by the L<Starch::Plugin::LogStoreExceptions> and
 L<Starch::Plugin::ThrottleStore> plugins to avoid losing state
-datain the store when errors or throttling is encountered.
+data in the store when errors or throttling is encountered.
 
 =cut
 
-has invalid_state_key => (
+has no_store_state_key => (
     is      => 'ro',
     isa     => NonEmptySimpleStr,
-    default => '__STARCH_INVALID__',
+    default => '__STARCH_NO_STORE__',
 );
 
 =head1 ATTRIBUTES
@@ -284,6 +285,30 @@ sub stringify_key {
         @$namespace,
         $id,
     );
+}
+
+=head2 state_id_seed
+
+Returns a fairly unique string used for seeding L<Starch::State/id>.
+
+=cut
+
+my $counter = 0;
+sub state_id_seed {
+    my ($self) = @_;
+    return join( '', ++$counter, time, rand, $$, {}, refaddr($self) )
+}
+
+=head2 generate_state_id
+
+Generates and returns a new state ID which is a SHA-1 hex
+digest of calling L</state_id_seed>.
+
+=cut
+
+sub generate_state_id {
+    my ($self) = @_;
+    return sha1_hex( $self->state_id_seed() );
 }
 
 =head2 clone_data

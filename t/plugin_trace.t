@@ -50,9 +50,9 @@ subtest 'create state' => sub{
         'starch.state.new.$state_id',
     );
     $log->category_contains_ok(
-        $state_class,
-        qr{^starch\.state\.generate_id\.$state_id$},
-        'starch.state.generate_id.$state_id',
+        $manager_class,
+        qr{^starch\.manager\.generate_state_id\.$state_id$},
+        'starch.manager.generate_state_id.$state_id',
     );
     $log->category_contains_ok(
         $manager_class,

@@ -118,6 +118,18 @@ sub test_manager {
     my $starch = $self->new_manager();
 
     subtest 'core tests for ' . ref($starch) => sub{
+        subtest state_id_seed => sub{
+            isnt( $starch->state_id_seed(), $starch->state_id_seed(), 'two seeds are not the same' );
+        };
+
+        subtest generate_state_id => sub{
+            isnt(
+                $starch->generate_state_id(),
+                $starch->generate_state_id(),
+                'two generated ids are not the same',
+            );
+        };
+
         subtest clone_data => sub{
             my $old_data = { foo=>32, bar=>[1,2,3] };
             my $new_data = $starch->clone_data( $old_data );
@@ -326,21 +338,6 @@ sub test_state {
             $state->save();
             $state = $starch->state( $state->id() );
             is( $state->expires(), 111, 'custom expires was saved' );
-        };
-
-        subtest hash_seed => sub{
-            my $state = $starch->state();
-            isnt( $state->hash_seed(), $state->hash_seed(), 'two hash seeds are not the same' );
-        };
-
-        subtest generate_id => sub{
-            my $state = $starch->state();
-
-            isnt(
-                $state->generate_id(),
-                $state->generate_id(),
-                'two generated ids are not the same',
-            );
         };
 
         subtest reset_id => sub{

@@ -57,6 +57,11 @@ format of C<starch.manager.state.$action.$state_id>, where
 C<$action> is either C<retrieve> or C<create> depending
 on if the state ID was provided.
 
+=head2 generate_state_id
+
+Every call to L<Starch::Manager/generate_state_id>
+is logged in the format of C<starch.manager.generate_state_id.$state_id>.
+
 =head1 STATE LOGGING
 
 These messages are logged from the L<Starch::State> object.
@@ -93,11 +98,6 @@ is logged in the format of C<starch.state.rollback.$state_id>.
 Every call to L<Starch::State/force_delete> (which C<delete> calls
 if the state is in the store) is logged in the format of
 C<starch.state.delete.$state_id>.
-
-=head2 generate_id
-
-Every call to L<Starch::State/generate_id>
-is logged in the format of C<starch.state.generate_id.$state_id>.
 
 =head1 STORE LOGGING
 

@@ -2,7 +2,15 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
- - Update state's in_store if the store did not find any data.
+ - Update state's in_store if the store did not find any data.  This
+   should provide some minor performance improvements and correct
+   behavior.
+ - Moved the hash_seed and generate_id methods into the manager.
+ - Renamed invalid key to no_store key, which means its named
+   after what it causes rather than what it is used for (an anti-
+   pattern of sorts, but this key will be used for more general
+   purpose stuff).
+ - Added a mark_dirty method to state.
 
 0.03 2015-07-20
 

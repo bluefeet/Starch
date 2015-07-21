@@ -129,7 +129,7 @@ foreach my $method (qw( set get remove )) {
                     $method, $key, $self->short_store_class_name(), ($start + $duration) - time(),
                 );
                 return {
-                    $manager->invalid_state_key() => 1,
+                    $manager->no_store_state_key() => 1,
                 } if $method eq 'get';
                 return;
             }

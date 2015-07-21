@@ -31,4 +31,18 @@ around state => sub{
     return $state;
 };
 
+around generate_state_id => sub{
+    my $orig = shift;
+    my $self = shift;
+
+    my $id = $self->$orig( @_ );
+
+    $self->log->tracef(
+        'starch.manager.generate_state_id.%s',
+        $id,
+    );
+
+    return $id;
+};
+
 1;

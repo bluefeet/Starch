@@ -50,7 +50,7 @@ foreach my $method (qw( set get remove )) {
                 ref($self), $method, $_,
             );
             return {
-                $self->manager->invalid_state_key() => 1,
+                $self->manager->no_store_state_key() => 1,
             } if $method eq 'get';
             return;
         };

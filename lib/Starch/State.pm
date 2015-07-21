@@ -18,10 +18,8 @@ This is the state class used by L<Starch::Manager/state>.
 
 =cut
 
-use Scalar::Util qw( refaddr );
 use Types::Standard -types;
 use Types::Common::String -types;
-use Digest::SHA qw( sha1_hex );
 use Starch::Util qw( croak );
 
 use Moo;
@@ -72,7 +70,7 @@ has id => (
 sub _build_id {
     my ($self) = @_;
     return $self->_existing_id() if $self->_has_existing_id();
-    return $self->generate_id();
+    return $self->manager->generate_state_id();
 }
 
 =head1 ATTRIBUTES
@@ -199,6 +197,10 @@ sub _build_created {
 Returns true if the state is expected to exist in the store
 (AKA, if the L</id> argument was specified or L</save> was called).
 
+Note that the value of this attribute may change after L</data>
+is called which will set this to false if the store did not have
+the data for the state.
+
 =cut
 
 has in_store => (
@@ -256,7 +258,7 @@ are called.
 
 =head2 is_saved
 
-Returns true if the state was saved and is not dirty.
+Returns true if the state was saved, is L</in_store>, and is not L</is_dirty>.
 
 =cut
 
@@ -269,6 +271,7 @@ has _save_was_called => (
 sub is_saved {
     my ($self) = @_;
     return 0 if !$self->_save_was_called();
+    return 0 if !$self->in_store();
     return 0 if $self->is_dirty();
     return 1;
 }
@@ -352,8 +355,6 @@ Just like L</reload>, but reloads even if the state L</is_dirty>.
 sub force_reload {
     my ($self) = @_;
 
-    return if $self->is_deleted();
-
     $self->_clear_original_data();
     $self->_clear_data();
 
@@ -363,18 +364,37 @@ sub force_reload {
 =head2 mark_clean
 
 Marks the state as not L</is_dirty> by setting L</original_data> to
-L</data>.
+L</data>.  This is a potentially destructive method to call as data
+may be lost since L</save> will silently not save the data if it
+appears clean.
 
 =cut
 
 sub mark_clean {
     my ($self) = @_;
 
-    return if $self->is_deleted();
-
     $self->_set_original_data(
         $self->manager->clone_data( $self->data() ),
     );
+
+    return;
+}
+
+=head2 mark_dirty
+
+Increments the L<Starch::Manager/dirty_state_key> value in
+L</data>, which causes the state to be considered dirty.
+
+=cut
+
+sub mark_dirty {
+    my ($self) = @_;
+
+    my $key = $self->manager->dirty_state_key();
+
+    my $counter = $self->data->{ $key };
+    $counter = ($counter || 0) + 1;
+    $self->data->{ $key } = $counter;
 
     return;
 }
@@ -387,8 +407,6 @@ Sets L</data> to L</original_data>.
 
 sub rollback {
     my ($self) = @_;
-
-    return if $self->is_deleted();
 
     $self->_set_data(
         $self->manager->clone_data( $self->original_data() ),
@@ -464,28 +482,19 @@ sub set_expires {
     return;
 }
 
-=head2 hash_seed
+=head2 reset_expires
 
-Returns a fairly unique string used for seeding L</id>.
-
-=cut
-
-my $counter = 0;
-sub hash_seed {
-    my ($self) = @_;
-    return join( '', ++$counter, time, rand, $$, {}, refaddr($self) )
-}
-
-=head2 generate_id
-
-Generates and returns a new state ID which is a SHA-1 hex
-digest of calling L</hash_seed>.
+Sets this state's expires to L<Starch::Manager/expires>, overriding
+and custom expires set on this state.
 
 =cut
 
-sub generate_id {
+sub reset_expires {
     my ($self) = @_;
-    return sha1_hex( $self->hash_seed() );
+
+    $self->set_expires( $self->manager->expires() );
+
+    return;
 }
 
 =head2 reset_id
