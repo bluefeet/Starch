@@ -43,6 +43,8 @@ subtest basics => sub{
     is_deeply( $layered->get('foo', []), {bar=>16}, 'layered get (no inner)' );
     is_deeply( $outer->get('foo', []), {bar=>16}, 'outer get (no inner)' );
     is( $inner->get('foo', []), undef, 'inner get (no inner)' );
+
+    ok( (!$layered->can_reap_expired()), 'cannot reap expired' );
 };
 
 subtest max_expires => sub{
