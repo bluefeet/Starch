@@ -118,6 +118,15 @@ sub test_manager {
     my $starch = $self->new_manager();
 
     subtest 'core tests for ' . ref($starch) => sub{
+        subtest stringify_key => sub{
+            is( $starch->stringify_key( '1234', ['foo'] ), 'foo:1234', 'basic' );
+            is( $starch->stringify_key( '1234', ['foo', 'bar'] ), 'foo:bar:1234', 'deep' );
+            is( $starch->stringify_key( '1234', [] ), '1234', 'empty' );
+
+            my $starch = $self->new_manager( key_separator=>'-' );
+            is( $starch->stringify_key( '1234', ['foo', 'bar'] ), 'foo-bar-1234', 'custom key_separator' );
+        };
+
         subtest state_id_seed => sub{
             isnt( $starch->state_id_seed(), $starch->state_id_seed(), 'two seeds are not the same' );
         };
@@ -138,8 +147,15 @@ sub test_manager {
 
             isnt( "$old_data->{bar}", "$new_data->{bar}", 'clone data structure has different reference' );
         };
-    };
 
+        subtest is_data_diff => sub{
+            my $old_data = { foo=>1 };
+            my $new_data = { foo=>2 };
+
+            ok( $starch->is_data_diff($old_data, $new_data), 'is diff' );
+            ok( (!$starch->is_data_diff($old_data, $old_data)), 'is not diff' );
+        };
+    };
 
     return;
 }
@@ -159,11 +175,12 @@ sub test_state {
         subtest id => sub{
             my $state1 = $starch->state();
             my $state2 = $starch->state();
-            my $state3 = $starch->state( '1234' );
+            my $id = $starch->generate_state_id();
+            my $state3 = $starch->state( $id );
 
-            like( $state1->id(), qr{^\S+$}, 'ID looks good' );
+            ok( $starch->state_id_type->check($id), 'ID looks good' );
             isnt( $state1->id(), $state2->id(), 'two generated state IDs are not the same' );
-            is( $state3->id(), '1234', 'custom ID was used' );
+            is( $state3->id(), $id, 'custom ID was used' );
         };
 
         subtest expires => sub{
@@ -196,8 +213,14 @@ sub test_state {
             my $state1 = $starch->state();
             my $state2 = $starch->state( $state1->id() );
 
-            is( $state1->in_store(), 0, 'new state is_new' );
-            is( $state2->in_store(), 1, 'existing state is not is_new' );
+            is( $state1->in_store(), 0, 'new state is not in_store' );
+            is( $state2->in_store(), 1, 'existing state is in_store' );
+
+            my $id = $starch->generate_state_id();
+            my $state3 = $starch->state( $id );
+            is( $state3->in_store(), 1, 'existing state is in_store' );
+            $state3->data();
+            is( $state3->in_store(), 0, 'state is no longer in_store when data was not found' );
         };
 
         subtest is_deleted => sub{
@@ -296,6 +319,13 @@ sub test_state {
             is( $state->data->{foo}, 6934, 'data is intact' );
         };
 
+        subtest mark_dirty => sub{
+            my $state = $starch->state();
+            is( $state->is_dirty(), 0, 'is not dirty' );
+            $state->mark_dirty();
+            is( $state->is_dirty(), 1, 'is dirty' );
+        };
+
         subtest rollback => sub{
             my $state = $starch->state();
             $state->data->{foo} = 6934;
@@ -338,6 +368,20 @@ sub test_state {
             $state->save();
             $state = $starch->state( $state->id() );
             is( $state->expires(), 111, 'custom expires was saved' );
+        };
+
+        subtest reset_expires => sub{
+            my $starch = $self->new_manager( expires=>111 );
+            my $state = $starch->state();
+            is( $state->expires(), 111, 'state got default expires' );
+            $state->set_expires( 666 );
+            $state->force_save();
+            $state = $starch->state( $state->id() );
+            is( $state->expires(), 666, 'expires persisted' );
+            $state->reset_expires();
+            $state->force_save();
+            $state = $starch->state( $state->id() );
+            is( $state->expires(), 111, 'state expires was reset' );
         };
 
         subtest reset_id => sub{
@@ -403,6 +447,27 @@ sub test_store {
                 expires => 89,
             );
             is( $starch->store->max_expires(), 67, 'store max_expires explicitly set' );
+        };
+
+        subtest class_name => sub{
+            my $starch = $self->new_manager( store=>{class=>'::Memory'}, plugins=>['::TimeoutStore'] );
+            is( $starch->store->base_class_name(), 'Starch::Store::Memory', 'base_class_name' );
+            is( $starch->store->short_class_name(), 'Store::Memory', 'short_class_name' );
+            is( $starch->store->short_store_class_name(), 'Memory', 'short_store_class_name' );
+        };
+
+        subtest new_sub_store => sub{
+            my $sub_store1 = $store->new_sub_store( class=>'::Memory', max_expires=>12 );
+            isa_ok( $sub_store1, 'Starch::Store::Memory' );
+            is( $sub_store1->manager(), $store->manager(), 'sub store has same manager as parent store' );
+            my $sub_store2 = $sub_store1->new_sub_store( class=>'::Memory' );
+            is( $sub_store2->max_expires(), 12, 'sub store has max_expires from parent store' );
+        };
+
+        subtest calculate_expires => sub{
+            my $store = $store->new_sub_store( class=>'::Memory', max_expires => 10 );
+            is( $store->calculate_expires( 5 ), 5, 'expires less than max_expires' );
+            is( $store->calculate_expires( 15 ), 10, 'expires more than max_expires' );
         };
     };
 

@@ -218,6 +218,19 @@ has no_store_state_key => (
     default => '__STARCH_NO_STORE__',
 );
 
+=head2 dirty_state_key
+
+This key is used to artificially mark as state as dirty by incrementing
+the value of this key.  Used by L<Starch::State/mark_dirty>.
+
+=cut
+
+has dirty_state_key => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => '__STARCH_DIRTY__',
+);
+
 =head1 ATTRIBUTES
 
 =head2 state_id_type

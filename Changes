@@ -11,6 +11,7 @@ Revision history for Perl extension Starch.
    pattern of sorts, but this key will be used for more general
    purpose stuff).
  - Added a mark_dirty method to state.
+ - Increase test coverage.
 
 0.03 2015-07-20
 
