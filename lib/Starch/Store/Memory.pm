@@ -77,7 +77,7 @@ sub set {
     my ($self, $id, $namespace, $data) = @_;
 
     $self->memory->{
-        $self->manager->stringify_key( $id, $namespace )
+        $self->stringify_key( $id, $namespace )
     } = $data;
 
     return;
@@ -86,14 +86,14 @@ sub set {
 sub get {
     my ($self, $id, $namespace) = @_;
     return $self->memory->{
-        $self->manager->stringify_key( $id, $namespace )
+        $self->stringify_key( $id, $namespace )
     };
 }
 
 sub remove {
     my ($self, $id, $namespace) = @_;
     delete( $self->memory->{
-        $self->manager->stringify_key( $id, $namespace )
+        $self->stringify_key( $id, $namespace )
     } );
     return;
 }

@@ -23,7 +23,7 @@ around set => sub{
     my $self = shift;
     my ($id, $namespace) = @_;
 
-    my $key = $self->manager->stringify_key( $id, $namespace );
+    my $key = $self->stringify_key( $id, $namespace );
 
     $self->log->tracef(
         'starch.store.%s.set.%s',
@@ -38,7 +38,7 @@ around get => sub{
     my $self = shift;
     my ($id, $namespace) = @_;
 
-    my $key = $self->manager->stringify_key( $id, $namespace );
+    my $key = $self->stringify_key( $id, $namespace );
 
     $self->log->tracef(
         'starch.store.%s.get.%s',
@@ -60,7 +60,7 @@ around remove => sub{
     my $self = shift;
     my ($id, $namespace) = @_;
 
-    my $key = $self->manager->stringify_key( $id, $namespace );
+    my $key = $self->stringify_key( $id, $namespace );
 
     $self->log->tracef(
         'starch.store.%s.remove.%s',

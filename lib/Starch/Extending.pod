@@ -60,7 +60,7 @@ Stores must implement three methods for setting, getting, and removing
 state data.  These methods receive a state ID and a namespace array ref
 as their first two arguments.  The combination of these two values should
 identify a unique location in the store.  They can be combined to create
-a single key string using L<Starch::Manager/stringify_key>.
+a single key string using L<Starch::Store/stringify_key>.
 
 A more detailed description of the methods that a store must
 implement:

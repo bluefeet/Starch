@@ -123,7 +123,7 @@ foreach my $method (qw( set get remove )) {
             else {
                 my ($id, $namespace) = @_;
                 my $manager = $self->manager();
-                my $key = $manager->stringify_key( $id, $namespace );
+                my $key = $self->stringify_key( $id, $namespace );
                 $self->log->errorf(
                     'Throttling %s of state key %s on the %s store for the next %d seconds.',
                     $method, $key, $self->short_store_class_name(), ($start + $duration) - time(),

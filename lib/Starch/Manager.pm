@@ -137,29 +137,20 @@ L<Starch::Manual/PLUGINS>.
 
 =head2 namespace
 
-The root namespace to put starch data in.  In most cases this is just
-prepended to the state ID and used as the key for storing the state
-data.  Defaults to C<starch-state>.
+The root array ref namespace to put starch data in.  In most cases this is
+just prepended to the state ID and used as the key for storing the state
+data.  Defaults to C<['starch-state']>.
+
+If you are using the same store for independent application states you
+may want to namespace them so that you can easly identify which application
+a particular state belongs to when looking in the store.
 
 =cut
 
 has namespace => (
     is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => 'starch-state',
-);
-
-=head2 key_separator
-
-Used by L</stringify_key> to combine the state namespace
-and ID.  Defaults to C<:>.
-
-=cut
-
-has key_separator => (
-    is      => 'ro',
-    isa     => NonEmptySimpleStr,
-    default => ':',
+    isa     => ArrayRef[ NonEmptySimpleStr ],
+    default => sub{ ['starch-state'] },
 );
 
 =head2 expires_state_key
@@ -274,29 +265,6 @@ sub state {
         %$extra_args,
         manager => $self,
         defined($id) ? (id => $id) : (),
-    );
-}
-
-=head2 stringify_key
-
-    my $store_key = $starch->stringify_key(
-        $state_id,
-        \@namespace,
-    );
-
-This method is used by stores that store and lookup data by
-a string (all of them at this time).  It combines the state
-ID with the L</namespace> of the key data for the store
-request.
-
-=cut
-
-sub stringify_key {
-    my ($self, $id, $namespace) = @_;
-    return join(
-        $self->key_separator(),
-        @$namespace,
-        $id,
     );
 }
 

@@ -95,7 +95,7 @@ sub _build_original_data {
     return {} if !$self->in_store();
 
     my $manager = $self->manager();
-    my $data = $manager->store->get( $self->id(), [$manager->namespace()] );
+    my $data = $manager->store->get( $self->id(), $manager->namespace() );
 
     return $data if $data;
 
@@ -312,7 +312,7 @@ sub force_save {
 
     $manager->store->set(
         $self->id(),
-        [$manager->namespace()],
+        $manager->namespace(),
         $data,
         $self->expires(),
     );
@@ -442,7 +442,7 @@ sub force_delete {
     my ($self) = @_;
 
     my $manager = $self->manager();
-    $manager->store->remove( $self->id(), [$manager->namespace()] );
+    $manager->store->remove( $self->id(), $manager->namespace() );
 
     $self->_set_original_data( {} );
     $self->_set_data( {} );
@@ -512,7 +512,7 @@ sub reset_id {
     # Remove the data for the current state ID.
     if ($self->in_store()) {
         my $manager = $self->manager();
-        $manager->store->remove( $self->id(), [$manager->namespace()] );
+        $manager->store->remove( $self->id(), $manager->namespace() );
     }
 
     # Ensure that future calls to id generate a new one.

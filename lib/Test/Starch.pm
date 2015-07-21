@@ -118,15 +118,6 @@ sub test_manager {
     my $starch = $self->new_manager();
 
     subtest 'core tests for ' . ref($starch) => sub{
-        subtest stringify_key => sub{
-            is( $starch->stringify_key( '1234', ['foo'] ), 'foo:1234', 'basic' );
-            is( $starch->stringify_key( '1234', ['foo', 'bar'] ), 'foo:bar:1234', 'deep' );
-            is( $starch->stringify_key( '1234', [] ), '1234', 'empty' );
-
-            my $starch = $self->new_manager( key_separator=>'-' );
-            is( $starch->stringify_key( '1234', ['foo', 'bar'] ), 'foo-bar-1234', 'custom key_separator' );
-        };
-
         subtest state_id_seed => sub{
             isnt( $starch->state_id_seed(), $starch->state_id_seed(), 'two seeds are not the same' );
         };
@@ -469,6 +460,15 @@ sub test_store {
             my $store = $store->new_sub_store( class=>'::Memory', max_expires => 10 );
             is( $store->calculate_expires( 5 ), 5, 'expires less than max_expires' );
             is( $store->calculate_expires( 15 ), 10, 'expires more than max_expires' );
+        };
+
+        subtest stringify_key => sub{
+            is( $store->stringify_key( '1234', ['foo'] ), 'foo:1234', 'basic' );
+            is( $store->stringify_key( '1234', ['foo', 'bar'] ), 'foo:bar:1234', 'deep' );
+            is( $store->stringify_key( '1234', [] ), '1234', 'empty' );
+
+            my $store = $store->new_sub_store( class=>'::Memory', key_separator=>'-' );
+            is( $store->stringify_key( '1234', ['foo', 'bar'] ), 'foo-bar-1234', 'custom key_separator' );
         };
 
         subtest reap_expired => sub{

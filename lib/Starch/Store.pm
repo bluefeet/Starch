@@ -84,6 +84,19 @@ has max_expires => (
     isa => (PositiveOrZeroInt) | Undef,
 );
 
+=head2 key_separator
+
+Used by L</stringify_key> to combine the state namespace
+and ID.  Defaults to C<:>.
+
+=cut
+
+has key_separator => (
+    is      => 'ro',
+    isa     => NonEmptySimpleStr,
+    default => ':',
+);
+
 =head1 ATTRIBUTES
 
 =head2 can_reap_expired
@@ -137,13 +150,12 @@ arguments may be present if any plugins extend this method.
 sub sub_store_args {
     my $self = shift;
 
-    my $max_expires = $self->max_expires();
-
     my $args = $self->BUILDARGS( @_ );
 
     return {
-        manager     => $self->manager(),
-        max_expires => $max_expires,
+        manager       => $self->manager(),
+        max_expires   => $self->max_expires(),
+        key_separator => $self->key_separator(),
         %$args,
     };
 }
@@ -164,6 +176,29 @@ sub calculate_expires {
     return $max_expires if $expires > $max_expires;
 
     return $expires;
+}
+
+=head2 stringify_key
+
+    my $store_key = $starch->stringify_key(
+        $state_id,
+        \@namespace,
+    );
+
+This method is used by stores that store and lookup data by
+a string (all of them at this time).  It combines the state
+ID with the L</namespace> of the key data for the store
+request.
+
+=cut
+
+sub stringify_key {
+    my ($self, $id, $namespace) = @_;
+    return join(
+        $self->key_separator(),
+        @$namespace,
+        $id,
+    );
 }
 
 =head2 reap_expired
