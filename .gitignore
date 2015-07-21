@@ -2,3 +2,4 @@
 /.build
 *.swp
 /nytprof*
+/cover_db
