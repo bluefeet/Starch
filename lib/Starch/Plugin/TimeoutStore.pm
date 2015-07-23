@@ -20,8 +20,9 @@ Starch::Plugin::TimeoutStore - Throw an exception if store access surpass a time
 This plugin causes all calls to C<set>, C<get>, and C<remove> to throw
 an exception if they surpass a timeout period.
 
-The timeout is implemented using L<Time::HiRes>'s C<alarm> function,
-which takes fractional seconds, and a localized C<$SIG{ALRM}> handler.
+The timeout is implemented using the C<alarm> function and a localized
+C<$SIG{ALRM}> handler.  Some stores implement timeouts themselves and their
+native implementation is often better than this naive implementation.
 
 The whole point of detecting timeouts is so that you can still serve
 a web page even if the underlying store backend is failing, so
@@ -36,7 +37,6 @@ of Starch works well on 5.8 and up.
 
 use 5.010_000;
 
-use Time::HiRes qw();
 use Try::Tiny;
 use Types::Common::Numeric -types;
 use Starch::Util qw( croak );
@@ -63,7 +63,7 @@ checking.  Defaults to C<0>.
 
 has timeout => (
     is      => 'ro',
-    isa     => PositiveOrZeroNum,
+    isa     => PositiveOrZeroInt,
     default => 0,
 );
 
@@ -81,10 +81,10 @@ foreach my $method (qw( set get remove )) {
             local $SIG{ALRM} = sub{
                 die 'STARCH TIMEOUT ALARM TRIGGERED';
             };
-            Time::HiRes::alarm( $timeout );
+            alarm( $timeout );
             my @ret;
             @ret = $self->$orig( @args );
-            Time::HiRes::alarm( 0 );
+            alarm( 0 );
             return( @ret ? $ret[0] : () );
         }
         catch {

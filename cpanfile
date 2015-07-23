@@ -5,7 +5,6 @@ requires 'Type::Tiny'       => 1.000005;
 requires 'Module::Runtime'  => 0.014;
 requires 'Log::Any'         => 1.03;
 requires 'Try::Tiny'        => 0.18;
-requires 'Time::HiRes'      => 0;
 requires 'Carp'             => 0;
 requires 'Scalar::Util'     => 0;
 requires 'Storable'         => 0;

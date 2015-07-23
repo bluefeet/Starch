@@ -2,6 +2,9 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Use alarm instead of Time::HiRes::Alarm for the TimeoutStore plugin,
+   as sub-second alarms cause more unpredictable issues than they are worth.
+
 0.04 2015-07-21
 
  - Update state's in_store if the store did not find any data.  This
