@@ -47,7 +47,7 @@ foreach my $method (qw( set get remove )) {
         catch {
             $self->log->errorf(
                 'Starch store %s errored when %s was called: %s',
-                ref($self), $method, $_,
+                $self->short_store_name(), $method, $_,
             );
             return {
                 $self->manager->no_store_state_key() => 1,
