@@ -9,14 +9,16 @@ with qw(
     Starch::Plugin::ForStore
 );
 
-sub BUILD {
+after BUILD => sub{
     my ($self) = @_;
+
     $self->log->tracef(
         'starch.store.%s.new',
         $self->short_store_class_name(),
     );
+
     return;
-}
+};
 
 around set => sub{
     my $orig = shift;

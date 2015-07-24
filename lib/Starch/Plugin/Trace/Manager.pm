@@ -9,11 +9,13 @@ with qw(
     Starch::Plugin::ForManager
 );
 
-sub BUILD {
+after BUILD => sub{
     my ($self) = @_;
+
     $self->log->trace( 'starch.manager.new' );
+
     return;
-}
+};
 
 around state => sub{
     my $orig = shift;

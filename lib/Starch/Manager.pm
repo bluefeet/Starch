@@ -40,6 +40,7 @@ with qw(
     Starch::Role::MethodProxy
 );
 
+# Declare BUILD so roles can apply method modifiers to it.
 sub BUILD {
     my ($self) = @_;
 

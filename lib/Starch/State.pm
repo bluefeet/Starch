@@ -30,6 +30,9 @@ with qw(
     Starch::Role::Log
 );
 
+# Declare BUILD so roles can apply method modifiers to it.
+sub BUILD { }
+
 =head1 REQUIRED ARGUMENTS
 
 =head2 manager

@@ -40,6 +40,9 @@ requires qw(
     remove
 );
 
+# Declare BUILD so roles can apply method modifiers to it.
+sub BUILD { }
+
 around set => sub{
     my ($orig, $self, $id, $keys, $data, $expires) = @_;
 

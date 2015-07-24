@@ -28,13 +28,13 @@ with qw(
     Starch::Plugin::ForState
 );
 
-sub BUILD {
+after BUILD => sub{
     my ($self) = @_;
 
     $self->data();
 
     return;
-}
+};
 
 1;
 __END__

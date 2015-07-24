@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Plugins can now more reliably extend BUILD via method modifiers.
  - Make sure the TimeoutStore alarm is cleared when an exception is thrown.
  - Use alarm instead of Time::HiRes::Alarm for the TimeoutStore plugin,
    as sub-second alarms cause more unpredictable issues than they are worth.

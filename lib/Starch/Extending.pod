@@ -104,6 +104,8 @@ reaping functions.  For example, a DBI store may allow the user to reap
 the states in batches, and a DynamoDB store may allow the user to specify
 a secondary global index to do the scan on.
 
+
+
 =head1 TESTING
 
 All plugin and store modules should use L<Test::Starch> to ensure that
@@ -132,7 +134,19 @@ This is especially important for plugins where you are often augmenting
 existing methods which may themselves be croak()ing, you don't want your
 plugin's code to be reported at the source of the known error.
 
+=head1 EXTENDING BUILD
 
+The L<Moo> BUILD method doesn't play well with roles.  If a role provides
+provides a BUILD method and then the class which consumes the role also
+defines a BUILD method the class will win and the role's BUILD method will
+never be called.  To get around this the L<Starch::Manager> class, the
+L<Starch::State> class, and the L<Starch::Store> role declare BUILD methods.
+Any plugin or store which wishes to extend the BUILD method should do so
+via an C<after> method modifier as in:
+
+    after BUILD => sub{
+        ...
+    };
 
 =head1 INTERNALS
 
