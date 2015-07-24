@@ -88,6 +88,7 @@ foreach my $method (qw( set get remove )) {
             return( @ret ? $ret[0] : () );
         }
         catch {
+            alarm( 0 );
             croak sprintf(
                 'The %s method %s exceeded the timeout of %s seconds',
                 $self->short_class_name(), $method, $timeout,
