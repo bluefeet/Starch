@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Simplified the state lifecycle methods a bit and modified them to be a
+   little less opinionated.
  - Plugins can now more reliably extend BUILD via method modifiers.
  - Make sure the TimeoutStore alarm is cleared when an exception is thrown.
  - Use alarm instead of Time::HiRes::Alarm for the TimeoutStore plugin,

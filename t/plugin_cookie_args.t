@@ -35,7 +35,8 @@ subtest cookie_args => sub{
     is( $args->{secure}, 0, 'cookie secure is correct' );
     is( $args->{httponly}, 0, 'cookie httponly is correct' );
 
-    $state->force_save();
+    $state->mark_dirty();
+    $state->save();
     $state->delete();
 
     $args = $state->cookie_args();
@@ -54,7 +55,8 @@ subtest cookie_set_args => sub{
     my $args = $state->cookie_set_args();
     is( $args->{expires}, $arg_expires, 'new session cookie expires is good' );
 
-    $state->force_save();
+    $state->mark_dirty();
+    $state->save();
     $state->delete();
     $args = $state->cookie_set_args();
     is( $args->{expires}, $arg_expires, 'expired session cookie expires is good' );
@@ -66,7 +68,8 @@ subtest cookie_delete_args => sub{
     my $args = $state->cookie_delete_args();
     is( $args->{expires}, '-1d', 'new session cookie expires is good' );
 
-    $state->force_save();
+    $state->mark_dirty();
+    $state->save();
     $state->delete();
     $args = $state->cookie_delete_args();
     is( $args->{expires}, '-1d', 'expired session cookie expires is good' );

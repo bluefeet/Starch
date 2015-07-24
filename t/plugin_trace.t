@@ -85,6 +85,11 @@ subtest 'state methods' => sub{
     $log->clear();
 
     $state->save();
+    $log->category_contains_ok(
+        $state_class,
+        qr{^starch\.state\.save\.$state_id$},
+        'starch.state.save.$state_id',
+    );
     log_empty_ok('log is empty after non-dirty save');
 
     $state->data->{foo} = 34;

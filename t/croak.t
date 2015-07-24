@@ -16,9 +16,11 @@ use Starch::Store::Memory;
 }
 
 my $starch = Starch->new( store=>{class=>'::CroakMemory'} );
+my $state = $starch->state();
+$state->mark_dirty();
 
 like(
-    exception { $starch->state->force_save() },
+    exception { $state->save() },
     qr{^foo at \S*croak.t line \d+\.\s*$},
     'croak reported proper caller',
 );

@@ -216,6 +216,30 @@ sub _build_in_store {
     return( $self->_has_existing_id() ? 1 : 0 );
 }
 
+=head2 is_loaded
+
+This returns true if the L</original_data> has been loaded up from
+the store.  Note that L</original_data> will be automatically
+loaded if L</original_data>, L</data>, or any methods that call them,
+are called.
+
+=cut
+
+# This is provided by the original_data attribute via its predicate.
+
+=head2 is_saved
+
+Returns true if the state is L</in_store> and is not L</is_dirty>.
+
+=cut
+
+sub is_saved {
+    my ($self) = @_;
+    return 0 if !$self->in_store();
+    return 0 if $self->is_dirty();
+    return 1;
+}
+
 =head2 is_deleted
 
 Returns true if L</delete> has been called on this state.
@@ -239,8 +263,6 @@ and L</data> are different).
 sub is_dirty {
     my ($self) = @_;
 
-    return 0 if $self->is_deleted();
-
     # If we haven't even loaded the data from the store then
     # there is no way we're dirty.
     return 0 if !$self->is_loaded();
@@ -248,63 +270,20 @@ sub is_dirty {
     return $self->manager->is_data_diff( $self->original_data(), $self->data() );
 }
 
-=head2 is_loaded
-
-This returns true if the L</original_data> has been loaded up from
-the store.  Note that L</original_data> will be automatically
-loaded if L</original_data>, L</data>, or any methods that call them,
-are called.
-
-=cut
-
-# This is provided by the original_data attribute via its predicate.
-
-=head2 is_saved
-
-Returns true if the state was saved, is L</in_store>, and is not L</is_dirty>.
-
-=cut
-
-has _save_was_called => (
-    is       => 'ro',
-    writer   => '_set_save_was_called',
-    init_arg => undef,
-);
-
-sub is_saved {
-    my ($self) = @_;
-    return 0 if !$self->_save_was_called();
-    return 0 if !$self->in_store();
-    return 0 if $self->is_dirty();
-    return 1;
-}
-
 =head1 METHODS
 
 =head2 save
 
-If this state L</is_dirty> this will save the L</data> to the
-L<Starch::Manager/store>.
+Saves this state in the L<Starch::Manager/store> if it L</is_dirty> and
+not L</is_deleted>.
 
 =cut
 
 sub save {
     my ($self) = @_;
+
     return if !$self->is_dirty();
-    return $self->force_save();
-}
-
-=head2 force_save
-
-Like L</save>, but saves even if L</is_dirty> is not set.
-
-=cut
-
-sub force_save {
-    my ($self) = @_;
-
-    croak 'Cannot call save or force_save on a deleted state'
-        if $self->is_deleted();
+    return if $self->is_deleted();
 
     my $manager = $self->manager();
     my $data = $self->data();
@@ -313,6 +292,8 @@ sub force_save {
     $data->{ $manager->modified_state_key() } = time();
     $data->{ $manager->expires_state_key() }  = $self->expires();
 
+    $self->_clear_modified();
+
     $manager->store->set(
         $self->id(),
         $manager->namespace(),
@@ -320,14 +301,30 @@ sub force_save {
         $self->expires(),
     );
 
+    # This will cause is_saved to return true.
     $self->_set_in_store( 1 );
-    $self->_set_save_was_called( 1 );
-
     $self->mark_clean();
 
-    $self->_clear_expires();
-    $self->_clear_modified();
-    $self->_clear_created();
+    return;
+}
+
+=head2 delete
+
+Deletes the state from the L<Starch::Manager/store> and sets
+L</is_deleted>.
+
+=cut
+
+sub delete {
+    my ($self) = @_;
+
+    if ($self->in_store()) {
+        my $manager = $self->manager();
+        $manager->store->remove( $self->id(), $manager->namespace() );
+    }
+
+    $self->_set_is_deleted( 1 );
+    $self->_set_in_store( 0 );
 
     return;
 }
@@ -335,69 +332,17 @@ sub force_save {
 =head2 reload
 
 Clears L</original_data> and L</data> so that the next call to these
-will reload the state data from the store.  If the state L</is_dirty>
-then an exception will be thrown.
+will reload the state data from the store.  This method is potentially
+destructive as you will loose any changes to the data that have not
+been saved.
 
 =cut
 
 sub reload {
     my ($self) = @_;
 
-    croak 'Cannot call reload on a dirty state'
-        if $self->is_dirty();
-
-    return $self->force_reload();
-}
-
-=head2 force_reload
-
-Just like L</reload>, but reloads even if the state L</is_dirty>.
-
-=cut
-
-sub force_reload {
-    my ($self) = @_;
-
     $self->_clear_original_data();
     $self->_clear_data();
-
-    return;
-}
-
-=head2 mark_clean
-
-Marks the state as not L</is_dirty> by setting L</original_data> to
-L</data>.  This is a potentially destructive method to call as data
-may be lost since L</save> will silently not save the data if it
-appears clean.
-
-=cut
-
-sub mark_clean {
-    my ($self) = @_;
-
-    $self->_set_original_data(
-        $self->manager->clone_data( $self->data() ),
-    );
-
-    return;
-}
-
-=head2 mark_dirty
-
-Increments the L<Starch::Manager/dirty_state_key> value in
-L</data>, which causes the state to be considered dirty.
-
-=cut
-
-sub mark_dirty {
-    my ($self) = @_;
-
-    my $key = $self->manager->dirty_state_key();
-
-    my $counter = $self->data->{ $key };
-    $counter = ($counter || 0) + 1;
-    $self->data->{ $key } = $counter;
 
     return;
 }
@@ -418,39 +363,60 @@ sub rollback {
     return;
 }
 
-=head2 delete
+=head2 clear
 
-Deletes the state from the L<Starch::Manager/store> and marks it
-as L</is_deleted>.  Throws an exception if not L<in_store>.
-
-=cut
-
-sub delete {
-    my ($self) = @_;
-
-    croak 'Cannot call delete on a state that is not stored yet'
-        if !$self->in_store();
-
-    return $self->force_delete();
-}
-
-=head2 force_delete
-
-Just like L</delete>, but remove the state from the store even if
-the state is not L</in_store>.
+Empties L</data> and L</original_data>, and calls L</mark_dirty>.
 
 =cut
 
-sub force_delete {
+sub clear {
     my ($self) = @_;
 
-    my $manager = $self->manager();
-    $manager->store->remove( $self->id(), $manager->namespace() );
+    # Make sure we retain these values.
+    $self->expires();
+    $self->modified();
+    $self->created();
 
     $self->_set_original_data( {} );
     $self->_set_data( {} );
-    $self->_set_is_deleted( 1 );
-    $self->_set_in_store( 0 );
+    $self->mark_dirty();
+
+    return;
+}
+
+=head2 mark_clean
+
+Marks the state as not L</is_dirty> by setting L</original_data> to
+L</data>.  This is a potentially destructive method as L</save> will
+silentfly not save if the state is not L</is_dirty>.
+
+=cut
+
+sub mark_clean {
+    my ($self) = @_;
+
+    $self->_set_original_data(
+        $self->manager->clone_data( $self->data() ),
+    );
+
+    return;
+}
+
+=head2 mark_dirty
+
+Increments the L<Starch::Manager/dirty_state_key> value in L</data>,
+which causes the state to be considered dirty.
+
+=cut
+
+sub mark_dirty {
+    my ($self) = @_;
+
+    my $key = $self->manager->dirty_state_key();
+
+    my $counter = $self->data->{ $key };
+    $counter = ($counter || 0) + 1;
+    $self->data->{ $key } = $counter;
 
     return;
 }
@@ -513,18 +479,15 @@ sub reset_id {
     my ($self) = @_;
 
     # Remove the data for the current state ID.
-    if ($self->in_store()) {
-        my $manager = $self->manager();
-        $manager->store->remove( $self->id(), $manager->namespace() );
-    }
+    $self->manager->state( $self->id() )->delete()
+        if $self->in_store();
 
     # Ensure that future calls to id generate a new one.
     $self->_clear_existing_id();
     $self->_clear_id();
 
-    # Make sure the state data is now dirty so it gets saved.
     $self->_set_original_data( {} );
-    $self->_set_save_was_called( 0 );
+    $self->_set_in_store( 0 );
 
     return;
 }

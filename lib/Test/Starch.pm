@@ -183,7 +183,8 @@ sub test_state {
             my $state = $starch->state();
             is( $state->modified(), $state->created(), 'modfied is same as created in new state' );
             sleep 2;
-            $state->force_save();
+            $state->mark_dirty();
+            $state->save();
             $state = $starch->state( $state->id() );
             cmp_ok( $state->modified(), '>', $state->created(), 'modified was updated with save' );
         };
@@ -195,7 +196,8 @@ sub test_state {
             cmp_ok( $created_time, '>=', $start_time, 'state created on or after test start' );
             cmp_ok( $created_time, '<=', $start_time+1, 'state created is on or just after test start' );
             sleep 2;
-            $state->force_save();
+            $state->mark_dirty();
+            $state->save();
             $state = $starch->state( $state->id() );
             is( $state->created(), $created_time, 'created was updated with save' );
         };
@@ -217,7 +219,8 @@ sub test_state {
         subtest is_deleted => sub{
             my $state = $starch->state();
             is( $state->is_deleted(), 0, 'new state is not deleted' );
-            $state->force_save();
+            $state->mark_dirty();
+            $state->save();
             $state->delete();
             is( $state->is_deleted(), 1, 'deleted state is deleted' );
         };
@@ -239,7 +242,8 @@ sub test_state {
         subtest is_saved => sub{
             my $state = $starch->state();
             ok( (!$state->is_saved()), 'state is not saved' );
-            $state->force_save();
+            $state->mark_dirty();
+            $state->save();
             ok( $state->is_saved(), 'state is saved' );
         };
 
@@ -255,11 +259,8 @@ sub test_state {
             is( $state1->is_dirty(), 0, 'is not dirty after save' );
             $state2 = $starch->state( $state1->id() );
             is( $state2->data->{foo}, 789, 'new state did receive data from old' );
-        };
 
-        subtest force_save => sub{
             my $state = $starch->state();
-
             $state->data->{foo} = 931;
             $state->save();
 
@@ -275,22 +276,19 @@ sub test_state {
                 'save did not save',
             );
 
-            $state->force_save();
+            $state->mark_dirty();
+            $state->save();
             is(
                 $starch->state( $state->id() )->data->{foo},
                 931,
-                'force_save did save',
+                'save did save',
             );
         };
 
         subtest reload => sub{
             my $state = $starch->state();
             is( exception { $state->reload() }, undef, 'reloading a non-dirty state did not fail' );
-            $state->data->{foo} = 2;
-            like( exception { $state->reload() }, qr{dirty}, 'reloading a dirty state failed' );
-        };
 
-        subtest force_reload => sub{
             my $state1 = $starch->state();
             $state1->data->{foo} = 91;
             $state1->save();
@@ -334,13 +332,6 @@ sub test_state {
 
         subtest delete => sub{
             my $state = $starch->state();
-            like( exception { $state->delete() }, qr{stored}, 'calling delete on un-stored state fails' );
-            $state->force_save();
-            is( exception { $state->delete() }, undef, 'deleting a stored state does not fail' );
-        };
-
-        subtest force_delete => sub{
-            my $state = $starch->state();
             $state->data->{foo} = 39;
             $state->save();
 
@@ -366,11 +357,11 @@ sub test_state {
             my $state = $starch->state();
             is( $state->expires(), 111, 'state got default expires' );
             $state->set_expires( 666 );
-            $state->force_save();
+            $state->save();
             $state = $starch->state( $state->id() );
             is( $state->expires(), 666, 'expires persisted' );
             $state->reset_expires();
-            $state->force_save();
+            $state->save();
             $state = $starch->state( $state->id() );
             is( $state->expires(), 111, 'state expires was reset' );
         };

@@ -54,7 +54,7 @@ logged in the format of C<starch.manager.new>.
 
 Every call to L<Starch::Manager/state> is logged in the
 format of C<starch.manager.state.$action.$state_id>, where
-C<$action> is either C<retrieve> or C<create> depending
+C<$action> is either C<retrieved> or C<created> depending
 on if the state ID was provided.
 
 =head2 generate_state_id
@@ -69,35 +69,57 @@ These messages are logged from the L<Starch::State> object.
 =head2 new
 
 Every time a L<Starch::State> object is created a message is
-logged in the format of C<starch.state.new.$state_key>.
+logged in the format of C<starch.state.new.$state_id>.
 
 =head2 save
 
-Every call to L<Starch::State/force_save> (which C<save> calls
-if the state isn't dirty) is logged in the format of
+Every call to L<Starch::State/save> is logged in the format of
 C<starch.state.save.$state_id>.
-
-=head2 reload
-
-Every call to L<Starch::State/force_reload> (which C<reload> calls
-if the state isn't dirty) is logged in the format of
-C<starch.state.reload.$state_id>.
-
-=head2 mark_clean
-
-Every call to L<Starch::State/mark_clean>
-is logged in the format of C<starch.state.mark_clean.$state_id>.
-
-=head2 rollback
-
-Every call to L<Starch::State/rollback>
-is logged in the format of C<starch.state.rollback.$state_id>.
 
 =head2 delete
 
-Every call to L<Starch::State/force_delete> (which C<delete> calls
-if the state is in the store) is logged in the format of
+Every call to L<Starch::State/delete> is logged in the format of
 C<starch.state.delete.$state_id>.
+
+=head2 reload
+
+Every call to L<Starch::State/reload> is logged in the format of
+C<starch.state.reload.$state_id>.
+
+=head2 rollback
+
+Every call to L<Starch::State/rollback> is logged in the format of
+C<starch.state.rollback.$state_id>.
+
+=head2 clear
+
+Every call to L<Starch::State/clear> is logged in the format of
+C<starch.state.clear.$state_id>.
+
+=head2 mark_clean
+
+Every call to L<Starch::State/mark_clean> is logged in the format of
+C<starch.state.mark_clean.$state_id>.
+
+=head2 mark_dirty
+
+Every call to L<Starch::State/mark_dirty> is logged in the format of
+C<starch.state.mark_dirty.$state_id>.
+
+=head2 set_expires
+
+Every call to L<Starch::State/set_expires> is logged in the format of
+C<starch.state.set_expires.$state_id>.
+
+=head2 reset_expires
+
+Every call to L<Starch::State/reset_expires> is logged in the format of
+C<starch.state.reset_expires.$state_id>.
+
+=head2 reset_id
+
+Every call to L<Starch::State/reset_id> is logged in the format of
+C<starch.state.reset_id.$state_id>.
 
 =head1 STORE LOGGING
 
