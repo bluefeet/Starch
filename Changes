@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+0.05 2015-07-27
+
  - Use the short store name when logging store exceptions.
  - Simplified the state lifecycle methods a bit and modified them to be a
    little less opinionated.
