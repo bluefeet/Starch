@@ -21,7 +21,7 @@ $state->mark_dirty();
 
 like(
     exception { $state->save() },
-    qr{^foo at \S*croak.t line \d+\.\s*$},
+    qr{^foo at t/croak\.t line \d+},
     'croak reported proper caller',
 );
 
