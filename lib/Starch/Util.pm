@@ -43,7 +43,6 @@ sub croak {
     local $Carp::Internal{'Starch::Plugin::RenewExpiration::Manager'} = 1;
     local $Carp::Internal{'Starch::Plugin::RenewExpiration::State'} = 1;
     local $Carp::Internal{'Starch::Plugin::ThrottleStore'} = 1;
-    local $Carp::Internal{'Starch::Plugin::TimeoutStore'} = 1;
     local $Carp::Internal{'Starch::Plugin::Trace::Manager'} = 1;
     local $Carp::Internal{'Starch::Plugin::Trace::State'} = 1;
     local $Carp::Internal{'Starch::Plugin::Trace::Store'} = 1;

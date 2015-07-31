@@ -317,10 +317,6 @@ L<Starch::Plugin::ThrottleStore>
 
 =item *
 
-L<Starch::Plugin::TimeoutStore>
-
-=item *
-
 L<Starch::Plugin::Trace>
 
 =back
@@ -332,6 +328,10 @@ These plugins are distributed separately on CPAN:
 =item *
 
 L<Starch::Plugin::Sereal>
+
+=item *
+
+L<Starch::Plugin::TimeoutStore>
 
 =back
 
