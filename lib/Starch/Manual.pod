@@ -327,6 +327,10 @@ These plugins are distributed separately on CPAN:
 
 =item *
 
+L<Starch::Plugin::Net::Statsd>
+
+=item *
+
 L<Starch::Plugin::Sereal>
 
 =item *
