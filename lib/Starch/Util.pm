@@ -33,6 +33,7 @@ sub croak {
     local $Carp::Internal{'Starch::Manager'} = 1;
     local $Carp::Internal{'Starch::Plugin::AlwaysLoad'} = 1;
     local $Carp::Internal{'Starch::Plugin::Bundle'} = 1;
+    local $Carp::Internal{'Starch::Plugin::CookieArgs'} = 1;
     local $Carp::Internal{'Starch::Plugin::CookieArgs::Manager'} = 1;
     local $Carp::Internal{'Starch::Plugin::CookieArgs::State'} = 1;
     local $Carp::Internal{'Starch::Plugin::DisableStore'} = 1;
@@ -40,18 +41,20 @@ sub croak {
     local $Carp::Internal{'Starch::Plugin::ForState'} = 1;
     local $Carp::Internal{'Starch::Plugin::ForStore'} = 1;
     local $Carp::Internal{'Starch::Plugin::LogStoreExceptions'} = 1;
+    local $Carp::Internal{'Starch::Plugin::RenewExpiration'} = 1;
     local $Carp::Internal{'Starch::Plugin::RenewExpiration::Manager'} = 1;
     local $Carp::Internal{'Starch::Plugin::RenewExpiration::State'} = 1;
     local $Carp::Internal{'Starch::Plugin::ThrottleStore'} = 1;
+    local $Carp::Internal{'Starch::Plugin::Trace'} = 1;
     local $Carp::Internal{'Starch::Plugin::Trace::Manager'} = 1;
     local $Carp::Internal{'Starch::Plugin::Trace::State'} = 1;
     local $Carp::Internal{'Starch::Plugin::Trace::Store'} = 1;
     local $Carp::Internal{'Starch::Role::Log'} = 1;
     local $Carp::Internal{'Starch::Role::MethodProxy'} = 1;
     local $Carp::Internal{'Starch::State'} = 1;
+    local $Carp::Internal{'Starch::Store'} = 1;
     local $Carp::Internal{'Starch::Store::Layered'} = 1;
     local $Carp::Internal{'Starch::Store::Memory'} = 1;
-    local $Carp::Internal{'Starch::Store'} = 1;
     local $Carp::Internal{'Starch::Util'} = 1;
 
     return Carp::croak( @_ );
