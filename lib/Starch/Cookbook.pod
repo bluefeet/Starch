@@ -17,7 +17,7 @@ L<Starch::Store::DBI> store:
 
     store => {
         class => '::DBI',
-        dbh => [ $dbn, $user, $pass ],
+        dbh => [ $dsn, $user, $pass ],
     },
 
 Which you'd like to put Memcached in front of:
@@ -33,7 +33,7 @@ Which you'd like to put Memcached in front of:
         },
         inner => {
             class => '::DBI',
-            dbh => [ $dbn, $user, $pass ],
+            dbh => [ $dsn, $user, $pass ],
         },
     },
 
@@ -53,7 +53,7 @@ store instead.  Your DBI store currently looks something like:
 
     store => {
         class => '::DBI',
-        dbh => [ $dbn, $user, $pass ],
+        dbh => [ $dsn, $user, $pass ],
     },
 
 To migrate your data to DynamoDB you'd set it up like this:
@@ -66,7 +66,7 @@ To migrate your data to DynamoDB you'd set it up like this:
         },
         inner => {
             class => '::DBI',
-            dbh => [ $dbn, $user, $pass ],
+            dbh => [ $dsn, $user, $pass ],
         },
     },
 
@@ -82,7 +82,7 @@ so change the above to use L<Starch::Plugin::DisableStore>:
         },
         inner => {
             class => '::DBI',
-            dbh => [ $dbn, $user, $pass ],
+            dbh => [ $dsn, $user, $pass ],
             disable_set => 1,
         },
     },
