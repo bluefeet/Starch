@@ -38,7 +38,7 @@ Starch - Implementation independent persistent statefulness.
     ); # Returns a Starch::Manager object.
     
     my $new_state = $starch->state();
-    my $existing_state = $starch->sate( $id );
+    my $existing_state = $starch->state( $id );
 
 =head1 DESCRIPTION
 
