@@ -37,7 +37,7 @@ use namespace::clean;
 
 with qw(
     Starch::Role::Log
-    Starch::Role::MethodProxy
+    MooX::MethodProxyArgs
 );
 
 # Declare BUILD so roles can apply method modifiers to it.

@@ -31,7 +31,7 @@ use namespace::clean;
 
 with qw(
     Starch::Role::Log
-    Starch::Role::MethodProxy
+    MooX::MethodProxyArgs
 );
 
 requires qw(
