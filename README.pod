@@ -35,6 +35,10 @@ Aran Clary Deltac <bluefeetE<64>gmail.com>
 
 Arthur Axel "fREW" Schmidt <frioux+cpanE<64>gmail.com>
 
+=item *
+
+Jonathan Scott Duff <duffE<64>pobox.com>
+
 =back
 
 =head1 ACKNOWLEDGEMENTS
