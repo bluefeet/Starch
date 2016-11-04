@@ -36,7 +36,7 @@ Starch - Implementation independent persistent statefulness.
             class   => '::Memory',
         },
     ); # Returns a Starch::Manager object.
-    
+
     my $new_state = $starch->state();
     my $existing_state = $starch->state( $id );
 
@@ -62,6 +62,10 @@ Arthur Axel "fREW" Schmidt <frioux+cpanE<64>gmail.com>
 =item *
 
 Jonathan Scott Duff <duffE<64>pobox.com>
+
+=item *
+
+Sterling Hanenkamp <hanenkampE<64>cpan.org>
 
 =back
 
