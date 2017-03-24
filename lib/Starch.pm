@@ -63,6 +63,10 @@ Arthur Axel "fREW" Schmidt <frioux+cpanE<64>gmail.com>
 
 Jonathan Scott Duff <duffE<64>pobox.com>
 
+=item *
+
+Ismail Kerim <ismail.kerim<64>assurant.com>
+
 =back
 
 =head1 ACKNOWLEDGEMENTS

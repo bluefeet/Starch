@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Some doc fixes to the manual. @IsmailKerim
  - Use MooX::MethodProxyArgs.
  - Some minor documentation cleanup.
 
