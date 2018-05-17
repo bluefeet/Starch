@@ -1,5 +1,4 @@
-package # hide from PAUSE
-    Starch::Plugin::CookieArgs::State;
+package Starch::Plugin::CookieArgs::State;
 
 use Moo::Role;
 use strictures 2;

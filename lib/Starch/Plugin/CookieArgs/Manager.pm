@@ -1,5 +1,4 @@
-package # hide from PAUSE
-    Starch::Plugin::CookieArgs::Manager;
+package Starch::Plugin::CookieArgs::Manager;
 
 use Types::Standard -types;
 use Types::Common::String -types;

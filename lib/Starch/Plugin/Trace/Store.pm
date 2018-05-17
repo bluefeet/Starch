@@ -1,5 +1,4 @@
-package # hide from PAUSE
-    Starch::Plugin::Trace::Store;
+package Starch::Plugin::Trace::Store;
 
 use Moo::Role;
 use strictures 2;
