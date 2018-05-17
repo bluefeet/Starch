@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+0.07 2018-05-17
+
  - Stop hiding packages from indexing.
  - Some doc fixes to the manual. @IsmailKerim
  - Use MooX::MethodProxyArgs.
