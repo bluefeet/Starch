@@ -16,9 +16,8 @@ they lose the ability to be independent which is always a loss.
 
 The prime example, and the reason this module was originally built, is
 L<Catalyst::Plugin::Session> which has no business being so monolithic
-and still being tied directly into L<Catalyst>.  Thus Starch was written,
-and a very thin glue layer, L<Catalyst::Plugin::Starch>, was created as
-a drop-in replacement.
+and still being tied directly into L<Catalyst>.  Thus Starch was created
+along with the super-thin glue L<Catalyst::Plugin::Starch>.
 
 At its foundation Starch provides the ability to create state objects, store
 them, update, and remove them.  Starch is extremely generic despite the
