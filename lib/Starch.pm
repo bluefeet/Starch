@@ -272,7 +272,7 @@ decision you can make with respect to performance.
 
 =head1 STORES
 
-These stores are included with the C<Starch> distribution:
+These stores are included with the Starch distribution:
 
 =over
 
@@ -327,7 +327,7 @@ creating your Starch object:
         ...,
     );
 
-These plugins are included with the C<Starch> distribution:
+These plugins are included with the Starch distribution:
 
 =over
 
@@ -442,7 +442,7 @@ L<MojoX::Session>
 
 =head1 DEPENDENCIES
 
-The C<Starch> distribution is shipped with minimal dependencies
+The Starch distribution is shipped with minimal dependencies
 and with no non-core XS requirements.  This is important for many people.
 
 =head1 SUPPORT
