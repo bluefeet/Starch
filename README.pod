@@ -153,7 +153,7 @@ for cookies via L<Starch::Plugin::CookieArgs>.
 
 =item *
 
-States have a C<expires> argument which defaults to the value of
+States have an C<expires> argument which defaults to the value of
 the global expires set in the L<Starch::Manager> object.  Each state
 can then have their individual expire extended or reduced via the
 L<Starch::State/set_expires> method.
@@ -170,7 +170,7 @@ be replaced with the store's max_expires when writing the data to the store.
 
 Starch has built-in logging facilities via L<Log::Any>.  By default,
 nothing is logged.  Various plugins and stores do use logging, such
-as the C<LogStoreExceptions> L<plugin|/PLUGINS>.
+as the L<Starch::Plugin::LogStoreExceptions> plugin.
 
 If you do not set up a log adapter then these log messages will disappear
 into the void.  Read the L<Log::Any> documentation for instructions on
@@ -223,8 +223,8 @@ configuration from the ground up you could:
 Which will call C<get_config> on the C<My::Starch::Config> package and use its
 return value as the arguments for instantiating the Starch object.
 
-Method proxies are provided by L<MooX::MethodProxyArgs>, check there for more
-details.
+Method proxies are provided by L<MooX::MethodProxyArgs> and
+L<Config::MethodProxy>; check those for more details.
 
 =head1 PERFORMANCE
 
