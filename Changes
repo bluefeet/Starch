@@ -2,11 +2,13 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - A handful more POD edits which should have been in the previous release.
+
 0.08 2018-09-03
 
  - Move Starch::Manual POD into Starch.
  - Rework the manual DESCRIPTION to be less pretentious and more useful.
- - Change the module on-liner from some weird esoteric thing to something
+ - Change the module one-liner from some weird esoteric thing to something
    talking about sessions.
 
 0.07 2018-05-17
