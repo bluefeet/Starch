@@ -17,7 +17,7 @@ Typically you will be using the L<Starch> module to create this
 object.
 
 This class supports method proxies as described in
-L<Starch::Manual/METHOD PROXIES>.
+L<Starch/METHOD PROXIES>.
 
 =cut
 
@@ -61,7 +61,7 @@ C<class> key and will be converted into a store object automatically.
 The C<class> can be fully qualified, or relative to the C<Starch::Store>
 namespace.  A leading C<::> signifies that the store's package name is relative.
 
-More information about stores can be found at L<Starch::Manual/STORES>.
+More information about stores can be found at L<Starch/STORES>.
 
 =cut
 
@@ -110,7 +110,7 @@ has factory => (
 How long, in seconds, a state should live after the last time it was
 modified.  Defaults to C<60 * 60 * 2> (2 hours).
 
-See L<Starch::Manual/EXPIRATION> for more information.
+See L<Starch/EXPIRATION> for more information.
 
 =cut
 
@@ -129,7 +129,7 @@ that the plugin's package name is relative.
 
 Plugins can modify nearly any functionality in Starch.  More information
 about plugins, as well as which plugins are available, can be found at
-L<Starch::Manual/PLUGINS>.
+L<Starch/PLUGINS>.
 
 =cut
 
