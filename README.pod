@@ -62,6 +62,10 @@ about any part of Starch via stores and plugin bundles.
 Is easy to understand due to everything being well documented,
 hyper-linked, and containing thorough examples and tests.
 
+=item *
+
+Low dependency overhead, and no XS dependencies in the core distribution.
+
 =back
 
 There are many L</ALTERNATIVES> to Starch to choose from, all of which
@@ -415,11 +419,6 @@ L<Mojolicious::Sessions>
 L<MojoX::Session>
 
 =back
-
-=head1 DEPENDENCIES
-
-The Starch distribution is shipped with minimal dependencies
-and with no non-core XS requirements.  This is important for many people.
 
 =head1 SUPPORT
 
