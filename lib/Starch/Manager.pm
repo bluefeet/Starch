@@ -88,21 +88,6 @@ sub _build_store {
     );
 }
 
-=head2 factory
-
-The underlying L<Starch::Factory> object which manages all the plugins
-and state/store object construction.
-
-This argument is automatically set when calling C<new> on L<Starch>.
-
-=cut
-
-has factory => (
-    is       => 'ro',
-    isa      => InstanceOf[ 'Starch::Factory' ],
-    required => 1,
-);
-
 =head1 OPTIONAL ARGUMENTS
 
 =head2 expires
@@ -224,6 +209,21 @@ has dirty_state_key => (
 );
 
 =head1 ATTRIBUTES
+
+=head2 factory
+
+The L<Starch::Factory> object which applies plugins and handles the
+construction of the manager, state, and store objects.
+
+=cut
+
+# This argument is always set by Starch->new().  So, to the end-user,
+# this is an attribute not a required argument.
+has factory => (
+    is       => 'ro',
+    isa      => InstanceOf[ 'Starch::Factory' ],
+    required => 1,
+);
 
 =head2 state_id_type
 
