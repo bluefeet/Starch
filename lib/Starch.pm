@@ -315,7 +315,7 @@ L<Starch::Store::DBIx::Connector>
 =back
 
 More third-party stores can be found on
-L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3AStore>.
+L<meta::cpan|https://metacpan.org/search?q=Starch%3A%3AStore>.
 
 =head1 PLUGINS
 
@@ -383,7 +383,7 @@ L<Starch::Plugin::TimeoutStore>
 =back
 
 More third-party plugins can be found on
-L<meta::cpan|https://metacpan.org/search?q=Web%3A%3AStarch%3A%3APlugin>.
+L<meta::cpan|https://metacpan.org/search?q=Starch%3A%3APlugin>.
 
 =head1 INTEGRATIONS
 
@@ -467,7 +467,7 @@ Jonathan Scott Duff <duffE<64>pobox.com>
 
 =item *
 
-Ismail Kerim <ismail.kerim<64>assurant.com>
+Ismail Kerim <ismail.kerimE<64>assurant.com>
 
 =back
 
