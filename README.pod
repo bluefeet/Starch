@@ -116,9 +116,9 @@ making changes to the data, call save:
 
 This stores the state data in the store.
 
-Each state gets assigned a state ID automatically which can be
-used to retrieve the state data at a later time.  The state ID
-is a randomly generated SHA-1 hex digest.
+Each state gets assigned a state ID automatically, unless you specify a custom
+one when creating the state, which can be used to retrieve the state data at a
+later time.  The state ID is a randomly generated SHA-1 hex digest.
 
     my $id = $state->id();
 
@@ -137,8 +137,8 @@ it's still good to know what is happening behind the scenes.
 
 =head1 EXPIRATION
 
-Expiration can be specified globally, when instantiating the L<Starch::Manager>
-object, per-state, and per-store.  The expires value has various properties
+Expiration can be specified globally when instantiating the L<Starch::Manager>
+object, as well as per-state and per-store.  The expires value has various properties
 and behaviors that are important to understand:
 
 =over
@@ -147,6 +147,12 @@ and behaviors that are important to understand:
 
 The C<expires> field is always specified as the number of seconds before
 the state will expire.
+
+=item *
+
+Setting C<expires> to C<0> generally disables expiration, but behavior
+can be store-specific.  For example, often times caching stores assume no
+expiration to mean the storage backend gets to pick when the expire the data.
 
 =item *
 
@@ -163,9 +169,14 @@ L<Starch::State/set_expires> method.
 
 =item *
 
-Stores may have a C<max_expires> argument passed to them.  If the per-state
+Stores may have a C<max_expires> argument passed to them.  If the state's
 expires is larger than the store's max_expires then the state's expires will
 be replaced with the store's max_expires when writing the data to the store.
+
+This is useful for when you have a caching store in front of your persistent
+store and you'd like your sessions to expire out of the caching store, by
+setting C<max_expires> on it, well before they will expire out of the
+persistent store.
 
 =back
 

@@ -2,7 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
- - A handful more POD edits which should have been in the previous release.
+ - Migrate all the tests from Test::More to Test2::V0.
+ - A bunch of little POD edits to make readers happier.
 
 0.08 2018-09-03
 
