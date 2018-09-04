@@ -26,7 +26,7 @@ __END__
 
 =head1 NAME
 
-Starch - A framework-independent HTTP session library.
+Starch - A framework independent HTTP session library.
 
 =head1 DESCRIPTION
 
