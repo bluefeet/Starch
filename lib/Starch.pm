@@ -299,6 +299,10 @@ L<Starch::Store::Amazon::DynamoDB>
 
 =item *
 
+L<Starch::Store::Catalyst::Plugin::Session>
+
+=item *
+
 L<Starch::Store::CHI> - This store is a meta-store which provides
 access to many other stores such as L<CHI::Driver::Redis>,
 L<CHI::Driver::BerkleyDB>, L<CHI::Driver::File>, L<CHI::Driver::FastMmap>,
@@ -371,6 +375,10 @@ These plugins are distributed separately on CPAN:
 =item *
 
 L<Starch::Plugin::Net::Statsd>
+
+=item *
+
+L<Starch::Plugin::SecureStateID>
 
 =item *
 
