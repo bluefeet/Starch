@@ -1,6 +1,6 @@
 package Starch::Plugin::CookieArgs;
 
-$Starch::Plugin::CookieArgs::VERSION = '0.09';
+$Starch::Plugin::CookieArgs::VERSION = '0.10';
 
 use Moo;
 use strictures 2;

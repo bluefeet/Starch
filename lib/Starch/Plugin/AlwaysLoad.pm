@@ -1,6 +1,6 @@
 package Starch::Plugin::AlwaysLoad;
 
-$Starch::Plugin::AlwaysLoad::VERSION = '0.09';
+$Starch::Plugin::AlwaysLoad::VERSION = '0.10';
 
 =head1 NAME
 

@@ -1,6 +1,6 @@
 package Starch::Factory;
 
-$Starch::Factory::VERSION = '0.09';
+$Starch::Factory::VERSION = '0.10';
 
 =head1 NAME
 

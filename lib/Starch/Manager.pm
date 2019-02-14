@@ -1,6 +1,6 @@
 package Starch::Manager;
 
-$Starch::Manager::VERSION = '0.09';
+$Starch::Manager::VERSION = '0.10';
 
 =head1 NAME
 

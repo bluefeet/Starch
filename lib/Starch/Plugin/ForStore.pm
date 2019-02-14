@@ -1,6 +1,6 @@
 package Starch::Plugin::ForStore;
 
-$Starch::Plugin::ForStore::VERSION = '0.09';
+$Starch::Plugin::ForStore::VERSION = '0.10';
 
 =head1 NAME
 
