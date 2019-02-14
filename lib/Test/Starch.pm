@@ -1,5 +1,7 @@
 package Test::Starch;
 
+$Test::Starch::VERSION = '0.09';
+
 =head1 NAME
 
 Test::Starch - Test core features of starch.

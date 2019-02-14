@@ -1,5 +1,7 @@
 package Starch;
 
+$Starch::VERSION = '0.09';
+
 use Starch::Factory;
 use Moo::Object qw();
 

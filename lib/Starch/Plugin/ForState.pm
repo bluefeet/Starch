@@ -1,5 +1,7 @@
 package Starch::Plugin::ForState;
 
+$Starch::Plugin::ForState::VERSION = '0.09';
+
 =head1 NAME
 
 Starch::Plugin::ForState - Base role for Starch::State plugins.
