@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Remove Test::Fatal usage from one test.
  - Migrate build tooling from Dist::Zilla to Minilla.
 
 0.09 2018-09-04
