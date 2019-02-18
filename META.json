@@ -46,14 +46,14 @@
             "Digest::SHA" : "0",
             "Log::Any" : "1.03",
             "Module::Runtime" : "0.014",
-            "Moo" : "2",
+            "Moo" : "2.000000",
             "MooX::BuildArgs" : "0.02",
             "Scalar::Util" : "0",
             "Storable" : "0",
             "Try::Tiny" : "0.18",
             "Type::Tiny" : "1.000005",
             "namespace::clean" : "0.24",
-            "strictures" : "2"
+            "strictures" : "2.000000"
          }
       },
       "test" : {
@@ -81,6 +81,6 @@
       "Ismail Kerim <ismail.kerim@assurant.com>",
       "Jonathan Scott Duff <duff@pobox.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 2.27400_02",
+   "x_serialization_backend" : "JSON::PP version 2.27300",
    "x_static_install" : 1
 }
