@@ -53,6 +53,7 @@
             "Try::Tiny" : "0.18",
             "Type::Tiny" : "1.000005",
             "namespace::clean" : "0.24",
+            "perl" : "5.008001",
             "strictures" : "2.000000"
          }
       },
