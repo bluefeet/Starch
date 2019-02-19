@@ -1,6 +1,6 @@
 package Starch::Plugin::CookieArgs::State;
 
-$Starch::Plugin::CookieArgs::State::VERSION = '0.10';
+our $VERSION = '0.10';
 
 use Moo::Role;
 use strictures 2;

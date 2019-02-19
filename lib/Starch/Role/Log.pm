@@ -1,6 +1,6 @@
 package Starch::Role::Log;
 
-$Starch::Role::Log::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

@@ -1,6 +1,6 @@
 package Starch::Plugin::LogStoreExceptions;
 
-$Starch::Plugin::LogStoreExceptions::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

@@ -1,6 +1,6 @@
 package Starch::Store::Memory;
 
-$Starch::Store::Memory::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

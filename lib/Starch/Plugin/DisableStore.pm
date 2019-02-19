@@ -1,6 +1,6 @@
 package Starch::Plugin::DisableStore;
 
-$Starch::Plugin::DisableStore::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

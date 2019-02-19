@@ -1,6 +1,6 @@
 package Starch::Plugin::RenewExpiration::Manager;
 
-$Starch::Plugin::RenewExpiration::Manager::VERSION = '0.10';
+our $VERSION = '0.10';
 
 use Types::Common::String -types;
 use Types::Common::Numeric -types;

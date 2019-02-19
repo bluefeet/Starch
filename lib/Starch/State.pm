@@ -1,6 +1,6 @@
 package Starch::State;
 
-$Starch::State::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

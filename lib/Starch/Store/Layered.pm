@@ -1,6 +1,6 @@
 package Starch::Store::Layered;
 
-$Starch::Store::Layered::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

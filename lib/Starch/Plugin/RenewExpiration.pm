@@ -1,6 +1,6 @@
 package Starch::Plugin::RenewExpiration;
 
-$Starch::Plugin::RenewExpiration::VERSION = '0.10';
+our $VERSION = '0.10';
 
 use Moo;
 use strictures 2;

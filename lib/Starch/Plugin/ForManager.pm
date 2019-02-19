@@ -1,6 +1,6 @@
 package Starch::Plugin::ForManager;
 
-$Starch::Plugin::ForManager::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

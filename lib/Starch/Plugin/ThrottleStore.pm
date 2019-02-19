@@ -1,6 +1,6 @@
 package Starch::Plugin::ThrottleStore;
 
-$Starch::Plugin::ThrottleStore::VERSION = '0.10';
+our $VERSION = '0.10';
 
 =head1 NAME
 

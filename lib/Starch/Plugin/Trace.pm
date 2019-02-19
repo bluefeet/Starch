@@ -1,6 +1,6 @@
 package Starch::Plugin::Trace;
 
-$Starch::Plugin::Trace::VERSION = '0.10';
+our $VERSION = '0.10';
 
 use Moo;
 use strictures 2;

@@ -1,6 +1,6 @@
 package Starch::Plugin::Trace::Store;
 
-$Starch::Plugin::Trace::Store::VERSION = '0.10';
+our $VERSION = '0.10';
 
 use Moo::Role;
 use strictures 2;
