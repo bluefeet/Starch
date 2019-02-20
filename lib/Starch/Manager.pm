@@ -1,5 +1,6 @@
 package Starch::Manager;
-
+use 5.008001;
+use strictures 2;
 our $VERSION = '0.10';
 
 =head1 NAME
@@ -34,7 +35,6 @@ use Types::Common::String -types;
 use Types::Common::Numeric -types;
 
 use Moo;
-use strictures 2;
 use namespace::clean;
 
 with qw(

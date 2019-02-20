@@ -1,5 +1,6 @@
 package Starch::Util;
-
+use 5.008001;
+use strictures 2;
 our $VERSION = '0.10';
 
 =head1 NAME
@@ -12,7 +13,6 @@ use Carp qw();
 use Module::Runtime qw( require_module is_module_name );
 use Module::Find qw( findallmod );
 
-use strictures 2;
 use namespace::clean;
 
 use Exporter qw( import );

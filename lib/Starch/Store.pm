@@ -1,5 +1,6 @@
 package Starch::Store;
-
+use 5.008001;
+use strictures 2;
 our $VERSION = '0.10';
 
 =head1 NAME
@@ -28,7 +29,6 @@ use Types::Common::String -types;
 use Starch::Util qw( croak );
 
 use Moo::Role;
-use strictures 2;
 use namespace::clean;
 
 with qw(

@@ -1,5 +1,6 @@
 package Starch::Role::Log;
-
+use 5.008001;
+use strictures 2;
 our $VERSION = '0.10';
 
 =head1 NAME
@@ -12,7 +13,6 @@ use Types::Standard -types;
 use Log::Any;
 
 use Moo::Role;
-use strictures 2;
 use namespace::clean;
 
 =head1 ATTRIBUTES

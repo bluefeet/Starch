@@ -1,5 +1,6 @@
 package Starch::Plugin::CookieArgs::Manager;
-
+use 5.008001;
+use strictures 2;
 our $VERSION = '0.10';
 
 use Types::Standard -types;
@@ -7,7 +8,6 @@ use Types::Common::String -types;
 use Types::Common::Numeric -types;
 
 use Moo::Role;
-use strictures 2;
 use namespace::clean;
 
 with qw(
