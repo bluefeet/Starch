@@ -10,7 +10,7 @@
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "Starch",
    "no_index" : {
@@ -45,6 +45,7 @@
             "Carp" : "0",
             "Digest::SHA" : "0",
             "Log::Any" : "1.03",
+            "Module::Find" : "0.11",
             "Module::Runtime" : "0.014",
             "Moo" : "2.000000",
             "MooX::BuildArgs" : "0.02",
@@ -82,6 +83,6 @@
       "Ismail Kerim <ismail.kerim@assurant.com>",
       "Jonathan Scott Duff <duff@pobox.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 2.27300",
+   "x_serialization_backend" : "JSON::PP version 2.97001",
    "x_static_install" : 1
 }

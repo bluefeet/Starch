@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Find installed modules with Module::Find in Starch::Util::croak(),
+   making it support non-core Starch:: modules too.
  - Require perl 5.8 per Minilla.
  - Simplify VERSION declarations.
 

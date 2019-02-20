@@ -10,6 +10,7 @@ Starch::Util - Utility functions used internally by Starch.
 
 use Carp qw();
 use Module::Runtime qw( require_module is_module_name );
+use Module::Find qw( findallmod );
 
 use strictures 2;
 use namespace::clean;
@@ -29,36 +30,12 @@ need to use confess which generates giant stack traces.
 
 =cut
 
+my $all_modules;
+
 push @EXPORT_OK, 'croak';
 sub croak {
-    local $Carp::Internal{'Starch::Factory'} = 1;
-    local $Carp::Internal{'Starch::Manager'} = 1;
-    local $Carp::Internal{'Starch::Plugin::AlwaysLoad'} = 1;
-    local $Carp::Internal{'Starch::Plugin::Bundle'} = 1;
-    local $Carp::Internal{'Starch::Plugin::CookieArgs'} = 1;
-    local $Carp::Internal{'Starch::Plugin::CookieArgs::Manager'} = 1;
-    local $Carp::Internal{'Starch::Plugin::CookieArgs::State'} = 1;
-    local $Carp::Internal{'Starch::Plugin::DisableStore'} = 1;
-    local $Carp::Internal{'Starch::Plugin::ForManager'} = 1;
-    local $Carp::Internal{'Starch::Plugin::ForState'} = 1;
-    local $Carp::Internal{'Starch::Plugin::ForStore'} = 1;
-    local $Carp::Internal{'Starch::Plugin::LogStoreExceptions'} = 1;
-    local $Carp::Internal{'Starch::Plugin::RenewExpiration'} = 1;
-    local $Carp::Internal{'Starch::Plugin::RenewExpiration::Manager'} = 1;
-    local $Carp::Internal{'Starch::Plugin::RenewExpiration::State'} = 1;
-    local $Carp::Internal{'Starch::Plugin::ThrottleStore'} = 1;
-    local $Carp::Internal{'Starch::Plugin::Trace'} = 1;
-    local $Carp::Internal{'Starch::Plugin::Trace::Manager'} = 1;
-    local $Carp::Internal{'Starch::Plugin::Trace::State'} = 1;
-    local $Carp::Internal{'Starch::Plugin::Trace::Store'} = 1;
-    local $Carp::Internal{'Starch::Role::Log'} = 1;
-    local $Carp::Internal{'Starch::Role::MethodProxy'} = 1;
-    local $Carp::Internal{'Starch::State'} = 1;
-    local $Carp::Internal{'Starch::Store'} = 1;
-    local $Carp::Internal{'Starch::Store::Layered'} = 1;
-    local $Carp::Internal{'Starch::Store::Memory'} = 1;
-    local $Carp::Internal{'Starch::Util'} = 1;
-
+    $all_modules ||= [ findallmod('Starch') ];
+    local @Carp::Internal{@$all_modules} = map { 1 } @$all_modules;
     return Carp::croak( @_ );
 }
 
