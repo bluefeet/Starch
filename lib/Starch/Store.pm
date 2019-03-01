@@ -192,7 +192,7 @@ sub calculate_expires {
 
 This method is used by stores that store and lookup data by
 a string (all of them at this time).  It combines the state
-ID with the L</namespace> of the key data for the store
+ID with the L<Starch::Manager/namespace> of the key data for the store
 request.
 
 =cut

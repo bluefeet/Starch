@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Fix several POD errors.  Thanks CPANTS!
  - Declare deps as modules, not distros.
 
 0.11 2019-02-20T15:54:38Z
