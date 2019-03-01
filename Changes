@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Remove Test::Starch and add it as a dependency.
  - Fix several POD errors.  Thanks CPANTS!
  - Declare deps as modules, not distros.
 
