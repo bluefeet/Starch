@@ -306,13 +306,10 @@ Please submit bugs and feature requests to the Starch GitHub issue tracker:
 
 # AUTHORS
 
-Aran Clary Deltac <bluefeet@gmail.com>
-
-Arthur Axel "fREW" Schmidt &lt;frioux+cpan@gmail.com>
-
-Jonathan Scott Duff <duff@pobox.com>
-
-Ismail Kerim <ismail.kerim@assurant.com>
+    Aran Clary Deltac <bluefeet@gmail.com>
+    Arthur Axel "fREW" Schmidt <frioux+cpan@gmail.com>
+    Jonathan Scott Duff <duff@pobox.com>
+    Ismail Kerim <ismail.kerim@assurant.com>
 
 # ACKNOWLEDGEMENTS
 

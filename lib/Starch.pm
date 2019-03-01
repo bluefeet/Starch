@@ -472,13 +472,10 @@ L<https://github.com/bluefeet/Starch/issues>
 
 =head1 AUTHORS
 
-Aran Clary Deltac E<lt>bluefeet@gmail.comE<gt>
-
-Arthur Axel "fREW" Schmidt E<lt>frioux+cpan@gmail.comE<gt>
-
-Jonathan Scott Duff E<lt>duff@pobox.comE<gt>
-
-Ismail Kerim E<lt>ismail.kerim@assurant.comE<gt>
+    Aran Clary Deltac <bluefeet@gmail.com>
+    Arthur Axel "fREW" Schmidt <frioux+cpan@gmail.com>
+    Jonathan Scott Duff <duff@pobox.com>
+    Ismail Kerim <ismail.kerim@assurant.com>
 
 =head1 ACKNOWLEDGEMENTS
 
