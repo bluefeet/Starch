@@ -84,6 +84,7 @@
       }
    },
    "version" : "0.12",
+   "x_authority" : "cpan:BLUEFEET",
    "x_contributors" : [
       "Aran Deltac <aran@ziprecruiter.com>",
       "Arthur Axel 'fREW' Schmidt <frioux@gmail.com>",
