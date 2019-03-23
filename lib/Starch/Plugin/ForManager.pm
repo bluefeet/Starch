@@ -1,7 +1,7 @@
 package Starch::Plugin::ForManager;
 use 5.008001;
 use strictures 2;
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 =head1 NAME
 

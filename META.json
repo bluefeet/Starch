@@ -82,7 +82,7 @@
          "web" : "https://github.com/bluefeet/Starch"
       }
    },
-   "version" : "0.12",
+   "version" : "0.13",
    "x_authority" : "cpan:BLUEFEET",
    "x_contributors" : [
       "Aran Deltac <aran@ziprecruiter.com>",

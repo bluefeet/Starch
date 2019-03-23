@@ -2,6 +2,8 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+0.13 2019-03-23T21:34:30Z
+
  - Move Test::Starch back into this distro.
  - Up Log::Any version to include a fix that we no longer need to workaround.
 
