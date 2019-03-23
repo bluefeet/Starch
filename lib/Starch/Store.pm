@@ -231,9 +231,17 @@ sub reap_expired {
 1;
 __END__
 
-=head1 AUTHORS AND LICENSE
+=head1 SUPPORT
 
-See L<Starch/AUTHORS> and L<Starch/LICENSE>.
+See L<Starch/SUPPORT>.
+
+=head1 AUTHORS
+
+See L<Starch/AUTHORS>.
+
+=head1 LICENSE
+
+See L<Starch/LICENSE>.
 
 =cut
 

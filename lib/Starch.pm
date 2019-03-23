@@ -466,7 +466,8 @@ L<MojoX::Session>
 
 =head1 SUPPORT
 
-Please submit bugs and feature requests to the Starch GitHub issue tracker:
+Please submit bugs and feature requests to the
+Starch GitHub issue tracker:
 
 L<https://github.com/bluefeet/Starch/issues>
 

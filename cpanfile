@@ -22,7 +22,6 @@ requires 'Storable';
 
 on test => sub {
     requires 'Test2::V0' => '0.000094';
-    requires 'Test::Starch' => '0.12';
     requires 'Log::Any::Test' => '1.033';
 };
 

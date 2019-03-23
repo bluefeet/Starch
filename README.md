@@ -300,7 +300,8 @@ for instructions on writing your own.
 
 # SUPPORT
 
-Please submit bugs and feature requests to the Starch GitHub issue tracker:
+Please submit bugs and feature requests to the
+Starch GitHub issue tracker:
 
 [https://github.com/bluefeet/Starch/issues](https://github.com/bluefeet/Starch/issues)
 
