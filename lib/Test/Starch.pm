@@ -1,6 +1,4 @@
 package Test::Starch;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 =head1 NAME
@@ -43,15 +41,13 @@ if the C<store> argument is not passed it will defailt to a Memory store.
 
 =cut
 
-use Types::Standard -types;
-use Types::Common::String -types;
-
+use Starch;
 use Test2::V0;
-
-use Test2::Require::Module 'Starch';
-BEGIN { require Starch }
+use Types::Common::String -types;
+use Types::Standard -types;
 
 use Moo;
+use strictures 2;
 use namespace::clean;
 
 around BUILDARGS => sub{
