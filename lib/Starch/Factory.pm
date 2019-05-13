@@ -203,9 +203,9 @@ See L<Starch/SUPPORT>.
 
 See L<Starch/AUTHORS>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-See L<Starch/LICENSE>.
+See L<Starch/COPYRIGHT AND LICENSE>.
 
 =cut
 

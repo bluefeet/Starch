@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Switch to the GNU General Public License version 3.
  - Stop using Test2::Require::Module in Test::Starch.
 
 0.13 2019-03-23T21:34:30Z
