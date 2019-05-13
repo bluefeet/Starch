@@ -1,6 +1,4 @@
 package Starch::Plugin::ThrottleStore;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 =head1 NAME
@@ -34,15 +32,14 @@ a log message stating which state key is being throttled.
 
 =cut
 
-use Types::Common::Numeric -types;
 use Try::Tiny;
+use Types::Common::Numeric -types;
 
 use Moo::Role;
+use strictures 2;
 use namespace::clean;
 
-with qw(
-    Starch::Plugin::ForStore
-);
+with 'Starch::Plugin::ForStore';
 
 =head1 OPTIONAL STORE ARGUMENTS
 

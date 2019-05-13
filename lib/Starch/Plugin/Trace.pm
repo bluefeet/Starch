@@ -1,14 +1,11 @@
 package Starch::Plugin::Trace;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 use Moo;
+use strictures 2;
 use namespace::clean;
 
-with qw(
-    Starch::Plugin::Bundle
-);
+with 'Starch::Plugin::Bundle';
 
 sub bundled_plugins {
     return [qw(

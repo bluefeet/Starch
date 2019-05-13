@@ -1,6 +1,4 @@
 package Starch::Role::Log;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 =head1 NAME
@@ -9,10 +7,11 @@ Starch::Role::Log - Logging capabilities used internally by Starch.
 
 =cut
 
-use Types::Standard -types;
 use Log::Any;
+use Types::Standard -types;
 
 use Moo::Role;
+use strictures 2;
 use namespace::clean;
 
 =head1 ATTRIBUTES

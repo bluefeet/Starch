@@ -1,6 +1,4 @@
 package Starch::Store::Memory;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 =head1 NAME
@@ -15,15 +13,14 @@ tests against.
 
 =cut
 
-use Types::Standard -types;
 use Types::Common::Numeric -types;
+use Types::Standard -types;
 
 use Moo;
+use strictures 2;
 use namespace::clean;
 
-with qw(
-    Starch::Store
-);
+with 'Starch::Store';
 
 =head1 OPTIONAL ARGUMENTS
 

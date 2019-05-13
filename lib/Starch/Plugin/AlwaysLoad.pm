@@ -1,6 +1,4 @@
 package Starch::Plugin::AlwaysLoad;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 =head1 NAME
@@ -24,11 +22,10 @@ accessed.
 =cut
 
 use Moo::Role;
+use strictures 2;
 use namespace::clean;
 
-with qw(
-    Starch::Plugin::ForState
-);
+with 'Starch::Plugin::ForState';
 
 after BUILD => sub{
     my ($self) = @_;

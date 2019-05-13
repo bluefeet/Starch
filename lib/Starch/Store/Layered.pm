@@ -1,6 +1,4 @@
 package Starch::Store::Layered;
-use 5.008001;
-use strictures 2;
 our $VERSION = '0.13';
 
 =head1 NAME
@@ -52,15 +50,14 @@ stores within layered stores.
 
 =cut
 
-use Types::Standard -types;
 use Scalar::Util qw( blessed );
+use Types::Standard -types;
 
 use Moo;
+use strictures 2;
 use namespace::clean;
 
-with qw(
-    Starch::Store
-);
+with 'Starch::Store';
 
 after BUILD => sub{
     my ($self) = @_;
