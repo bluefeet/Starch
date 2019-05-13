@@ -1,7 +1,7 @@
 {
    "abstract" : "A framework independent HTTP session library.",
    "author" : [
-      "Aran Clary Deltac <bluefeet@gmail.com>"
+      "Aran Clary Deltac <aran@bluefeet.dev>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v3.1.4, CPAN::Meta::Converter version 2.150010",
@@ -85,7 +85,6 @@
    "version" : "0.14",
    "x_authority" : "cpan:BLUEFEET",
    "x_contributors" : [
-      "Aran Deltac <aran@ziprecruiter.com>",
       "Arthur Axel 'fREW' Schmidt <frioux@gmail.com>",
       "Ismail Kerim <ismail.kerim@assurant.com>",
       "Jonathan Scott Duff <duff@pobox.com>"

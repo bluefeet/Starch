@@ -481,7 +481,7 @@ development this distribution would not exist.
 
 =head1 AUTHORS
 
-    Aran Clary Deltac <bluefeet@gmail.com>
+    Aran Clary Deltac <aran@bluefeet.dev>
     Arthur Axel "fREW" Schmidt <frioux+cpan@gmail.com>
     Jonathan Scott Duff <duff@pobox.com>
     Ismail Kerim <ismail.kerim@assurant.com>
