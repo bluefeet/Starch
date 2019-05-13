@@ -1,5 +1,5 @@
 package Starch::Plugin::CookieArgs::Manager;
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 use Types::Common::Numeric -types;
 use Types::Common::String -types;

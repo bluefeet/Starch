@@ -1,5 +1,5 @@
 package Starch::Plugin::ForState;
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 use Moo::Role;
 use strictures 2;

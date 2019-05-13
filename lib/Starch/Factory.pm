@@ -1,5 +1,5 @@
 package Starch::Factory;
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 =encoding utf8
 
