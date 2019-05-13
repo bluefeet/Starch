@@ -1,6 +1,8 @@
 package Starch::Util;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Util - Utility functions used internally by Starch.

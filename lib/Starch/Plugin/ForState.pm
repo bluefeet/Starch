@@ -1,6 +1,15 @@
 package Starch::Plugin::ForState;
 our $VERSION = '0.13';
 
+use Moo::Role;
+use strictures 2;
+use namespace::clean;
+
+1;
+__END__
+
+=encoding utf8
+
 =head1 NAME
 
 Starch::Plugin::ForState - Base role for Starch::State plugins.
@@ -25,15 +34,6 @@ state plugins.  All it does is labels a plugin as a state
 plugin so that Starch knows which class type it applies to.
 
 See L<Starch::Extending/PLUGINS> for more information.
-
-=cut
-
-use Moo::Role;
-use strictures 2;
-use namespace::clean;
-
-1;
-__END__
 
 =head1 SUPPORT
 

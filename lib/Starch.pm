@@ -25,6 +25,8 @@ sub new {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Starch - A framework independent HTTP session library.

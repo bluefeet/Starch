@@ -1,6 +1,15 @@
 package Starch::Plugin::ForManager;
 our $VERSION = '0.13';
 
+use Moo::Role;
+use strictures 2;
+use namespace::clean;
+
+1;
+__END__
+
+=encoding utf8
+
 =head1 NAME
 
 Starch::Plugin::ForManager - Base role for Starch plugins.
@@ -26,15 +35,6 @@ manager plugins.  All it does is labels a plugin as a manager
 plugin so that Starch knows which class type it applies to.
 
 See L<Starch::Extending/PLUGINS> for more information.
-
-=cut
-
-use Moo::Role;
-use strictures 2;
-use namespace::clean;
-
-1;
-__END__
 
 =head1 SUPPORT
 

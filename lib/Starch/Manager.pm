@@ -1,6 +1,8 @@
 package Starch::Manager;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Manager - Entry point for accessing Starch state objects.

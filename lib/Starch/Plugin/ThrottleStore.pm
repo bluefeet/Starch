@@ -1,6 +1,8 @@
 package Starch::Plugin::ThrottleStore;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Plugin::ThrottleStore - Throttle misbehaving Starch stores.

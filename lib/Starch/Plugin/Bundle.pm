@@ -1,6 +1,8 @@
 package Starch::Plugin::Bundle;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Plugin::Bundle - Base role for Starch plugin bundles.

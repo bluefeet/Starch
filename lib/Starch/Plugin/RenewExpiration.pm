@@ -17,6 +17,8 @@ sub bundled_plugins {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Plugin::RenewExpiration - Trigger periodic writes to the store.

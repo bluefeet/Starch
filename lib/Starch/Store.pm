@@ -1,6 +1,8 @@
 package Starch::Store;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Store - Base role for Starch stores.

@@ -1,6 +1,8 @@
 package Starch::Factory;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Factory - Role applicator and class creator.

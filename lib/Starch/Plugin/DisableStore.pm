@@ -1,6 +1,8 @@
 package Starch::Plugin::DisableStore;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Plugin::DisableStore - Disable store read and/or write operations.

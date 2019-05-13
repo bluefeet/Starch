@@ -1,6 +1,8 @@
 package Starch::Store::Layered;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Store::Layered - Layer multiple Starch stores.

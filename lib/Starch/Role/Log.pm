@@ -1,6 +1,8 @@
 package Starch::Role::Log;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Role::Log - Logging capabilities used internally by Starch.

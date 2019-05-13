@@ -1,6 +1,8 @@
 package Starch::State;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::State - The Starch state object.

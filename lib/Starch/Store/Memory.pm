@@ -1,6 +1,8 @@
 package Starch::Store::Memory;
 our $VERSION = '0.13';
 
+=encoding utf8
+
 =head1 NAME
 
 Starch::Store::Memory - In-memory Starch store.
