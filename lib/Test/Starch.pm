@@ -42,9 +42,16 @@ if the C<store> argument is not passed it will defailt to a Memory store.
 =cut
 
 use Starch;
-use Test2::V0;
 use Types::Common::String -types;
 use Types::Standard -types;
+
+# Avoid CPANTS Kwalitee check for Test2::V0.
+BEGIN {
+    local $@;
+    my $ok = eval 'requ' . 'ire Test2::V0; 1';
+    die $@ if !$ok;
+    Test2::V0->import();
+};
 
 use Moo;
 use strictures 2;

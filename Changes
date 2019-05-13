@@ -2,6 +2,7 @@ Revision history for Perl extension Starch.
 
 {{$NEXT}}
 
+ - Avoid CPANTS Kwalitee check for Test2::V0.
  - Switch to the GNU General Public License version 3.
  - Stop using Test2::Require::Module in Test::Starch.
 
