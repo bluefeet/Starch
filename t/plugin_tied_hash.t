@@ -44,7 +44,7 @@ subtest tied_hash => sub{
     @Test::TiedHash::LOG = ();
 
     my $state = $starch->state();
-    isa_ok tied( $state->data->%* ), ['Test::TiedHash'], 'data hash is tied';
+    isa_ok tied( %{ $state->data } ), ['Test::TiedHash'], 'data hash is tied';
 
     $state->data->{tester} = 34;
     is $state->data->{tester}, 34, 'tied hash stored and fetched a value';
