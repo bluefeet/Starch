@@ -10,16 +10,18 @@ with 'Starch::Plugin::ForState';
 around _build_data => sub{
     my $orig = shift;
     my $self = shift;
-    my %data = $self->$orig( @_ )->%*;
+    my %data;
     tie %data, $self->manager->tied_hash_class;
+    %data = %{ $self->$orig( @_ ) };
     return \%data;
 };
 
 around _set_data => sub{
     my $orig = shift;
     my $self = shift;
-    my %data = shift->%*;
+    my %data;
     tie %data, $self->manager->tied_hash_class;
+    %data = %{ shift() };
     return $self->$orig( \%data );
 };
 
